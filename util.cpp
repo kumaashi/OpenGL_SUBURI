@@ -272,11 +272,6 @@ LRESULT WINAPI WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
-
-
-//--------------------------------------------------------------------------------------
-// entry point
-//--------------------------------------------------------------------------------------
 int Init(int argc, char *argv[], void (*StartMain)(int argc, char *argv[], HDC hdc)) {
 	diag.resize(32768);
 	
@@ -295,7 +290,7 @@ int Init(int argc, char *argv[], void (*StartMain)(int argc, char *argv[], HDC h
 	DWORD styleex = WS_EX_APPWINDOW | (Windowed ? WS_EX_WINDOWEDGE : 0);
 	DWORD style	 = Windowed ? WS_OVERLAPPEDWINDOW : WS_POPUP;
 	HWND hWnd		 = CreateWindowEx(
-			styleex, appname, appname, style, 0, 0, Width * 3, Height *2, NULL, NULL, wcex.hInstance, NULL);
+			styleex, appname, appname, style, 0, 0, Width * 1.5, Height * 1.5, NULL, NULL, wcex.hInstance, NULL);
 	ShowWindow(hWnd, SW_SHOW);
 	UpdateWindow(hWnd);
 	if(!Windowed) {
@@ -320,9 +315,4 @@ int Init(int argc, char *argv[], void (*StartMain)(int argc, char *argv[], HDC h
 	
 	return 0;
 }
-
-
-
-
-
 

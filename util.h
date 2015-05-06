@@ -21,12 +21,8 @@
 #pragma comment(lib, "user32.lib")
 #pragma comment(lib, "opengl32.lib")
 
-
-//#define  DEFAULT_WIDTH   (320)
-//#define  DEFAULT_HEIGHT  (240)
-
-#define  DEFAULT_WIDTH   (480)
-#define  DEFAULT_HEIGHT  (640)
+#define  DEFAULT_WIDTH   (320 * 3)
+#define  DEFAULT_HEIGHT  (240 * 2)
 
 //--------------------------------------------------------------------------------------
 // OpenGL Function
@@ -560,23 +556,6 @@ struct Mesh {
 		glBindVertexArray(0);
 	}
 	
-	/*
-	void Draw(float *view, float *proj, float *world) {
-		glUseProgram(program);
-		glBindVertexArray(vao);
-		if(view)	glUniformMatrix4fv(glGetUniformLocation(program, "view"),  1, GL_FALSE, view);
-		if(proj)	glUniformMatrix4fv(glGetUniformLocation(program, "proj"),  1, GL_FALSE, proj);
-		if(world) glUniformMatrix4fv(glGetUniformLocation(program, "world"), 1, GL_FALSE, world);
-		glDrawArrays(GL_TRIANGLES, 0, trinum * 3);
-		glUseProgram(0);
-	}
-
-	void Draw(float *world) {
-		glBindVertexArray(vao);
-		if(world) glUniformMatrix4fv(glGetUniformLocation(program, "world"), 1, GL_FALSE, world);
-		glDrawArrays(GL_TRIANGLES, 0, trinum * 3);
-	}
-	*/
 	void Bind() {
 		glBindVertexArray(vao);
 	}
@@ -584,7 +563,11 @@ struct Mesh {
 	void Draw() {
 		glDrawArrays(GL_TRIANGLES, 0, trinum * 3);
 	}
-	
+
+	void Unbind() {
+		glBindVertexArray(0);
+	}
+
 };
 
 
@@ -630,9 +613,7 @@ struct Texture3D {
 
 
 //------------------------------------------------------------------------------------------
-//
 // RenderTarget
-//
 //------------------------------------------------------------------------------------------
 struct RenderTarget {
 	GLuint rto;
@@ -652,13 +633,10 @@ struct RenderTarget {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, w, h, 0, GL_RGBA, GL_FLOAT, 0);       //(^o^)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);  //more?
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);  //more?
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);                     //depr
-		
 		glBindRenderBuffer(GL_RENDERBUFFER, rtdo);
 		glRenderBufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, w, h);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rtdo);
@@ -735,6 +713,76 @@ struct RenderTarget {
 };
 
 
+
+//--------------------------------------------------------------------------------------
+// Camera
+//--------------------------------------------------------------------------------------
+struct Camera {
+	Matrix view;
+	Matrix proj;
+	vec  Pos, At, Up;
+	vec  PosStart;
+	vec  PosEnd;
+	float  tt;
+	float dtt;
+  int Width, Height;
+	int state;
+	float ffov, fnear, ffar;
+
+	void SetScreen(int w, int h) {
+		Width  = w;
+		Height = h;
+	}
+
+	void SetView(vec &p, vec &a, vec &u) {
+		if(!state) {
+			Pos = p;
+		}
+		At  = a;
+		Up  = u;
+	}
+
+	void SetProj(float fov, float fn, float ff) {
+		ffov = fov, fnear = fn, ffar = ff;
+	}
+
+	float *GetView() {
+		return (float *)&view;
+	}
+
+	float *GetProj() {
+		return (float *)&proj;
+	}
+
+	void SetTracking(vec &p, float dt, int ty = 0) {
+		Reset();
+		PosStart = Pos;
+		PosEnd   = p;
+		dtt      = dt;
+		state    = 1;
+	}
+	
+	void Reset() {
+		state = 0;
+		tt    = 0;
+	}
+	
+	void Update() {
+		view.LookAt(Pos, At, Up);
+		proj.Perspective(ffov, float(Width) / float(Height), fnear, ffar);
+		if(state) {
+			Pos.smoothstep(PosStart, PosEnd, tt);
+			tt += dtt;
+			if(tt > 1.0) {
+				Pos   = PosEnd;
+				tt    = 1.0;
+				state = 0;
+			}
+		}
+	}
+};
+
+
 //--------------------------------------------------------------------------------------
 // OpenGL Function
 //--------------------------------------------------------------------------------------
@@ -743,7 +791,7 @@ void glSetInterval(int isinterval);
 GLuint glLoadShader(const char *vsfile, const char *fsfile);
 int Init(int argc, char *argv[], void (*StartMain)(int argc, char *argv[], HDC hdc));
 BOOL ProcMsg();
-float frand(int a = 1, int b = 2345, int c = 789);
+float frand();
 
 
 #endif //_UTIL_H_

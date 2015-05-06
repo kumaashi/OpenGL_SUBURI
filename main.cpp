@@ -6,61 +6,6 @@
 #include "util.h"
 
 //--------------------------------------------------------------------------------------
-// Camera
-//--------------------------------------------------------------------------------------
-struct Camera {
-	Matrix view;
-	Matrix proj;
-	vec  Pos, At, Up;
-	vec  PosStart;
-	vec  PosEnd;
-	float  tt;
-	float dtt;
-  int Width, Height;
-	int state;
-	float ffov, fnear, ffar;
-	void SetScreen(int w, int h) { Width = w, Height = h; }
-	void SetView(vec &p, vec &a, vec &u) {
-		if(!state) {
-			Pos = p;
-		}
-		At  = a;
-		Up  = u;
-	}
-	void SetProj(float fov, float fn, float ff) {
-		ffov = fov, fnear = fn, ffar = ff;
-	}
-	float *GetView() { return (float *)&view; }
-	float *GetProj() { return (float *)&proj; }
-	void SetTracking(vec &p, float dt, int ty = 0) {
-		Reset();
-		PosStart = Pos;
-		PosEnd   = p;
-		dtt      = dt;
-		state    = 1;
-	}
-	
-	void Reset() {
-		state = 0;
-		tt    = 0;
-	}
-	
-	void Update() {
-		view.LookAt(Pos, At, Up);
-		proj.Perspective(ffov, float(Width) / float(Height), fnear, ffar);
-		if(state) {
-			Pos.smoothstep(PosStart, PosEnd, tt);
-			tt += dtt;
-			if(tt > 1.0) {
-				Pos   = PosEnd;
-				tt    = 1.0;
-				state = 0;
-			}
-		}
-	}
-};
-
-//--------------------------------------------------------------------------------------
 // Data
 //--------------------------------------------------------------------------------------
 struct Data {
@@ -148,8 +93,29 @@ struct Scene {
   }
 };
 
+
+//fps : http://www.t-pot.com/program/13_fps/index.html
+void show_fps() {
+	static DWORD    last = timeGetTime();
+	static DWORD    frames = 0;
+	static char     buf[256] = "";
+	DWORD           current;
+	current = timeGetTime();
+	frames++;
+	if(1000 <= current - last) {
+		float dt = (float)(current - last) / 1000.0f;
+		float fps = (float)frames / dt;
+		last = current;
+		frames = 0;
+		sprintf(buf, "%.02f fps", fps);
+		printf("%s\n", buf);
+	}
+}
+
+
+
 void StartMain(int argc, char *argv[], HDC hdc) {
-	GLuint shader      = glLoadShader("vvs.cpp", "vfs.cpp");
+	GLuint shader      = glLoadShader("vvs.cpp",   "vfs.cpp");
 	GLuint shader_rect = glLoadShader("vrect.cpp", "frect.cpp");
 	
 	Mesh         mesh;
@@ -171,7 +137,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 	vec at  (0,0,0);
 	vec up  (0,1,0);
 	float fFov     = 60.0;
-	float zNear    = 0.1;
+	float zNear    = 0.01;
 	float zFar     = 2560;
 	camera.Reset();
 	camera.SetScreen(Width, Height);
@@ -187,21 +153,28 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		float info[4]  = {rt.Width, rt.Height, zNear, zFar};
 		float info2[4] = {Width, Height, g_time, g_time};
 		
-		float r = 5;
-		float speed = 0.003;
-		//vec pos (frand() * r, frand() * r, frand() * r);
-		if(GetAsyncKeyState('2') & 0x8000) {
-			vec pos (-r, r, -r);
-			camera.SetTracking(pos, speed);
-		}
+		float r = 30;
+		float speed = 0.005;
 
 		if(GetAsyncKeyState('1') & 0x8000) {
 			vec pos (r, r, -r);
 			camera.SetTracking(pos, speed);
 		}
 		
+		if(GetAsyncKeyState('2') & 0x8000) {
+			vec pos (-r, r, -r);
+			camera.SetTracking(pos, speed);
+		}
+
+		
+		if(GetAsyncKeyState('A') & 0x8000) {
+			vec pos (frand() * r, frand() * r, frand() * r);
+			camera.SetTracking(pos, speed);
+		}
+		
 		//Update
 		camera.Update();
+
 		{
 			rt.Begin();
 			glViewport(0, 0, rt.Width, rt.Height);
@@ -219,46 +192,24 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			GLint loc = glGetUniformLocation(shader, "world");
 			mesh.Bind();
 			srand(0);
-			for(float z = -30 ; z < 30; z += 2.05) {
-				for(float x = -30 ; x < 30; x += 2.05) {
+			float begin  = 50;
+			float margin = 2.0;
+			for(float z = -begin ; z < begin; z += margin) {
+				for(float x = -begin ; x < begin; x += margin) {
 					world.Ident();
-					//world.Trans(x, (float(rand()) / float(0x7FFF)) * 2.0 + sin(z + g_time) * 0.5, z);
 					world.Trans(x, sin(3.0 * x + z + x * z + g_time * 3.2) * 0.5, z);
 					glUniformMatrix4fv(loc, 1, GL_FALSE, (float *)&world);
 					mesh.Draw();
 				}
 			}
-			/*
-			world.Ident();
-			glUniformMatrix4fv(glGetUniformLocation(shader, "world"), 1, GL_FALSE, (float *)&world);
-			mesh.Draw();
-			*/
+			mesh.Unbind();
 			rt.End();
 		}
 
-		//AO
-		/*
-		{
-			glClearColor(0.55, 0.25, 0.5, 1);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glViewport(0, 0, Width, Height);
-			glDisable(GL_DEPTH_TEST);
-			glUseProgram(shader_rect);
-			rt.SetTexture();
-			glUniform1i(glGetUniformLocation(shader_rect,  "tex"), 0);
-			glUniform4fv(glGetUniformLocation(shader_rect, "info"), 1, info);
-			glUniform4fv(glGetUniformLocation(shader_rect, "info2"), 1, info2);
-			glRects(-1, -1, 1, 1);
-			glEnable(GL_DEPTH_TEST);
-		}
-		*/
-
-		//AO
 		{
 			rtd.Begin();
-			glClearColor(0.55, 0.25, 0.5, 1);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			//glViewport(0, 0, Width, Height);
+			//glClearColor(0.55, 0.25, 0.5, 1);
+			//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glViewport(0, 0, rt.Width, rt.Height);
 			glDisable(GL_DEPTH_TEST);
 			glUseProgram(shader_rect);
@@ -276,7 +227,10 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		rtd.Resolve(Width, Height);
 		wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
 		g_time += 0.0166666666666666666666666666666666666;
-		//Sleep(16);
+		
+		
+		//
+		show_fps();
 	}
 }
 
