@@ -199,7 +199,7 @@ GLuint glLoadShader(const char *vsfile, const char *fsfile) {
 	GLsizei size;
 
 	//VS
-	printf("Load %s %s:", vsfile, fsfile);
+	printf("Load %s %s\n", vsfile, fsfile);
 	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
 	fp.Open(vsfile, "r");
 	b = fp.Buf();
@@ -207,9 +207,10 @@ GLuint glLoadShader(const char *vsfile, const char *fsfile) {
 	glCompileShader(vs);
 	memset(&diag[0], 0, diag.size());
 	glGetShaderInfoLog(vs, diag.size(), &size, &diag[0]);
-	printf("%s:", vsfile);
+	printf("\n%s:", vsfile);
 	s = &diag[0];
 	while(*s) printf("%c", *s++);
+	printf("\n");
 	
 	//FS
 	GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
@@ -223,7 +224,7 @@ GLuint glLoadShader(const char *vsfile, const char *fsfile) {
 	s = &diag[0];
 	while(*s) printf("%c", *s++);
 	printf("%s %s Done\n", vsfile, fsfile);
-	
+		printf("\n");
 	GLuint ret = glCreateProgram();
 	glAttachShader(ret, vs);
 	glAttachShader(ret, fs);
