@@ -391,25 +391,48 @@ struct Matrix {
 // Filereader
 //--------------------------------------------------------------------------------------
 struct File {
-	std::vector<char> buf;
+	std::vector<unsigned char> buf;
+	int size;
 	int Open(const char *name, const char *mode) {
 		int ret = -1;
 		FILE *fp = fopen(name, mode);
 		buf.clear();
+		size = -1;
 		if(fp) {
 			fseek(fp, 0, SEEK_END);
-			int size = ftell(fp);
+			size = ftell(fp);
 			fseek(fp, 0, SEEK_SET);
 			buf.resize(size);
+			memset(&buf[0], 0, buf.size());
+			printf("DEBUG : size = %d, %d\n", size, buf.size());
 			fread(&buf[0], 1, size, fp);
 			fclose(fp);
+			
+			int ccc = size;
+			for(int i = 0 ; i < ccc; i++) {
+				int c = buf[i];
+				if( (i % 16) == 0) {
+					printf("\n");
+				}
+				
+				if(isgraph(c)) {
+					printf("%c", c);
+				} else {
+					printf(".", c);
+				}
+			}
+
 			ret = 0;
 		}
 		return buf.size();
 	}
-	
-	char *Buf() {
-		if(buf.empty()) return NULL;
+
+	int Size() {
+		return size;
+	}
+
+	unsigned char *Buf() {
+		//if(buf.empty()) return NULL;
 		return &buf[0];
 	}
 };

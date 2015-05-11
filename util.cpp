@@ -193,38 +193,43 @@ void glSetInterval(int isinterval) {
 //--------------------------------------------------------------------------------------
 GLuint glLoadShader(const char *vsfile, const char *fsfile) {
 	File fp;
-	char *b = NULL;
+	unsigned char *b = NULL;
 	char *s = NULL;
 
 	GLsizei size;
 
 	//VS
-	printf("Load %s %s\n", vsfile, fsfile);
 	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-	fp.Open(vsfile, "rb");
-	b = fp.Buf();
-	glShaderSource(vs, 1, &b, NULL);
-	glCompileShader(vs);
-	memset(&diag[0], 0, diag.size());
-	glGetShaderInfoLog(vs, diag.size(), &size, &diag[0]);
-	printf("\n%s:", vsfile);
-	s = &diag[0];
-	while(*s) printf("%c", *s++);
-	printf("\n");
+	GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
+	{
+		printf("Load %s %s\n", vsfile, fsfile);
+		int size = fp.Open(vsfile, "rb");
+		b = fp.Buf();
+		glShaderSource(vs, 1, (char **)&b, &size);
+		glCompileShader(vs);
+		memset(&diag[0], 0, diag.size());
+		glGetShaderInfoLog(vs, diag.size(), &size, &diag[0]);
+		printf("\n%s:", vsfile);
+		s = &diag[0];
+		while(*s) printf("%c", *s++);
+		printf("\n");
+	}
 	
 	//FS
-	GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-	fp.Open(fsfile, "rb");
-	b = fp.Buf();
-	glShaderSource(fs, 1, &b, NULL);
-	glCompileShader(fs);
-	memset(&diag[0], 0, diag.size());
-	glGetShaderInfoLog(fs, diag.size(), &size, &diag[0]);
-	printf("%s:", fsfile);
-	s = &diag[0];
-	while(*s) printf("%c", *s++);
-	printf("%s %s Done\n", vsfile, fsfile);
+	{
+		int size = fp.Open(fsfile, "rb");
+		b = fp.Buf();
+		glShaderSource(fs, 1, (char **)&b, &size);
+		glCompileShader(fs);
+		memset(&diag[0], 0, diag.size());
+		glGetShaderInfoLog(fs, diag.size(), &size, &diag[0]);
+		printf("%s:", fsfile);
+		s = &diag[0];
+		while(*s) printf("%c", *s++);
+		printf("%s %s Done\n", vsfile, fsfile);
 		printf("\n");
+	}
+	
 	GLuint ret = glCreateProgram();
 	glAttachShader(ret, vs);
 	glAttachShader(ret, fs);
