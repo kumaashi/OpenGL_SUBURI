@@ -1,9 +1,5 @@
 #version 130
 
-#ifdef GL_ES
-precision mediump float;
-#endif
-
 uniform vec4 info;
 uniform mat4 proj;
 uniform mat4 view;

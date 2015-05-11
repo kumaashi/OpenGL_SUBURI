@@ -118,6 +118,11 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 	GLuint shader      = glLoadShader("vvs.cpp",   "vfs.cpp");
 	GLuint shader_rect = glLoadShader("vrect.cpp", "frect.cpp");
 	
+	/*
+	*/
+	GLuint nAttLoc = glGetAttribLocation( shader, "position" );
+	printf("nAttLoc = %d\n", nAttLoc);
+	
 	Mesh         mesh;
 	Texture3D    tex;
 	RenderTarget rt;
@@ -144,6 +149,13 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 	camera.SetView(pos, at, up);
 	camera.SetProj(fFov, zNear, zFar);
 	static float g_time = 0;
+	
+	
+	printf("======================\n");
+	printf("Press Key 1, 2, and A!\n");
+	printf("======================\n");
+	
+	
 	while(ProcMsg()) {
 		if(GetAsyncKeyState(VK_F5) & 0x8000) {
 			shader      = glLoadShader("vvs.cpp", "vfs.cpp");
@@ -187,9 +199,9 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			glUniform4fv(glGetUniformLocation(shader, "info2"), 1, info2);
 			glUniformMatrix4fv(glGetUniformLocation(shader, "view"),  1, GL_FALSE, camera.GetView());
 			glUniformMatrix4fv(glGetUniformLocation(shader, "proj"),  1, GL_FALSE, camera.GetProj());
-			
 			Matrix world;
 			GLint loc = glGetUniformLocation(shader, "world");
+			mesh.SetShader(shader);
 			mesh.Bind();
 			srand(0);
 			float begin  = 50;
@@ -203,6 +215,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 				}
 			}
 			mesh.Unbind();
+			tex.Unbind();
 			rt.End();
 		}
 
@@ -218,6 +231,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			glUniform4fv(glGetUniformLocation(shader_rect, "info"), 1, info);
 			glUniform4fv(glGetUniformLocation(shader_rect, "info2"), 1, info2);
 			glRects(-1, -1, 1, 1);
+			rt.UnsetTexture();
 			glEnable(GL_DEPTH_TEST);
 			rtd.End();
 		}
@@ -225,7 +239,8 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		//blit
 		glViewport(0, 0, Width, Height);
 		rtd.Resolve(Width, Height);
-		wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
+		//wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
+		SwapBuffers(hdc);
 		g_time += 0.0166666666666666666666666666666666666;
 		
 		

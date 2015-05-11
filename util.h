@@ -50,6 +50,7 @@ extern PFNGLTRANSFORMFEEDBACKVARYINGSPROC      glTransformFeedbackVaryings ;
 extern PFNGLBEGINTRANSFORMFEEDBACKPROC         glBeginTransformFeedback    ;
 extern PFNGLENDTRANSFORMFEEDBACKPROC           glEndTransformFeedback      ;
 extern PFNGLENABLEVERTEXATTRIBARRAYPROC        glEnableVertexAttribArray   ;
+extern PFNGLDISABLEVERTEXATTRIBARRAYPROC       glDisableVertexAttribArray  ;
 extern PFNGLVERTEXATTRIBPOINTERPROC            glVertexAttribPointer       ;
 extern PFNGLGETSHADERINFOLOGPROC               glGetShaderInfoLog          ;
 extern PFNGLTEXIMAGE3DPROC                     glTexImage3D                ;
@@ -504,8 +505,7 @@ struct Mesh {
 	};
 	int trinum;
 	GLuint vbo[Max];
-	GLuint vao;
-	GLint  program;
+	GLint  shader;
 	BoundingBox bb;
 	
 	void Init() {
@@ -529,7 +529,7 @@ struct Mesh {
 	}
 	
 	void SetShader(int p) {
-		program = p;
+		shader = p;
 	}
 	
 	void Create(float *v, int vnum, float *n, int nnum) {
@@ -544,20 +544,17 @@ struct Mesh {
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[Normal]);
 		glBufferData(GL_ARRAY_BUFFER, nnum * sizeof(float), n, GL_STATIC_DRAW);
 		printf("Done.\n");
-		
-		glGenVertexArrays(1, &vao);
-		glBindVertexArray(vao);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[Vertex]);
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[Normal]);
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
-		glBindVertexArray(0);
 	}
-	
+
 	void Bind() {
-		glBindVertexArray(vao);
+		GLuint nAttLocPos = glGetAttribLocation( shader, "position" );
+		GLuint nAttLocNor = glGetAttribLocation( shader, "normal" );
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[Vertex]);
+		glEnableVertexAttribArray(nAttLocPos);
+		glVertexAttribPointer(nAttLocPos, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[Normal]);
+		glEnableVertexAttribArray(nAttLocNor);
+		glVertexAttribPointer(nAttLocNor, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
 	}
 
 	void Draw() {
@@ -565,7 +562,12 @@ struct Mesh {
 	}
 
 	void Unbind() {
+		GLuint nAttLocPos = glGetAttribLocation( shader, "position" );
+		GLuint nAttLocNor = glGetAttribLocation( shader, "normal" );
 		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glDisableVertexAttribArray(nAttLocNor);
+		glDisableVertexAttribArray(nAttLocPos);
 	}
 
 };
@@ -604,10 +606,15 @@ struct Texture3D {
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
 		glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA32F, rect, rect, rect, 0, GL_RGBA, GL_FLOAT, src);
+		glBindTexture(GL_TEXTURE_3D, 0);
 	}
 	
 	void Bind() {
 		glBindTexture(GL_TEXTURE_3D, tex3d);
+	}
+	
+	void Unbind() {
+		glBindTexture(GL_TEXTURE_3D, 0);
 	}
 };
 
@@ -690,14 +697,22 @@ struct RenderTarget {
 		Width  = w;
 		Height = h;
 		Sample = ms;
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindRenderBuffer(GL_RENDERBUFFER, 0);
 	}
 
-  void SetTexture() {
-  	//glActiveTexture(GL_TEXTURE0);
+	void SetTexture() {
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, rttex);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
+	
+	void UnsetTexture() {
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
 
+	
 	void Begin() {
 		glBindFramebuffer(GL_FRAMEBUFFER, rto);
 	}
@@ -705,10 +720,13 @@ struct RenderTarget {
 	void End() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
+
 	void Resolve(int w, int h) {
 		glBindFramebuffer( GL_READ_FRAMEBUFFER, rto);
 		glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0);
 		glBlitFramebuffer(0, 0, Width, Height, 0, 0, w, h, GL_COLOR_BUFFER_BIT, GL_LINEAR );
+		glBindFramebuffer( GL_READ_FRAMEBUFFER, 0);
+		glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0);
 	}
 };
 

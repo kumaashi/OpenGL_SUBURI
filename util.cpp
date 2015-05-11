@@ -37,6 +37,7 @@ PFNGLTRANSFORMFEEDBACKVARYINGSPROC      glTransformFeedbackVaryings = NULL;
 PFNGLBEGINTRANSFORMFEEDBACKPROC         glBeginTransformFeedback    = NULL;
 PFNGLENDTRANSFORMFEEDBACKPROC           glEndTransformFeedback      = NULL;
 PFNGLENABLEVERTEXATTRIBARRAYPROC        glEnableVertexAttribArray   = NULL;
+PFNGLDISABLEVERTEXATTRIBARRAYPROC       glDisableVertexAttribArray  = NULL;
 PFNGLVERTEXATTRIBPOINTERPROC            glVertexAttribPointer       = NULL;
 PFNGLGETSHADERINFOLOGPROC               glGetShaderInfoLog          = NULL;
 PFNGLTEXIMAGE3DPROC                     glTexImage3D                = NULL;
@@ -86,6 +87,7 @@ void glInitFunc() {
 	glBeginTransformFeedback    = (PFNGLBEGINTRANSFORMFEEDBACKPROC    )wglGetProcAddress("glBeginTransformFeedback");
 	glEndTransformFeedback      = (PFNGLENDTRANSFORMFEEDBACKPROC      )wglGetProcAddress("glEndTransformFeedback");
 	glEnableVertexAttribArray   = (PFNGLENABLEVERTEXATTRIBARRAYPROC   )wglGetProcAddress("glEnableVertexAttribArray");
+	glDisableVertexAttribArray  = (PFNGLDISABLEVERTEXATTRIBARRAYPROC  )wglGetProcAddress("glDisableVertexAttribArray");;
 	glVertexAttribPointer       = (PFNGLVERTEXATTRIBPOINTERPROC       )wglGetProcAddress("glVertexAttribPointer");
 	glGetShaderInfoLog          = (PFNGLGETSHADERINFOLOGPROC          )wglGetProcAddress("glGetShaderInfoLog");
 	glTexImage3D                = (PFNGLTEXIMAGE3DPROC                )wglGetProcAddress("glTexImage3D");
@@ -137,6 +139,7 @@ void glInitFunc() {
 	printf("glBeginTransformFeedback    =%08X\n", glBeginTransformFeedback    );
 	printf("glEndTransformFeedback      =%08X\n", glEndTransformFeedback      );
 	printf("glEnableVertexAttribArray   =%08X\n", glEnableVertexAttribArray   );
+	printf("glDisableVertexAttribArray  =%08X\n", glDisableVertexAttribArray   );
 	printf("glVertexAttribPointer       =%08X\n", glVertexAttribPointer       );
 	printf("glGetShaderInfoLog          =%08X\n", glGetShaderInfoLog          );
 	printf("glTexImage3D                =%08X\n", glTexImage3D                );

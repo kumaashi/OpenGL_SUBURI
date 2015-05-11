@@ -58,7 +58,7 @@ void main() {
 
 	vec3  L      = normalize(vec3(1, 2, 3));
 	float D      = max(0.0, dot(col.xyz, L));
-	float AO     = getao(uv);// * D;
+	float AO     = getao(uv) * D;
 	//float AO     = D;
 	gl_FragColor = vec4(AO);
 }
