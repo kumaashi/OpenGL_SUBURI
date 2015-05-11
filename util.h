@@ -21,8 +21,8 @@
 #pragma comment(lib, "user32.lib")
 #pragma comment(lib, "opengl32.lib")
 
-#define  DEFAULT_WIDTH   (320 * 3)
-#define  DEFAULT_HEIGHT  (240 * 2)
+#define  DEFAULT_WIDTH   (320 * 4)
+#define  DEFAULT_HEIGHT  (240 * 3)
 
 //--------------------------------------------------------------------------------------
 // OpenGL Function

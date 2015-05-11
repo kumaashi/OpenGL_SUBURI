@@ -6,14 +6,14 @@ uniform vec4        info;
 uniform vec4        info2;
 uniform sampler2D   tex;
 #define AO_REP      1
-#define SAMPLES     5
+#define SAMPLES     32
 #define PI          3.14159265358979323846
 #define ADSAMPLES   ((2 * PI) / SAMPLES)
 #define EPS         0.50
 #define MPS         0.03
 #define STRONG      9.2
 #define RADIUS      0.003
-#define RADIUS_MULT 1.05
+#define RADIUS_MULT 1.0001
 
 float GetDepth(float d) {
 	float zNear = info.z;
@@ -38,10 +38,10 @@ float getao(vec2 uv) {
 			vec4  tex  = texture2D(tex, uv + duv);
 			float temp = 1.0 - GetDepth(tex.w) / depth;
 			if(abs(temp) > 0.05) continue;
-			g -= clamp(temp, 0.0, 1.0 / SAMPLES / AO_REP) * mult;
+			g -= clamp(temp, 0.0, (1.0 / SAMPLES / AO_REP)) * mult;
 			radius *= RADIUS_MULT;
 		}
-		mult *= 0.5;
+		mult *= 0.7;
 	}
 	return pow(g, STRONG);
 }
@@ -58,7 +58,7 @@ void main() {
 
 	vec3  L      = normalize(vec3(1, 2, 3));
 	float D      = max(0.0, dot(col.xyz, L));
-	float AO     = getao(uv) * D;
+	float AO     = getao(uv);// * D;
 	//float AO     = D;
 	gl_FragColor = vec4(AO);
 }
