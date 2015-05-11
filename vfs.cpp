@@ -1,4 +1,4 @@
-#version 130
+//#version 130
 
 uniform vec4 info;
 uniform mat4 proj;
@@ -11,5 +11,4 @@ void main() {
 	//gl_FragColor = vec4(gColor);
 	gl_FragData[0] = vec4(gColor);
 }
-
 
