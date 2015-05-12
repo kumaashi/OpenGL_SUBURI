@@ -148,15 +148,18 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 	camera.SetScreen(Width, Height);
 	camera.SetView(pos, at, up);
 	camera.SetProj(fFov, zNear, zFar);
-	static float g_time = 0;
-	
 	
 	printf("======================\n");
 	printf("Press Key 1, 2, and A!\n");
 	printf("======================\n");
 	
-	
+	static float g_time = 0;
 	while(ProcMsg()) {
+		show_fps();
+		static unsigned long start = timeGetTime();
+		unsigned long delta = timeGetTime() - start;
+		float dtime = float(delta) / 1000.0f;
+		start = timeGetTime();
 		if(GetAsyncKeyState(VK_F5) & 0x8000) {
 			shader      = glLoadShader("vvs.cpp", "vfs.cpp");
 			shader_rect = glLoadShader("vrect.cpp", "frect.cpp");
@@ -166,7 +169,8 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		float info2[4] = {Width, Height, g_time, g_time};
 		
 		float r = 30;
-		float speed = 0.005;
+		float speed = 0.3 * dtime;
+		printf("%5.6f\r", dtime);
 
 		if(GetAsyncKeyState('1') & 0x8000) {
 			vec pos (r, r, -r);
@@ -205,11 +209,13 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			mesh.Bind();
 			srand(0);
 			float begin  = 50;
-			float margin = 2.0;
+			float margin = 2.2;
+			static float ugoki = 0.0;
+			ugoki += dtime;
 			for(float z = -begin ; z < begin; z += margin) {
 				for(float x = -begin ; x < begin; x += margin) {
 					world.Ident();
-					world.Trans(x, sin(3.0 * x + z + x * z + g_time * 3.2) * 0.5, z);
+					world.Trans(x, sin(3.0 * x + z + x * z + ugoki * 3.2) * 0.5, z);
 					glUniformMatrix4fv(loc, 1, GL_FALSE, (float *)&world);
 					mesh.Draw();
 				}
@@ -221,8 +227,6 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 
 		{
 			rtd.Begin();
-			//glClearColor(0.55, 0.25, 0.5, 1);
-			//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glViewport(0, 0, rt.Width, rt.Height);
 			glDisable(GL_DEPTH_TEST);
 			glUseProgram(shader_rect);
@@ -239,13 +243,8 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		//blit
 		glViewport(0, 0, Width, Height);
 		rtd.Resolve(Width, Height);
-		//wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
-		SwapBuffers(hdc);
+		wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
 		g_time += 0.0166666666666666666666666666666666666;
-		
-		
-		//
-		show_fps();
 	}
 }
 
