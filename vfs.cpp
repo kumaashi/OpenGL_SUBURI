@@ -8,7 +8,6 @@ varying vec4 cColor;
 varying vec4 gColor;
 
 void main() {
-	//gl_FragColor = vec4(gColor);
-	gl_FragData[0] = vec4(gColor);
+	gl_FragColor = vec4(gColor);
 }
 

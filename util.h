@@ -404,10 +404,11 @@ struct File {
 			fseek(fp, 0, SEEK_SET);
 			buf.resize(size);
 			memset(&buf[0], 0, buf.size());
-			printf("DEBUG : size = %d, %d\n", size, buf.size());
+			printf("DEBUG : %s -> size = %d, %d\n", name, size, buf.size());
 			fread(&buf[0], 1, size, fp);
 			fclose(fp);
 			
+			/*
 			int ccc = size;
 			for(int i = 0 ; i < ccc; i++) {
 				int c = buf[i];
@@ -421,6 +422,7 @@ struct File {
 					printf(".", c);
 				}
 			}
+			*/
 
 			ret = 0;
 		}
@@ -646,18 +648,24 @@ struct Texture3D {
 // RenderTarget
 //------------------------------------------------------------------------------------------
 struct RenderTarget {
-	GLuint rto;
+	GLuint fbo;
+	GLuint fbo2;
 	GLuint rttex;
-	GLuint rtdo;
+	GLuint rttex2;
+	GLuint rbo;
 	int Width, Height, Sample;
 	
-	void Create(int w, int h, int ms = 2) {
-		printf("%s : Width=%d, Height=%d\n", __FUNCTION__, w, h);
-		glGenFramebuffers(1, &rto);
+	
+	void Create(int w, int h, int ms = 8) {
+		int status = 0;
+		printf("%s: Width=%d, Height=%d, Ms=%d\n", __FUNCTION__, w, h, ms);
+		
+		/*
+		glGenFramebuffers(1, &fbo);
 		glGenTextures(1, &rttex);
-		glGenRenderBuffers(1, &rtdo);
+		glGenRenderBuffers(1, &rbo);
 	  
-		glBindFramebuffer(GL_FRAMEBUFFER, rto);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		glBindTexture(GL_TEXTURE_2D, rttex);
 		
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, w, h, 0, GL_RGBA, GL_FLOAT, 0);       //(^o^)
@@ -667,40 +675,13 @@ struct RenderTarget {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);                     //depr
-		glBindRenderBuffer(GL_RENDERBUFFER, rtdo);
+		glBindRenderBuffer(GL_RENDERBUFFER, rbo);
 		glRenderBufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, w, h);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rtdo);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
 		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, rttex, 0);
 		GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
 		glDrawBuffers(1, DrawBuffers);
 		int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-		
-		/*
-		printf("%s: Width=%d, Height=%d, Ms=%d\n", __FUNCTION__, w, h, ms);
-		glGenFramebuffers(1, &rto);
-		glGenTextures(1, &rttex);
-		glGenRenderBuffers(1, &rtdo);
-	  
-		glBindFramebuffer(GL_FRAMEBUFFER, rto);
-		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, rttex);
-		//glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, ms, GL_RGBA8, w, h, GL_FALSE);
-		//glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, ms, GL_R32F, w, h, GL_FALSE);
-		//glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, ms, GL_RGBA32F, w, h, GL_FALSE);
-		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, ms, GL_RGBA16F, w, h, GL_FALSE);
-		printf("%s : Line:%04d : glGetError=%08X\n", __FUNCTION__, __LINE__, glGetError());
-		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);                     //depr
-		glBindRenderBuffer(GL_RENDERBUFFER, rtdo);
-		glRenderbufferStorageMultisample(GL_RENDERBUFFER, ms, GL_DEPTH_COMPONENT32, w, h);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rtdo);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, rttex, 0);
-		//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, rttex, 0);
-		//glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, rttex, 0);
-		printf("%s : Line:%04d : glGetError=%08X\n", __FUNCTION__, __LINE__, glGetError());
-		GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
-		glDrawBuffers(1, DrawBuffers);
-		int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-		*/
-		
 		printf("GL_NO_ERROR                                  =%08X\n", GL_NO_ERROR                     );
 		printf("GL_INVALID_ENUM                              =%08X\n", GL_INVALID_ENUM                 );
 		printf("GL_INVALID_VALUE                             =%08X\n", GL_INVALID_VALUE                );
@@ -715,19 +696,70 @@ struct RenderTarget {
 		if(status != GL_FRAMEBUFFER_COMPLETE ) {
 			printf("Bind Failed : status=%08X\n", status);
 		} else {
-			printf("Bind OK : %d, %d\n", rttex, rtdo);
+			printf("Bind OK : %d, %d\n", rttex, rbo);
 		}
+		*/
+		
+		//1ST
+		glGenTextures(1, &rttex);
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, rttex);
+		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, ms, GL_RGBA32F, w, h, GL_TRUE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE);
+		printf("%s : Line:%04d : glGetError=%08X\n", __FUNCTION__, __LINE__, glGetError());
+		glBindTexture(GL_TEXTURE_2D, 0);
+		
+		glGenFramebuffers(1, &fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, rttex, 0);
+		
+		glGenRenderBuffers(1, &rbo);
+		glBindRenderBuffer(GL_RENDERBUFFER, rbo);
+		glRenderbufferStorageMultisample(GL_RENDERBUFFER, ms, GL_DEPTH_COMPONENT32, w, h);
+		glBindRenderBuffer(GL_RENDERBUFFER, 0);
+		printf("%s : Line:%04d : glGetError=%08X\n", __FUNCTION__, __LINE__, glGetError());
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
+		if((status = glCheckFramebufferStatus(GL_FRAMEBUFFER)) != glCheckFramebufferStatus(GL_FRAMEBUFFER)) {
+			printf("Bind Failed : status=%08X\n", status);
+		} else {
+			printf("Bind OK : %d, %d\n", rttex, fbo);
+		}
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		//2ND
+		glGenTextures(1, &rttex2);
+		glBindTexture(GL_TEXTURE_2D, rttex2);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, w, h, 0, GL_RGBA, GL_FLOAT, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		printf("%s : Line:%04d : glGetError=%08X\n", __FUNCTION__, __LINE__, glGetError());
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glGenFramebuffers(1, &fbo2);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, rttex2, 0);
+		if( (status = glCheckFramebufferStatus(GL_FRAMEBUFFER)) != glCheckFramebufferStatus(GL_FRAMEBUFFER)) {
+			printf("Bind Failed : status=%08X\n", status);
+		} else {
+			printf("Bind OK : %d, %d\n", rttex2, fbo2);
+		}
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 		Width  = w;
 		Height = h;
 		Sample = ms;
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glBindRenderBuffer(GL_RENDERBUFFER, 0);
 	}
 
 	void SetTexture() {
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, rttex);
+		glBindTexture(GL_TEXTURE_2D, rttex2);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	
@@ -737,19 +769,29 @@ struct RenderTarget {
 
 	
 	void Begin() {
-		glBindFramebuffer(GL_FRAMEBUFFER, rto);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	}
 
 	void End() {
+		Resolve();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void Resolve(int w, int h) {
-		glBindFramebuffer( GL_READ_FRAMEBUFFER, rto);
+	void Resolve() {
+		glBindFramebuffer( GL_READ_FRAMEBUFFER, fbo);
+		glBindFramebuffer( GL_DRAW_FRAMEBUFFER, fbo2);
+		glBlitFramebuffer(0, 0, Width, Height, 0, 0, Width, Height, GL_COLOR_BUFFER_BIT, GL_LINEAR );
 		glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0);
-		glBlitFramebuffer(0, 0, Width, Height, 0, 0, w, h, GL_COLOR_BUFFER_BIT, GL_LINEAR );
 		glBindFramebuffer( GL_READ_FRAMEBUFFER, 0);
+	}
+
+	void DrawBack(int w, int h) {
+		glBindFramebuffer( GL_READ_FRAMEBUFFER, fbo2);
 		glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0);
+		glDrawBuffer(GL_BACK);
+		glBlitFramebuffer(0, 0, Width, Height, 0, 0, w, h, GL_COLOR_BUFFER_BIT, GL_LINEAR );
+		glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0);
+		glBindFramebuffer( GL_READ_FRAMEBUFFER, 0);
 	}
 };
 

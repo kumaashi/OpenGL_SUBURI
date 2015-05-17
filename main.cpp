@@ -117,21 +117,13 @@ void show_fps() {
 void StartMain(int argc, char *argv[], HDC hdc) {
 	GLuint shader      = glLoadShader("vvs.cpp",   "vfs.cpp");
 	GLuint shader_rect = glLoadShader("vrect.cpp", "frect.cpp");
-	
-	/*
-	*/
-	GLuint nAttLoc = glGetAttribLocation( shader, "position" );
-	printf("nAttLoc = %d\n", nAttLoc);
-	
 	Mesh         mesh;
-	Texture3D    tex;
 	RenderTarget rt;
-	RenderTarget rtd;
+	RenderTarget rtdisp;
 	Camera       camera;
 	
 	rt.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-	rtd.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-	tex.Create();
+	rtdisp.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
 	if(argc == 1) {
 		mesh.Load("cube.stl");
@@ -167,7 +159,6 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 
 		float info[4]  = {rt.Width, rt.Height, zNear, zFar};
 		float info2[4] = {Width, Height, g_time, g_time};
-		
 		float r = 30;
 		float speed = 0.3 * dtime;
 		printf("%5.6f\r", dtime);
@@ -191,6 +182,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		//Update
 		camera.Update();
 
+		glEnable( GL_MULTISAMPLE );
 		{
 			rt.Begin();
 			glViewport(0, 0, rt.Width, rt.Height);
@@ -198,7 +190,6 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glEnable(GL_DEPTH_TEST);
 			glUseProgram(shader);
-			tex.Bind();
 			glUniform4fv(glGetUniformLocation(shader, "info"), 1, info);
 			glUniform4fv(glGetUniformLocation(shader, "info2"), 1, info2);
 			glUniformMatrix4fv(glGetUniformLocation(shader, "view"),  1, GL_FALSE, camera.GetView());
@@ -221,12 +212,11 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 				}
 			}
 			mesh.Unbind();
-			tex.Unbind();
 			rt.End();
 		}
 
 		{
-			rtd.Begin();
+			rtdisp.Begin();
 			glViewport(0, 0, rt.Width, rt.Height);
 			glDisable(GL_DEPTH_TEST);
 			glUseProgram(shader_rect);
@@ -237,12 +227,12 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			glRects(-1, -1, 1, 1);
 			rt.UnsetTexture();
 			glEnable(GL_DEPTH_TEST);
-			rtd.End();
+			rtdisp.End();
 		}
 		
 		//blit
 		glViewport(0, 0, Width, Height);
-		rtd.Resolve(Width, Height);
+		rtdisp.DrawBack(Width, Height);
 		wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
 		g_time += 0.0166666666666666666666666666666666666;
 	}
