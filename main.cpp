@@ -117,6 +117,7 @@ void show_fps() {
 void StartMain(int argc, char *argv[], HDC hdc) {
 	GLuint shader      = glLoadShader("vvs.cpp",   "vfs.cpp");
 	GLuint shader_rect = glLoadShader("vrect.cpp", "frect.cpp");
+	GLuint shader_blit = glLoadShader("vblit.cpp", "fblit.cpp");
 	Mesh         mesh;
 	RenderTarget rt;
 	RenderTarget rtdisp;
@@ -155,6 +156,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		if(GetAsyncKeyState(VK_F5) & 0x8000) {
 			shader      = glLoadShader("vvs.cpp", "vfs.cpp");
 			shader_rect = glLoadShader("vrect.cpp", "frect.cpp");
+			shader_blit = glLoadShader("vblit.cpp", "fblit.cpp");
 		}
 
 		float info[4]  = {rt.Width, rt.Height, zNear, zFar};
@@ -216,23 +218,43 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		}
 
 		{
-			rtdisp.Begin();
-			glViewport(0, 0, rt.Width, rt.Height);
-			glDisable(GL_DEPTH_TEST);
-			glUseProgram(shader_rect);
-			rt.SetTexture();
-			glUniform1i(glGetUniformLocation(shader_rect,  "tex"), 0);
-			glUniform4fv(glGetUniformLocation(shader_rect, "info"), 1, info);
-			glUniform4fv(glGetUniformLocation(shader_rect, "info2"), 1, info2);
-			glRects(-1, -1, 1, 1);
-			rt.UnsetTexture();
+			rtdisp.Begin(); GL_DEBUG;
+			glViewport(0, 0, rt.Width, rt.Height); GL_DEBUG;
+			glDisable(GL_DEPTH_TEST); GL_DEBUG;
+			glUseProgram(shader_rect); GL_DEBUG;
+			rt.SetTexture(); GL_DEBUG;
+			
+			
+			int loc;
+			loc = glGetUniformLocation(shader_rect,  "tex");
+			glUniform1i(loc, 0); GL_DEBUG;
+			loc = glGetUniformLocation(shader_rect, "info");
+			glUniform4fv(loc, 1, info); GL_DEBUG;
+			loc = glGetUniformLocation(shader_rect, "info2");
+			glUniform4fv(loc, 1, info2); GL_DEBUG;
+			glRects(-1, -1, 1, 1); GL_DEBUG;
+			rt.UnsetTexture(); GL_DEBUG;
 			glEnable(GL_DEPTH_TEST);
-			rtdisp.End();
+			rtdisp.End(); GL_DEBUG;
 		}
 		
 		//blit
-		glViewport(0, 0, Width, Height);
-		rtdisp.DrawBack(Width, Height);
+		{
+			glViewport(0, 0, Width, Height); GL_DEBUG;
+			glClearColor(0.25, 0.25, 0.5, 0); GL_DEBUG;
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); GL_DEBUG;
+			glBindFramebuffer(GL_FRAMEBUFFER, 0); GL_DEBUG;
+			glDisable(GL_DEPTH_TEST);GL_DEBUG;
+			glUseProgram(shader_blit);GL_DEBUG;
+			rtdisp.SetTexture();GL_DEBUG;
+			float info[4]  = {Width, Height, zNear, zFar};
+			glUniform1i(glGetUniformLocation(shader_blit,  "tex"), 0);GL_DEBUG;
+			glUniform4fv(glGetUniformLocation(shader_blit, "info"), 1, info);GL_DEBUG;
+			glUniform4fv(glGetUniformLocation(shader_blit, "info2"), 1, info2);GL_DEBUG;
+			glRects(-1, -1, 1, 1);GL_DEBUG;
+			rt.UnsetTexture();GL_DEBUG;
+			glEnable(GL_DEPTH_TEST);GL_DEBUG;
+		}
 		wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
 		g_time += 0.0166666666666666666666666666666666666;
 	}

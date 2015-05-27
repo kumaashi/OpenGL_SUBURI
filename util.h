@@ -24,6 +24,9 @@
 #define  DEFAULT_WIDTH   (320 * 4)
 #define  DEFAULT_HEIGHT  (240 * 3)
 
+//#define GL_DEBUG  printf("%s:%08d : glErr:%08X\n", __FUNCTION__, __LINE__, glGetError())
+#define GL_DEBUG  (void *)0
+
 //--------------------------------------------------------------------------------------
 // OpenGL Function
 //--------------------------------------------------------------------------------------
@@ -656,56 +659,19 @@ struct RenderTarget {
 	int Width, Height, Sample;
 	
 	
-	void Create(int w, int h, int ms = 8) {
+	void Create(int w, int h, int ms = 2) {
 		int status = 0;
 		printf("%s: Width=%d, Height=%d, Ms=%d\n", __FUNCTION__, w, h, ms);
-		
-		/*
-		glGenFramebuffers(1, &fbo);
-		glGenTextures(1, &rttex);
-		glGenRenderBuffers(1, &rbo);
-	  
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glBindTexture(GL_TEXTURE_2D, rttex);
-		
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, w, h, 0, GL_RGBA, GL_FLOAT, 0);       //(^o^)
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);  //more?
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);  //more?
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);                     //depr
-		glBindRenderBuffer(GL_RENDERBUFFER, rbo);
-		glRenderBufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, w, h);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, rttex, 0);
-		GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
-		glDrawBuffers(1, DrawBuffers);
-		int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-		printf("GL_NO_ERROR                                  =%08X\n", GL_NO_ERROR                     );
-		printf("GL_INVALID_ENUM                              =%08X\n", GL_INVALID_ENUM                 );
-		printf("GL_INVALID_VALUE                             =%08X\n", GL_INVALID_VALUE                );
-		printf("GL_INVALID_OPERATION                         =%08X\n", GL_INVALID_OPERATION            );
-		printf("GL_INVALID_FRAMEBUFFER_OPERATION             =%08X\n", GL_INVALID_FRAMEBUFFER_OPERATION);
-		printf("GL_OUT_OF_MEMORY                             =%08X\n", GL_OUT_OF_MEMORY                );
-		printf("GL_FRAMEBUFFER_COMPLETE                      =%08X\n",  GL_FRAMEBUFFER_COMPLETE        );
-		printf("GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT         =%08X\n",  GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT        );
-		printf("GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT =%08X\n",  GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT);
-		printf("GL_FRAMEBUFFER_UNSUPPORTED                   =%08X\n",  GL_FRAMEBUFFER_UNSUPPORTED                  );
-		
-		if(status != GL_FRAMEBUFFER_COMPLETE ) {
-			printf("Bind Failed : status=%08X\n", status);
-		} else {
-			printf("Bind OK : %d, %d\n", rttex, rbo);
-		}
-		*/
 		
 		//1ST
 		glGenTextures(1, &rttex);
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, rttex);
 		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, ms, GL_RGBA32F, w, h, GL_TRUE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+		
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
@@ -734,8 +700,10 @@ struct RenderTarget {
 		glGenTextures(1, &rttex2);
 		glBindTexture(GL_TEXTURE_2D, rttex2);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, w, h, 0, GL_RGBA, GL_FLOAT, 0);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
@@ -777,20 +745,11 @@ struct RenderTarget {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
+
 	void Resolve() {
 		glBindFramebuffer( GL_READ_FRAMEBUFFER, fbo);
 		glBindFramebuffer( GL_DRAW_FRAMEBUFFER, fbo2);
-		glBlitFramebuffer(0, 0, Width, Height, 0, 0, Width, Height, GL_COLOR_BUFFER_BIT, GL_LINEAR );
-		glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0);
-		glBindFramebuffer( GL_READ_FRAMEBUFFER, 0);
-	}
-
-	void DrawBack(int w, int h) {
-		glBindFramebuffer( GL_READ_FRAMEBUFFER, fbo2);
-		glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0);
-		glDrawBuffer(GL_BACK);
-		//glBlitFramebuffer(0, 0, Width, Height, 0, 0, w, h, GL_COLOR_BUFFER_BIT, GL_LINEAR );
-		glBlitFramebuffer(0, 0, Width, Height, 0, 0, Width, Height, GL_COLOR_BUFFER_BIT, GL_LINEAR );
+		glBlitFramebuffer(0, 0, Width, Height, 0, 0, Width, Height, GL_COLOR_BUFFER_BIT, GL_NEAREST );
 		glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0);
 		glBindFramebuffer( GL_READ_FRAMEBUFFER, 0);
 	}

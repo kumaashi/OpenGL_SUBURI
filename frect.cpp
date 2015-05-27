@@ -5,11 +5,11 @@ precision mediump float;
 uniform vec4        info;
 uniform vec4        info2;
 uniform sampler2D   tex;
-#define AO_REP      4
+#define AO_REP      8
 #define SAMPLES     8
 #define PI          3.14159265358979323846
 #define ADSAMPLES   ((2 * PI) / SAMPLES)
-#define RADIUS      0.003
+#define RADIUS      0.001
 #define RADIUS_MULT 1.03
 #define STRONG      1
 
@@ -37,7 +37,7 @@ float getao(vec2 uv) {
 			g -= clamp(temp, 0.0, (1.0 / SAMPLES / AO_REP)) * mult;
 			radius *= RADIUS_MULT;
 		}
-		mult   *= 0.9;
+		mult   *= 0.9999;
 	}
 	return pow(g, STRONG);
 }
