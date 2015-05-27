@@ -789,7 +789,8 @@ struct RenderTarget {
 		glBindFramebuffer( GL_READ_FRAMEBUFFER, fbo2);
 		glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0);
 		glDrawBuffer(GL_BACK);
-		glBlitFramebuffer(0, 0, Width, Height, 0, 0, w, h, GL_COLOR_BUFFER_BIT, GL_LINEAR );
+		//glBlitFramebuffer(0, 0, Width, Height, 0, 0, w, h, GL_COLOR_BUFFER_BIT, GL_LINEAR );
+		glBlitFramebuffer(0, 0, Width, Height, 0, 0, Width, Height, GL_COLOR_BUFFER_BIT, GL_LINEAR );
 		glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0);
 		glBindFramebuffer( GL_READ_FRAMEBUFFER, 0);
 	}
