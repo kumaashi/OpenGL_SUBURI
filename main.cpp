@@ -29,91 +29,6 @@ struct Data {
 	}
 };
 
-
-//--------------------------------------------------------------------------------------
-// Scene
-//--------------------------------------------------------------------------------------
-struct DataPool {
-
-	std::vector<Data> vdata;
-	Data dummy;
-	int dataindex;
-	int datamax;
-	void Init(int m) {
-		vdata.resize(m);
-		dataindex = 0;
-		datamax = m;
-	}
-
-	Data *Get(int type) {
-		Data *w = &vdata[dataindex++];
-		if(w->IsNone()) return w;
-		for(int i = 0 ; i < datamax; i++) {
-			w = &vdata[i];
-			if(w->IsNone()) return w;
-		}
-		printf("Scene return dummy[BUG]\n");
-		return &dummy;
-	}
-};
-
-//--------------------------------------------------------------------------------------
-// Scene
-//--------------------------------------------------------------------------------------
-bool data_sort(const Data *l, const Data *r) {
-	return l->type < r->type;
-}
-
-struct Scene {
-	std::vector<Data *> vData;
-	void Render() {
-		Matrix *view = NULL;
-		Matrix *proj = NULL;
-		
-		std::sort(vData.begin(), vData.end(), data_sort);
-		auto ite  = vData.begin();
-		auto eite = vData.end();
-		while(ite != eite) {
-			/*
-			if((*ite)->type == Data::TYPE_CAMERA) {
-				view = (*ite)->camera.GetView();
-				proj = (*ite)->camera.GetProj();
-				continue;
-			}
-			*/
-			/*
-			glUniformMatrix4fv(glGetUniformLocation(program, "view"),	1, GL_FALSE, &view);
-			glUniformMatrix4fv(glGetUniformLocation(program, "proj"),	1, GL_FALSE, &proj);
-			*/
-		}
-	}
-
-  void Update() {
-    //update per data
-  }
-};
-
-
-//fps : http://www.t-pot.com/program/13_fps/index.html
-void show_fps() {
-	static DWORD    last = timeGetTime();
-	static DWORD    frames = 0;
-	static char     buf[256] = "";
-	DWORD           current;
-	current = timeGetTime();
-	frames++;
-	if(1000 <= current - last) {
-		float dt = (float)(current - last) / 1000.0f;
-		float fps = (float)frames / dt;
-		last = current;
-		frames = 0;
-		sprintf(buf, "%.02f fps", fps);
-		printf("%s\n", buf);
-	}
-}
-
-
-
 void StartMain(int argc, char *argv[], HDC hdc) {
 	GLuint shader      = glLoadShader("vvs.cpp",   "vfs.cpp");
 	GLuint shader_rect = glLoadShader("vrect.cpp", "frect.cpp");
@@ -218,42 +133,42 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		}
 
 		{
-			rtdisp.Begin(); GL_DEBUG;
-			glViewport(0, 0, rt.Width, rt.Height); GL_DEBUG;
-			glDisable(GL_DEPTH_TEST); GL_DEBUG;
-			glUseProgram(shader_rect); GL_DEBUG;
-			rt.SetTexture(); GL_DEBUG;
+			rtdisp.Begin(); GL_DEBUG1;
+			glViewport(0, 0, rt.Width, rt.Height); GL_DEBUG1;
+			glDisable(GL_DEPTH_TEST); GL_DEBUG1;
+			glUseProgram(shader_rect); GL_DEBUG1;
+			rt.SetTexture(); GL_DEBUG1;
 			
 			
 			int loc;
 			loc = glGetUniformLocation(shader_rect,  "tex");
-			glUniform1i(loc, 0); GL_DEBUG;
+			glUniform1i(loc, 0); GL_DEBUG1;
 			loc = glGetUniformLocation(shader_rect, "info");
-			glUniform4fv(loc, 1, info); GL_DEBUG;
+			glUniform4fv(loc, 1, info); GL_DEBUG1;
 			loc = glGetUniformLocation(shader_rect, "info2");
-			glUniform4fv(loc, 1, info2); GL_DEBUG;
-			glRects(-1, -1, 1, 1); GL_DEBUG;
-			rt.UnsetTexture(); GL_DEBUG;
+			glUniform4fv(loc, 1, info2); GL_DEBUG1;
+			glRects(-1, -1, 1, 1); GL_DEBUG1;
+			rt.UnsetTexture(); GL_DEBUG1;
 			glEnable(GL_DEPTH_TEST);
-			rtdisp.End(); GL_DEBUG;
+			rtdisp.End(); GL_DEBUG1;
 		}
 		
 		//blit
 		{
-			glViewport(0, 0, Width, Height); GL_DEBUG;
-			glClearColor(0.25, 0.25, 0.5, 0); GL_DEBUG;
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); GL_DEBUG;
-			glBindFramebuffer(GL_FRAMEBUFFER, 0); GL_DEBUG;
-			glDisable(GL_DEPTH_TEST);GL_DEBUG;
-			glUseProgram(shader_blit);GL_DEBUG;
-			rtdisp.SetTexture();GL_DEBUG;
+			glViewport(0, 0, Width, Height); GL_DEBUG1;
+			glClearColor(0.25, 0.25, 0.5, 0); GL_DEBUG1;
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); GL_DEBUG1;
+			glBindFramebuffer(GL_FRAMEBUFFER, 0); GL_DEBUG1;
+			glDisable(GL_DEPTH_TEST); GL_DEBUG1;
+			glUseProgram(shader_blit); GL_DEBUG1;
+			rtdisp.SetTexture(); GL_DEBUG1;
 			float info[4]  = {Width, Height, zNear, zFar};
-			glUniform1i(glGetUniformLocation(shader_blit,  "tex"), 0);GL_DEBUG;
-			glUniform4fv(glGetUniformLocation(shader_blit, "info"), 1, info);GL_DEBUG;
-			glUniform4fv(glGetUniformLocation(shader_blit, "info2"), 1, info2);GL_DEBUG;
-			glRects(-1, -1, 1, 1);GL_DEBUG;
-			rt.UnsetTexture();GL_DEBUG;
-			glEnable(GL_DEPTH_TEST);GL_DEBUG;
+			glUniform1i(glGetUniformLocation(shader_blit,  "tex"), 0); GL_DEBUG1;
+			glUniform4fv(glGetUniformLocation(shader_blit, "info"), 1, info); GL_DEBUG1;
+			glUniform4fv(glGetUniformLocation(shader_blit, "info2"), 1, info2); GL_DEBUG1;
+			glRects(-1, -1, 1, 1); GL_DEBUG1;
+			rt.UnsetTexture(); GL_DEBUG1;
+			glEnable(GL_DEPTH_TEST); GL_DEBUG1;
 		}
 		wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
 		g_time += 0.0166666666666666666666666666666666666;

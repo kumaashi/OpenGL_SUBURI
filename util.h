@@ -24,8 +24,12 @@
 #define  DEFAULT_WIDTH   (320 * 4)
 #define  DEFAULT_HEIGHT  (240 * 3)
 
-//#define GL_DEBUG  printf("%s:%08d : glErr:%08X\n", __FUNCTION__, __LINE__, glGetError())
-#define GL_DEBUG  (void *)0
+//#define GL_DEBUG1  printf("%s:%08d : glErr:%08X\n", __FUNCTION__, __LINE__, glGetError())
+//#define GL_DEBUG2  printf("%s:%08d : glErr:%08X\n", __FUNCTION__, __LINE__, glGetError())
+//#define GL_DEBUG3  printf("%s:%08d : glErr:%08X\n", __FUNCTION__, __LINE__, glGetError())
+#define GL_DEBUG1  (void *)0
+#define GL_DEBUG2  (void *)0
+#define GL_DEBUG3  (void *)0
 
 //--------------------------------------------------------------------------------------
 // OpenGL Function
@@ -628,21 +632,21 @@ struct Texture3D {
 		}
 		glGenTextures(1, &tex3d);
 		glBindTexture(GL_TEXTURE_3D, tex3d);
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
-		glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA32F, rect, rect, rect, 0, GL_RGBA, GL_FLOAT, src);
-		glBindTexture(GL_TEXTURE_3D, 0);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); GL_DEBUG1;
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); GL_DEBUG1;
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT); GL_DEBUG1;
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT); GL_DEBUG1;
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT); GL_DEBUG1;
+		glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA32F, rect, rect, rect, 0, GL_RGBA, GL_FLOAT, src); GL_DEBUG1;
+		glBindTexture(GL_TEXTURE_3D, 0); GL_DEBUG1;
 	}
 	
 	void Bind() {
-		glBindTexture(GL_TEXTURE_3D, tex3d);
+		glBindTexture(GL_TEXTURE_3D, tex3d); GL_DEBUG1;
 	}
 	
 	void Unbind() {
-		glBindTexture(GL_TEXTURE_3D, 0);
+		glBindTexture(GL_TEXTURE_3D, 0); GL_DEBUG1;
 	}
 };
 
@@ -658,37 +662,35 @@ struct RenderTarget {
 	GLuint rbo;
 	int Width, Height, Sample;
 	
-	
-	void Create(int w, int h, int ms = 2) {
+	void Create(int w, int h, int ms = 8) {
 		int status = 0;
 		printf("%s: Width=%d, Height=%d, Ms=%d\n", __FUNCTION__, w, h, ms);
 		
 		//1ST
-		glGenTextures(1, &rttex);
-		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, rttex);
-		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, ms, GL_RGBA32F, w, h, GL_TRUE);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+		glGenTextures(1, &rttex); GL_DEBUG1;
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, rttex); GL_DEBUG1;
+		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, ms, GL_RGBA32F, w, h, GL_TRUE); GL_DEBUG1;
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR); GL_DEBUG1;
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); GL_DEBUG1;
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST); GL_DEBUG1;
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST); GL_DEBUG1;
 		
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE);
-		printf("%s : Line:%04d : glGetError=%08X\n", __FUNCTION__, __LINE__, glGetError());
-		glBindTexture(GL_TEXTURE_2D, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); GL_DEBUG1;
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); GL_DEBUG1;
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE); GL_DEBUG1;
+		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE); GL_DEBUG1;
 		
-		glGenFramebuffers(1, &fbo);
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, rttex, 0);
+		glBindTexture(GL_TEXTURE_2D, 0); GL_DEBUG1;
 		
-		glGenRenderBuffers(1, &rbo);
-		glBindRenderBuffer(GL_RENDERBUFFER, rbo);
-		glRenderbufferStorageMultisample(GL_RENDERBUFFER, ms, GL_DEPTH_COMPONENT32, w, h);
-		glBindRenderBuffer(GL_RENDERBUFFER, 0);
-		printf("%s : Line:%04d : glGetError=%08X\n", __FUNCTION__, __LINE__, glGetError());
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
+		glGenFramebuffers(1, &fbo); GL_DEBUG1;
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo); GL_DEBUG1;
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, rttex, 0); GL_DEBUG1;
+		
+		glGenRenderBuffers(1, &rbo); GL_DEBUG1;
+		glBindRenderBuffer(GL_RENDERBUFFER, rbo); GL_DEBUG1;
+		glRenderbufferStorageMultisample(GL_RENDERBUFFER, ms, GL_DEPTH_COMPONENT32, w, h); GL_DEBUG1;
+		glBindRenderBuffer(GL_RENDERBUFFER, 0); GL_DEBUG1;
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo); GL_DEBUG1;
 		if((status = glCheckFramebufferStatus(GL_FRAMEBUFFER)) != glCheckFramebufferStatus(GL_FRAMEBUFFER)) {
 			printf("Bind Failed : status=%08X\n", status);
 		} else {
@@ -697,28 +699,27 @@ struct RenderTarget {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		//2ND
-		glGenTextures(1, &rttex2);
-		glBindTexture(GL_TEXTURE_2D, rttex2);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, w, h, 0, GL_RGBA, GL_FLOAT, 0);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		printf("%s : Line:%04d : glGetError=%08X\n", __FUNCTION__, __LINE__, glGetError());
-		glBindTexture(GL_TEXTURE_2D, 0);
+		glGenTextures(1, &rttex2); GL_DEBUG1;
+		glBindTexture(GL_TEXTURE_2D, rttex2); GL_DEBUG1;
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, w, h, 0, GL_RGBA, GL_FLOAT, 0); GL_DEBUG1;
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR); GL_DEBUG1;
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); GL_DEBUG1;
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST); GL_DEBUG1;
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST); GL_DEBUG1;
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); GL_DEBUG1;
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); GL_DEBUG1;
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE); GL_DEBUG1;
+		glBindTexture(GL_TEXTURE_2D, 0); GL_DEBUG1;
 
-		glGenFramebuffers(1, &fbo2);
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, rttex2, 0);
+		glGenFramebuffers(1, &fbo2); GL_DEBUG1;
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo2); GL_DEBUG1;
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, rttex2, 0); GL_DEBUG1;
 		if( (status = glCheckFramebufferStatus(GL_FRAMEBUFFER)) != glCheckFramebufferStatus(GL_FRAMEBUFFER)) {
 			printf("Bind Failed : status=%08X\n", status);
 		} else {
 			printf("Bind OK : %d, %d\n", rttex2, fbo2);
 		}
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0); GL_DEBUG1;
 
 		Width  = w;
 		Height = h;
@@ -726,32 +727,31 @@ struct RenderTarget {
 	}
 
 	void SetTexture() {
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, rttex2);
-		glGenerateMipmap(GL_TEXTURE_2D);
+		glActiveTexture(GL_TEXTURE0); GL_DEBUG1;
+		glBindTexture(GL_TEXTURE_2D, rttex2); GL_DEBUG1;
+		glGenerateMipmap(GL_TEXTURE_2D); GL_DEBUG1;
 	}
 	
 	void UnsetTexture() {
-		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTexture(GL_TEXTURE_2D, 0); GL_DEBUG1;
 	}
 
 	
 	void Begin() {
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo); GL_DEBUG1;
 	}
 
 	void End() {
 		Resolve();
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0); GL_DEBUG1;
 	}
 
-
 	void Resolve() {
-		glBindFramebuffer( GL_READ_FRAMEBUFFER, fbo);
-		glBindFramebuffer( GL_DRAW_FRAMEBUFFER, fbo2);
-		glBlitFramebuffer(0, 0, Width, Height, 0, 0, Width, Height, GL_COLOR_BUFFER_BIT, GL_NEAREST );
-		glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0);
-		glBindFramebuffer( GL_READ_FRAMEBUFFER, 0);
+		glBindFramebuffer( GL_READ_FRAMEBUFFER, fbo); GL_DEBUG1;
+		glBindFramebuffer( GL_DRAW_FRAMEBUFFER, fbo2); GL_DEBUG1;
+		glBlitFramebuffer(0, 0, Width, Height, 0, 0, Width, Height, GL_COLOR_BUFFER_BIT, GL_NEAREST ); GL_DEBUG1;
+		glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0); GL_DEBUG1;
+		glBindFramebuffer( GL_READ_FRAMEBUFFER, 0); GL_DEBUG1;
 	}
 };
 
@@ -834,7 +834,9 @@ void glSetInterval(int isinterval);
 GLuint glLoadShader(const char *vsfile, const char *fsfile);
 int Init(int argc, char *argv[], void (*StartMain)(int argc, char *argv[], HDC hdc));
 BOOL ProcMsg();
+int random();
 float frand();
+void show_fps();
 
 
 #endif //_UTIL_H_

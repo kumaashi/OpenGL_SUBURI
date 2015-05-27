@@ -164,20 +164,6 @@ void glInitFunc() {
 	
 }
 
-
-int random() {
-	static int a = 1, b = 234567, c = 890123;
-	a += b;
-	b += c;
-	c += a;
-	return (a >> 16);
-}
-
-float frand() {
-	return float(random()) / float(0x7FFF);
-}
-
-
 //--------------------------------------------------------------------------------------
 // OpenGL Ex
 //--------------------------------------------------------------------------------------
@@ -239,6 +225,46 @@ GLuint glLoadShader(const char *vsfile, const char *fsfile) {
 	
 	return ret;
 }
+
+
+
+//--------------------------------------------------------------------------------------
+// MISC
+//--------------------------------------------------------------------------------------
+namespace {
+	static int a = 1, b = 234567, c = 890123;
+}
+
+int random() {
+	a += b;
+	b += c;
+	c += a;
+	return (a >> 16);
+}
+
+float frand() {
+	return float(random()) / float(0x7FFF);
+}
+
+
+//fps : http://www.t-pot.com/program/13_fps/index.html
+void show_fps() {
+	static DWORD    last = timeGetTime();
+	static DWORD    frames = 0;
+	static char     buf[256] = "";
+	DWORD           current;
+	current = timeGetTime();
+	frames++;
+	if(1000 <= current - last) {
+		float dt = (float)(current - last) / 1000.0f;
+		float fps = (float)frames / dt;
+		last = current;
+		frames = 0;
+		sprintf(buf, "%.02f fps", fps);
+		printf("%s\n", buf);
+	}
+}
+
 
 
 //--------------------------------------------------------------------------------------
@@ -324,4 +350,6 @@ int Init(int argc, char *argv[], void (*StartMain)(int argc, char *argv[], HDC h
 	
 	return 0;
 }
+
+
 
