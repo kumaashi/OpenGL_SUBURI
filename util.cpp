@@ -162,6 +162,9 @@ void glInitFunc() {
 	printf("glTexImage2DMultisample     =%08X\n", glTexImage2DMultisample     );
 	printf("glRenderbufferStorageMultisample    =%08X\n", glRenderbufferStorageMultisample);
 	
+
+	//after
+	glEnable( GL_MULTISAMPLE );
 }
 
 //--------------------------------------------------------------------------------------
@@ -325,7 +328,7 @@ int Init(int argc, char *argv[], void (*StartMain)(int argc, char *argv[], HDC h
 	DWORD styleex = WS_EX_APPWINDOW | (Windowed ? WS_EX_WINDOWEDGE : 0);
 	DWORD style	 = Windowed ? WS_OVERLAPPEDWINDOW : WS_POPUP;
 	HWND hWnd		 = CreateWindowEx(
-			styleex, appname, appname, style, 0, 0, Width * 1.0, Height * 1.0, NULL, NULL, wcex.hInstance, NULL);
+			styleex, appname, appname, style, 0, 0, Width * 1.5, Height * 1.5, NULL, NULL, wcex.hInstance, NULL);
 	ShowWindow(hWnd, SW_SHOW);
 	UpdateWindow(hWnd);
 	if(!Windowed) {

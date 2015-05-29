@@ -9,21 +9,26 @@
 #include <stdlib.h>
 #include <string>
 #include <windows.h>
+
+#include <gl/gl.h>
+#include <gl/glext.h>
+
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <string>
 #include <functional>
-#include <gl/gl.h>
-#include <gl/glext.h>
 
 #pragma comment(lib, "gdi32.lib")
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib, "user32.lib")
 #pragma comment(lib, "opengl32.lib")
 
-#define  DEFAULT_WIDTH   (320 * 4)
-#define  DEFAULT_HEIGHT  (240 * 3)
+#define  DEFAULT_WIDTH   (640)
+#define  DEFAULT_HEIGHT  (480)
 
+
+//
 //#define GL_DEBUG1  printf("%s:%08d : glErr:%08X\n", __FUNCTION__, __LINE__, glGetError())
 //#define GL_DEBUG2  printf("%s:%08d : glErr:%08X\n", __FUNCTION__, __LINE__, glGetError())
 //#define GL_DEBUG3  printf("%s:%08d : glErr:%08X\n", __FUNCTION__, __LINE__, glGetError())
@@ -670,8 +675,6 @@ struct RenderTarget {
 		glGenTextures(1, &rttex); GL_DEBUG1;
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, rttex); GL_DEBUG1;
 		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, ms, GL_RGBA32F, w, h, GL_TRUE); GL_DEBUG1;
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR); GL_DEBUG1;
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); GL_DEBUG1;
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST); GL_DEBUG1;
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST); GL_DEBUG1;
 		
@@ -702,8 +705,6 @@ struct RenderTarget {
 		glGenTextures(1, &rttex2); GL_DEBUG1;
 		glBindTexture(GL_TEXTURE_2D, rttex2); GL_DEBUG1;
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, w, h, 0, GL_RGBA, GL_FLOAT, 0); GL_DEBUG1;
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR); GL_DEBUG1;
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); GL_DEBUG1;
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST); GL_DEBUG1;
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST); GL_DEBUG1;
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); GL_DEBUG1;
@@ -768,7 +769,7 @@ struct Camera {
 	vec  PosEnd;
 	float  tt;
 	float dtt;
-  int Width, Height;
+	int Width, Height;
 	int state;
 	float ffov, fnear, ffar;
 
@@ -785,17 +786,9 @@ struct Camera {
 		Up  = u;
 	}
 
-	void SetProj(float fov, float fn, float ff) {
-		ffov = fov, fnear = fn, ffar = ff;
-	}
-
-	float *GetView() {
-		return (float *)&view;
-	}
-
-	float *GetProj() {
-		return (float *)&proj;
-	}
+	void SetProj(float fov, float fn, float ff) { ffov = fov, fnear = fn, ffar = ff; }
+	float *GetView() { return (float *)&view; }
+	float *GetProj() { return (float *)&proj; }
 
 	void SetTracking(vec &p, float dt, int ty = 0) {
 		Reset();
@@ -805,11 +798,7 @@ struct Camera {
 		state    = 1;
 	}
 	
-	void Reset() {
-		state = 0;
-		tt    = 0;
-	}
-	
+	void Reset() { state = 0; tt    = 0; }
 	void Update() {
 		view.LookAt(Pos, At, Up);
 		proj.Perspective(ffov, float(Width) / float(Height), fnear, ffar);
