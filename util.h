@@ -405,11 +405,16 @@ struct Matrix {
 struct File {
 	std::vector<unsigned char> buf;
 	int size;
+	bool Empty()
+	{
+		return size <= 0;
+	}
 	int Open(const char *name, const char *mode) {
 		int ret = -1;
+		size = -1;
+		if(!name) return ret;
 		FILE *fp = fopen(name, mode);
 		buf.clear();
-		size = -1;
 		if(fp) {
 			fseek(fp, 0, SEEK_END);
 			size = ftell(fp);
@@ -820,7 +825,7 @@ struct Camera {
 //--------------------------------------------------------------------------------------
 void glInitFunc();
 void glSetInterval(int isinterval);
-GLuint glLoadShader(const char *vsfile, const char *fsfile);
+GLuint glLoadShader(const char *vsfile, const char *, const char *fsfile);
 int Init(int argc, char *argv[], void (*StartMain)(int argc, char *argv[], HDC hdc));
 BOOL ProcMsg();
 int random();

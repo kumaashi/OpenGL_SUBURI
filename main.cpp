@@ -9,71 +9,74 @@
 // Data
 //--------------------------------------------------------------------------------------
 
-namespace Base { 
-	class Base {
-		int id;
-	public:
-		std::string name;
-		vec pos, rotate, scale, color;
-		Base() { id = 0; }
-		int GetId() { return id; }
-		int IsDeath() { return id <= 0; }
-		int SetId(int i) { return id = i; }
-		void Update() = 0;
-		void Render() = 0;
-	};
-	std::vector<Base *> vbase;
+namespace Base {
+class Base {
+public:
+	int id;
+	vec pos, rotate, scale, color;
+	Base() { id = 0; }
+	int GetId() { return id; }
+	int IsDeath() { return id <= 0; }
+	int SetId(int i) { return id = i; }
+	virtual void Update(){};
+	virtual void Render(){};
+};
+std::vector<Base *> vbase;
 
-	bool func_sort(Base *a, Base *b) { return a->GetId() < b->GetId(); }
+bool func_sort(Base *a, Base *b) { return a->GetId() < b->GetId(); }
 
 
-	void Update() {
-		std::sort(vbase.begin(), vbase.end(), func_sort);
-		auto it = vbase.begin();
-		auto ite = vbase.end();
-		while(it != ite) {
-			(*it)->Update();
-			it++;
-		}
-	}
-
-	void Render() {
-		std::sort(vbase.begin(), vbase.end(), func_sort);
-		auto it = vbase.begin();
-		auto ite = vbase.end();
-		while(it != ite) {
-			(*it)->Render();
-			it++;
-		}
-	}
-
-	void Gc() {
-		std::vector<Base *> vtemp;
-		auto it = vbase.begin();
-		auto ite = vbase.end();
-		while(it != ite) {
-			auto next = it + 1;
-			if(!(*it)->IsDeath()) {
-				vtemp.push_back(*it);
-			}
-			it = next;
-		}
-		vbase = vtemp;
-	}
-
-	void Add(int id, vec &p, vec &r, vec &s, vec &c) {
+void Update() {
+	std::sort(vbase.begin(), vbase.end(), func_sort);
+	auto it = vbase.begin();
+	auto ite = vbase.end();
+	while(it != ite) {
+		(*it)->Update();
+		it++;
 	}
 }
 
+void Render() {
+	std::sort(vbase.begin(), vbase.end(), func_sort);
+	auto it = vbase.begin();
+	auto ite = vbase.end();
+	while(it != ite) {
+		(*it)->Render();
+		it++;
+	}
+}
+
+void Gc() {
+	std::vector<Base *> vtemp;
+	auto it = vbase.begin();
+	auto ite = vbase.end();
+	while(it != ite) {
+		auto next = it + 1;
+		if(!(*it)->IsDeath()) {
+			vtemp.push_back(*it);
+		}
+		it = next;
+	}
+	vbase = vtemp;
+}
+
+void Add(int id, vec &p, vec &r, vec &s, vec &c) {
+}
+
+} //base
+
 void StartMain(int argc, char *argv[], HDC hdc) {
-	GLuint shader      = glLoadShader("vvs.cpp",   "vfs.cpp");
-	GLuint shader_rect = glLoadShader("vrect.cpp", "frect.cpp");
-	GLuint shader_blit = glLoadShader("vblit.cpp", "fblit.cpp");
+	GLuint shader      = glLoadShader("vvs.cpp",   "grect.cpp", "vfs.cpp");
+	printf("Create Render Target\n");
+	GLuint shader_rect = glLoadShader("vrect.cpp", NULL, "frect.cpp");
+	printf("Create Render Target\n");
+	GLuint shader_blit = glLoadShader("vblit.cpp", NULL, "fblit.cpp");
 	Mesh         mesh;
 	RenderTarget rt;
 	RenderTarget rtdisp;
 	Camera       camera;
 
+	printf("Create Render Target\n");
 	rt.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	rtdisp.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
@@ -82,10 +85,12 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 	} else {
 		mesh.Load(argv[1]);
 	}
+
 	vec pos (0,10,-10);
 	vec at  (0,0,0);
 	vec up  (0,1,0);
-	float fFov     = 120.0;
+
+	float fFov     = 60.0;
 	float zNear    = 0.01;
 	float zFar     = 2560;
 	camera.Reset();
@@ -105,9 +110,13 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		float dtime = float(delta) / 1000.0f;
 		start = timeGetTime();
 		if(GetAsyncKeyState(VK_F5) & 0x8000) {
-			shader      = glLoadShader("vvs.cpp", "vfs.cpp");
-			shader_rect = glLoadShader("vrect.cpp", "frect.cpp");
-			shader_blit = glLoadShader("vblit.cpp", "fblit.cpp");
+			//shader      = glLoadShader("vvs.cpp",   "grect.cpp", "vfs.cpp");
+			//shader_rect = glLoadShader("vrect.cpp", "grect.cpp", "frect.cpp");
+			//shader_blit = glLoadShader("vblit.cpp", "grect.cpp", "fblit.cpp");
+			shader      = glLoadShader("vvs.cpp",   "grect.cpp", "vfs.cpp");
+			shader_rect = glLoadShader("vrect.cpp", NULL, "frect.cpp");
+			shader_blit = glLoadShader("vblit.cpp", NULL, "fblit.cpp");
+			
 		}
 
 		float info[4]  = {rt.Width, rt.Height, zNear, zFar};
@@ -216,3 +225,4 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 int main(int argc, char *argv[]) {
 	return Init(argc, argv, StartMain);
 }
+

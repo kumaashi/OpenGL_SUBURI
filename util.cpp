@@ -180,50 +180,42 @@ void glSetInterval(int isinterval) {
 //--------------------------------------------------------------------------------------
 // glProgram Loader
 //--------------------------------------------------------------------------------------
-GLuint glLoadShader(const char *vsfile, const char *fsfile) {
-	File fp;
+static GLuint glCreateShaderFromFile(const char *fname, int type) {
 	unsigned char *b = NULL;
 	char *s = NULL;
+	File fp;
+	GLuint vs = 0;
+	vs = glCreateShader(type);
+	int size = fp.Open(fname, "rb");
+	if(size <= 0) return 0;
+	b = fp.Buf();
+	memset(&diag[0], 0, diag.size());
+	glShaderSource(vs, 1, (char **)&b, &size);
+	glCompileShader(vs);
+	glGetShaderInfoLog(vs, diag.size(), &size, &diag[0]);
+	printf("\n%s:", fname);
+	s = &diag[0];
+	while(*s) printf("%c", *s++);
+	printf("\n");
+	return vs;
+}
+
+GLuint glLoadShader(const char *vsfile, const char *gsfile, const char *fsfile) {
 
 	GLsizei size;
 
 	//VS
-	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
-	GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
-	{
-		printf("Load %s %s\n", vsfile, fsfile);
-		int size = fp.Open(vsfile, "rb");
-		b = fp.Buf();
-		glShaderSource(vs, 1, (char **)&b, &size);
-		glCompileShader(vs);
-		memset(&diag[0], 0, diag.size());
-		glGetShaderInfoLog(vs, diag.size(), &size, &diag[0]);
-		printf("\n%s:", vsfile);
-		s = &diag[0];
-		while(*s) printf("%c", *s++);
-		printf("\n");
-	}
-	
-	//FS
-	{
-		int size = fp.Open(fsfile, "rb");
-		b = fp.Buf();
-		glShaderSource(fs, 1, (char **)&b, &size);
-		glCompileShader(fs);
-		memset(&diag[0], 0, diag.size());
-		glGetShaderInfoLog(fs, diag.size(), &size, &diag[0]);
-		printf("%s:", fsfile);
-		s = &diag[0];
-		while(*s) printf("%c", *s++);
-		printf("%s %s Done\n", vsfile, fsfile);
-		printf("\n");
-	}
-	
+	GLuint vs = glCreateShaderFromFile(vsfile, GL_VERTEX_SHADER);
+	GLuint gs = glCreateShaderFromFile(gsfile, GL_GEOMETRY_SHADER);
+	GLuint fs = glCreateShaderFromFile(fsfile, GL_FRAGMENT_SHADER);
+	printf("%s:%d %s:%d %s:%d Done\n",		vsfile, vs,		gsfile, gs,		fsfile, fs);
 	GLuint ret = glCreateProgram();
-	glAttachShader(ret, vs);
-	glAttachShader(ret, fs);
-	glDeleteShader(fs);
-	glDeleteShader(vs);
+	if(vs) glAttachShader(ret, vs);
+	if(gs) glAttachShader(ret, gs);
+	if(fs) glAttachShader(ret, fs);
+	if(vs) glDeleteShader(fs);
+	if(gs) glDeleteShader(gs);
+	if(fs) glDeleteShader(vs);
 	glLinkProgram(ret);
 	
 	return ret;
