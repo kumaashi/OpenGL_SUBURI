@@ -424,23 +424,6 @@ struct File {
 			printf("DEBUG : %s -> size = %d, %d\n", name, size, buf.size());
 			fread(&buf[0], 1, size, fp);
 			fclose(fp);
-			
-			/*
-			int ccc = size;
-			for(int i = 0 ; i < ccc; i++) {
-				int c = buf[i];
-				if( (i % 16) == 0) {
-					printf("\n");
-				}
-				
-				if(isgraph(c)) {
-					printf("%c", c);
-				} else {
-					printf(".", c);
-				}
-			}
-			*/
-
 			ret = 0;
 		}
 		return buf.size();
@@ -451,7 +434,6 @@ struct File {
 	}
 
 	unsigned char *Buf() {
-		//if(buf.empty()) return NULL;
 		return &buf[0];
 	}
 };

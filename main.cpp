@@ -8,7 +8,6 @@
 //--------------------------------------------------------------------------------------
 // Data
 //--------------------------------------------------------------------------------------
-
 namespace Base {
 class Base {
 public:
@@ -65,18 +64,19 @@ void Add(int id, vec &p, vec &r, vec &s, vec &c) {
 
 } //base
 
+
+//--------------------------------------------------------------------------------------
+// Main
+//--------------------------------------------------------------------------------------
 void StartMain(int argc, char *argv[], HDC hdc) {
 	GLuint shader      = glLoadShader("vvs.cpp",   "grect.cpp", "vfs.cpp");
-	printf("Create Render Target\n");
-	GLuint shader_rect = glLoadShader("vrect.cpp", NULL, "frect.cpp");
-	printf("Create Render Target\n");
-	GLuint shader_blit = glLoadShader("vblit.cpp", NULL, "fblit.cpp");
+	GLuint shader_rect = glLoadShader("vrect.cpp", "grect.cpp", "frect.cpp");
+	GLuint shader_blit = glLoadShader("vblit.cpp", "grect.cpp", "fblit.cpp");
 	Mesh         mesh;
 	RenderTarget rt;
 	RenderTarget rtdisp;
 	Camera       camera;
 
-	printf("Create Render Target\n");
 	rt.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	rtdisp.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
@@ -91,16 +91,13 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 	vec up  (0,1,0);
 
 	float fFov     = 60.0;
-	float zNear    = 0.01;
+	float zNear    = 1.00;
 	float zFar     = 2560;
+
 	camera.Reset();
 	camera.SetScreen(Width, Height);
 	camera.SetView(pos, at, up);
 	camera.SetProj(fFov, zNear, zFar);
-
-	printf("======================\n");
-	printf("Press Key 1, 2, and A!\n");
-	printf("======================\n");
 
 	static float g_time = 0;
 	while(ProcMsg()) {
@@ -110,13 +107,9 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		float dtime = float(delta) / 1000.0f;
 		start = timeGetTime();
 		if(GetAsyncKeyState(VK_F5) & 0x8000) {
-			//shader      = glLoadShader("vvs.cpp",   "grect.cpp", "vfs.cpp");
-			//shader_rect = glLoadShader("vrect.cpp", "grect.cpp", "frect.cpp");
-			//shader_blit = glLoadShader("vblit.cpp", "grect.cpp", "fblit.cpp");
 			shader      = glLoadShader("vvs.cpp",   "grect.cpp", "vfs.cpp");
 			shader_rect = glLoadShader("vrect.cpp", NULL, "frect.cpp");
 			shader_blit = glLoadShader("vblit.cpp", NULL, "fblit.cpp");
-			
 		}
 
 		float info[4]  = {rt.Width, rt.Height, zNear, zFar};
@@ -135,7 +128,6 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			vec pos (-r, r, -r);
 			camera.SetTracking(pos, speed);
 		}
-
 
 		if(GetAsyncKeyState('A') & 0x8000) {
 			vec pos (frand() * r, frand() * r, frand() * r);
@@ -184,7 +176,6 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			glUseProgram(shader_rect); GL_DEBUG1;
 			rt.SetTexture(); GL_DEBUG1;
 
-
 			int loc;
 			loc = glGetUniformLocation(shader_rect,  "tex");
 			glUniform1i(loc, 0); GL_DEBUG1;
@@ -221,8 +212,8 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 }
 
 
-
-int main(int argc, char *argv[]) {
-	return Init(argc, argv, StartMain);
-}
+//--------------------------------------------------------------------------------------
+// ep
+//--------------------------------------------------------------------------------------
+int main(int argc, char *argv[]) { return Init(argc, argv, StartMain); }
 
