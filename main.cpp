@@ -70,8 +70,8 @@ void Add(int id, vec &p, vec &r, vec &s, vec &c) {
 //--------------------------------------------------------------------------------------
 void StartMain(int argc, char *argv[], HDC hdc) {
 	GLuint shader      = glLoadShader("vvs.cpp",   "grect.cpp", "vfs.cpp");
-	GLuint shader_rect = glLoadShader("vrect.cpp", "grect.cpp", "frect.cpp");
-	GLuint shader_blit = glLoadShader("vblit.cpp", "grect.cpp", "fblit.cpp");
+	GLuint shader_rect = glLoadShader("vrect.cpp", NULL, "frect.cpp");
+	GLuint shader_blit = glLoadShader("vblit.cpp", NULL, "fblit.cpp");
 	Mesh         mesh;
 	RenderTarget rt;
 	RenderTarget rtdisp;
@@ -107,7 +107,8 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		float dtime = float(delta) / 1000.0f;
 		start = timeGetTime();
 		if(GetAsyncKeyState(VK_F5) & 0x8000) {
-			shader      = glLoadShader("vvs.cpp",   "grect.cpp", "vfs.cpp");
+			//shader      = glLoadShader("vvs.cpp",   "grect.cpp", "vfs.cpp");
+			shader      = glLoadShader("vvs.cpp",   NULL, "vfs.cpp");
 			shader_rect = glLoadShader("vrect.cpp", NULL, "frect.cpp");
 			shader_blit = glLoadShader("vblit.cpp", NULL, "fblit.cpp");
 		}

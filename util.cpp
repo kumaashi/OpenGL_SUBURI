@@ -87,7 +87,7 @@ void glInitFunc() {
 	glBeginTransformFeedback    = (PFNGLBEGINTRANSFORMFEEDBACKPROC    )wglGetProcAddress("glBeginTransformFeedback");
 	glEndTransformFeedback      = (PFNGLENDTRANSFORMFEEDBACKPROC      )wglGetProcAddress("glEndTransformFeedback");
 	glEnableVertexAttribArray   = (PFNGLENABLEVERTEXATTRIBARRAYPROC   )wglGetProcAddress("glEnableVertexAttribArray");
-	glDisableVertexAttribArray  = (PFNGLDISABLEVERTEXATTRIBARRAYPROC  )wglGetProcAddress("glDisableVertexAttribArray");;
+	glDisableVertexAttribArray  = (PFNGLDISABLEVERTEXATTRIBARRAYPROC  )wglGetProcAddress("glDisableVertexAttribArray");
 	glVertexAttribPointer       = (PFNGLVERTEXATTRIBPOINTERPROC       )wglGetProcAddress("glVertexAttribPointer");
 	glGetShaderInfoLog          = (PFNGLGETSHADERINFOLOGPROC          )wglGetProcAddress("glGetShaderInfoLog");
 	glTexImage3D                = (PFNGLTEXIMAGE3DPROC                )wglGetProcAddress("glTexImage3D");
@@ -161,16 +161,16 @@ void glInitFunc() {
 	printf("glCheckFramebufferStatus    =%08X\n", glCheckFramebufferStatus    );
 	printf("glTexImage2DMultisample     =%08X\n", glTexImage2DMultisample     );
 	printf("glRenderbufferStorageMultisample    =%08X\n", glRenderbufferStorageMultisample);
-	
 
 	//after
 	glEnable( GL_MULTISAMPLE );
 }
 
 //--------------------------------------------------------------------------------------
-// OpenGL Ex
+// glSetInterval
 //--------------------------------------------------------------------------------------
-void glSetInterval(int isinterval) {
+void glSetInterval(int isinterval)
+{
 	BOOL (WINAPI *wglSwapIntervalEXT)(int) = NULL;
 	if( strstr( (char*)glGetString( GL_EXTENSIONS ), "WGL_EXT_swap_control") == 0) return;
 	wglSwapIntervalEXT = (BOOL (WINAPI*)(int))wglGetProcAddress("WGL_EXT_swap_control");
@@ -178,7 +178,7 @@ void glSetInterval(int isinterval) {
 }
 
 //--------------------------------------------------------------------------------------
-// glProgram Loader
+// glCreateShaderFromFile
 //--------------------------------------------------------------------------------------
 static GLuint glCreateShaderFromFile(const char *fname, int type) {
 	unsigned char *b = NULL;
@@ -200,11 +200,11 @@ static GLuint glCreateShaderFromFile(const char *fname, int type) {
 	return vs;
 }
 
+//--------------------------------------------------------------------------------------
+// glLoadShader
+//--------------------------------------------------------------------------------------
 GLuint glLoadShader(const char *vsfile, const char *gsfile, const char *fsfile) {
-
 	GLsizei size;
-
-	//VS
 	GLuint vs = glCreateShaderFromFile(vsfile, GL_VERTEX_SHADER);
 	GLuint gs = glCreateShaderFromFile(gsfile, GL_GEOMETRY_SHADER);
 	GLuint fs = glCreateShaderFromFile(fsfile, GL_FRAGMENT_SHADER);
@@ -213,29 +213,23 @@ GLuint glLoadShader(const char *vsfile, const char *gsfile, const char *fsfile) 
 	if(vs) glAttachShader(ret, vs);
 	if(gs) glAttachShader(ret, gs);
 	if(fs) glAttachShader(ret, fs);
-	if(vs) glDeleteShader(fs);
+	if(vs) glDeleteShader(vs);
 	if(gs) glDeleteShader(gs);
-	if(fs) glDeleteShader(vs);
+	if(fs) glDeleteShader(fs);
 	glLinkProgram(ret);
-	
 	return ret;
 }
 
 
-
-//--------------------------------------------------------------------------------------
-// MISC
-//--------------------------------------------------------------------------------------
-namespace {
-	static int a = 1, b = 234567, c = 890123;
-}
-
-int random() {
+static int a = 1, b = 234567, c = 890123;
+int random()
+{
 	a += b;
 	b += c;
 	c += a;
 	return (a >> 16);
 }
+
 
 float frand() {
 	return float(random()) / float(0x7FFF);
@@ -338,13 +332,14 @@ int Init(int argc, char *argv[], void (*StartMain)(int argc, char *argv[], HDC h
 		sizeof(PIXELFORMATDESCRIPTOR), 1, PFD_DOUBLEBUFFER | PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL,
 		PFD_TYPE_RGBA, 32, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 32
 	};
+
 	SetPixelFormat(hdc, ChoosePixelFormat(hdc, &pfd), &pfd);
 	wglMakeCurrent(hdc, wglCreateContext(hdc));
 	glInitFunc();
 	StartMain(argc, argv, hdc);
+	ReleaseDC(hWnd, hdc);
 	
 	return 0;
 }
-
 
 
