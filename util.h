@@ -13,10 +13,10 @@
 #include <gl/gl.h>
 #include <gl/glext.h>
 
-#include <vector>
 #include <map>
-#include <algorithm>
+#include <vector>
 #include <string>
+#include <algorithm>
 #include <functional>
 
 #pragma comment(lib, "gdi32.lib")
@@ -26,19 +26,24 @@
 
 #define  DEFAULT_WIDTH   (640)
 #define  DEFAULT_HEIGHT  (480)
+#define _CRT_SECURE_NO_WARNINGS
+#define sscanf sscanf_s
+#define sprintf sprintf_s
 
 
-//
-//#define GL_DEBUG1  printf("%s:%08d : glErr:%08X\n", __FUNCTION__, __LINE__, glGetError())
-//#define GL_DEBUG2  printf("%s:%08d : glErr:%08X\n", __FUNCTION__, __LINE__, glGetError())
-//#define GL_DEBUG3  printf("%s:%08d : glErr:%08X\n", __FUNCTION__, __LINE__, glGetError())
-#define GL_DEBUG1  (void *)0
-#define GL_DEBUG2  (void *)0
-#define GL_DEBUG3  (void *)0
+
+
+#define GL_DEBUG1  printf("%s:%08d : glErr:%08X\n", __FUNCTION__, __LINE__, glGetError())
+#define GL_DEBUG2  printf("%s:%08d : glErr:%08X\n", __FUNCTION__, __LINE__, glGetError())
+#define GL_DEBUG3  printf("%s:%08d : glErr:%08X\n", __FUNCTION__, __LINE__, glGetError())
+//#define GL_DEBUG1  (void *)0
+//#define GL_DEBUG2  (void *)0
+//#define GL_DEBUG3  (void *)0
 
 //--------------------------------------------------------------------------------------
 // OpenGL Function
 //--------------------------------------------------------------------------------------
+extern PFNGLDEBUGMESSAGECALLBACKPROC           glDebugMessageCallback      ;
 extern PFNGLCREATEPROGRAMPROC                  glCreateProgram             ;
 extern PFNGLCREATESHADERPROC                   glCreateShader              ;
 extern PFNGLSHADERSOURCEPROC                   glShaderSource              ;
@@ -397,44 +402,59 @@ struct Matrix {
 	}
 };
 
-
-
 //--------------------------------------------------------------------------------------
 // Filereader
 //--------------------------------------------------------------------------------------
 struct File {
-	std::vector<unsigned char> buf;
-	int size;
-	bool Empty()
-	{
-		return size <= 0;
-	}
-	int Open(const char *name, const char *mode) {
-		int ret = -1;
-		size = -1;
-		if(!name) return ret;
-		FILE *fp = fopen(name, mode);
+	std::vector<unsigned char>       buf;
+	std::vector<char>                sep;
+	char *ptr;
+
+	bool Empty() { return buf.empty(); }
+	int Size()   { return buf.size(); }
+	unsigned char *Buf()  { return &buf[0]; }
+
+	void Clear() {
 		buf.clear();
-		if(fp) {
-			fseek(fp, 0, SEEK_END);
-			size = ftell(fp);
-			fseek(fp, 0, SEEK_SET);
-			buf.resize(size);
-			memset(&buf[0], 0, buf.size());
-			printf("DEBUG : %s -> size = %d, %d\n", name, size, buf.size());
-			fread(&buf[0], 1, size, fp);
-			fclose(fp);
-			ret = 0;
-		}
+		sep.clear();
+	}
+
+	int Open(const char *name, bool il) {
+		Clear();
+		char *mode = "rb";
+		if(!name) return -1;
+		if(il) mode = "r";
+
+		//FILE *fp = fopen(name, "rb");
+		FILE *fp = NULL;
+		fopen_s(&fp, name, "rb"); //medoi, atoe fopen;
+		if(!fp) return -1;
+
+		fseek(fp, 0, SEEK_END);
+		buf.resize(ftell(fp));
+		fseek(fp, 0, SEEK_SET);
+
+		memset(&buf[0], 0, buf.size());
+		fread(&buf[0], 1, buf.size(), fp);
+		fclose(fp);
+
+		if(il) buf.push_back(0);
+		ptr = (char *)&buf[0];
+
+		//printf("DEBUG : %s -> bufsize = %d\n", name, buf.size());
 		return buf.size();
 	}
 
-	int Size() {
-		return size;
-	}
-
-	unsigned char *Buf() {
-		return &buf[0];
+	char *Line(const char c = '\n') {
+		if(buf.empty()) return NULL;
+		if(ptr) if(*ptr == 0) return NULL;
+		sep.clear();
+		while(*ptr && *ptr != c) {
+			sep.push_back(*ptr++);
+		}
+		ptr++;
+		sep.push_back(0);
+		return &sep[0];
 	}
 };
 
@@ -443,11 +463,15 @@ struct File {
 // BoundingBox
 //--------------------------------------------------------------------------------------
 struct BoundingBox {
+	enum
+	{
+		Max = 99999999 //todo std::honyarara
+	};
 	float bmax[3];
 	float bmin[3];
 	void Init() {
-		for(int i = 0 ; i < 3; i++) bmax[i] = -100000;
-		for(int i = 0 ; i < 3; i++) bmin[i] =  100000;
+		for(int i = 0 ; i < 3; i++) bmax[i] = -Max;
+		for(int i = 0 ; i < 3; i++) bmin[i] =  Max;
 	}
 	void GetParam(float *p) {
 		for(int i = 0; i < 3; i++) {
@@ -491,16 +515,17 @@ struct STLBlob {
 
 	int Load(const char *name) {
 		File f;
-		int size = f.Open(name, "rb");
+		int size = f.Open(name, false);
 		if(size <= 0) return size;
-		printf("size = %d\n", size);
+		printf("%s -> size = %d\n", name, size);
 		unsigned char *buf = (unsigned char *)f.Buf();
+
+		//Parse BIN STL
 		int index          = 80;
 		int trimax         = *(int *)(&buf[index]);
 		index             += 4;
 		int cnt            = 0;
 		printf("trimax = %d\n", trimax);
-		
 		bb.Init();
 		while(cnt < trimax) {
 			stldata d = *(stldata *)(&buf[index]); 
@@ -516,21 +541,73 @@ struct STLBlob {
 	}
 };
 
+//--------------------------------------------------------------------------------------
+// OBJ Loader (line)
+//--------------------------------------------------------------------------------------
+struct OBJBlob {
+	std::vector<float> vp;
+	std::vector<int>   vi;
+	int Load(const char *name) {
+		File f;
+		int size = f.Open(name, true);
+		if(size <= 0) return size;
+		printf("%s -> size = %d\n", name, size);
+		char *s;
+
+		//parse obj for line
+		while(s = f.Line()) {
+			while(isspace(*s)) s++;
+			char type = *s++;
+			if(type == 'v') {
+				float x, y, z;
+				sscanf(s, "%f %f %f", &x, &y, &z);
+				vp.push_back(x);
+				vp.push_back(y);
+				vp.push_back(z);
+				continue;
+			}
+			if(type == 'f') {
+				std::vector<char> temp;
+				while(*s) {
+					char c = *s++;
+					if(isspace(c) || isdigit(c)) {
+						temp.push_back(c);
+						continue;
+					}
+					if(c == '/' && temp.size()) {
+						temp.push_back(0);
+						int n = strtol(&temp[0], 0, 10) - 1; //w
+						vi.push_back(n);
+						temp.clear();
+
+						//discard tex and normal
+						while(!isspace(*s)) s++;
+					}
+				}
+				continue;
+			}
+		}
+		printf("vp=%d, vi=%d\n", vp.size(), vi.size());
+		return 0;
+	}
+};
+
 
 //--------------------------------------------------------------------------------------
 // Mesh Loader
 //--------------------------------------------------------------------------------------
 struct Mesh {
-	int vertexnum;
 	enum {
 		Vertex = 0,
 		Normal,
 		Max,
 	};
-	int trinum;
-	GLuint vbo[Max];
-	GLint  shader;
+	GLuint      vbo[Max];
+	GLint       shader;
+	GLuint      nAttLocPos;
+	GLuint      nAttLocNor;
 	BoundingBox bb;
+	int         trinum;
 	
 	void Init() {
 		if(trinum) {
@@ -541,6 +618,14 @@ struct Mesh {
 	
 	void Load(const char *name) {
 		STLBlob stl;
+		OBJBlob obj;
+
+		if(strstr(name, "obj")) {
+			obj.Load(name);
+			return;
+		}
+
+		//other stl
 		trinum = stl.Load(name);
 		if(trinum <= 0) {
 			printf("Failed load mesh : %s\n", name);
@@ -553,29 +638,35 @@ struct Mesh {
 	}
 	
 	void SetShader(int p) {
-		shader = p;
+		if(p) {
+			const char *locpos = "pos";
+			const char *locnor = "nor";
+			shader = p;
+			nAttLocPos = glGetAttribLocation( shader, locpos );
+			nAttLocNor = glGetAttribLocation( shader, locnor );
+		}
 	}
 	
 	void Create(float *v, int vnum, float *n, int nnum) {
 		glGenBuffers(Max, vbo);
 		
-		printf("Trans Vertex....");
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[Vertex]);
 		glBufferData(GL_ARRAY_BUFFER, vnum * sizeof(float), v, GL_STATIC_DRAW);
-		printf("Done.\n");
 		
-		printf("Trans Normal....");
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[Normal]);
 		glBufferData(GL_ARRAY_BUFFER, nnum * sizeof(float), n, GL_STATIC_DRAW);
-		printf("Done.\n");
+		printf("%s : vnum=%d, nnum=%d\n", __FUNCTION__, vnum, nnum);
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
 	void Bind() {
-		GLuint nAttLocPos = glGetAttribLocation( shader, "position" );
-		GLuint nAttLocNor = glGetAttribLocation( shader, "normal" );
+		glUseProgram(shader);
+
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[Vertex]);
 		glEnableVertexAttribArray(nAttLocPos);
 		glVertexAttribPointer(nAttLocPos, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[Normal]);
 		glEnableVertexAttribArray(nAttLocNor);
 		glVertexAttribPointer(nAttLocNor, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
@@ -586,12 +677,11 @@ struct Mesh {
 	}
 
 	void Unbind() {
-		GLuint nAttLocPos = glGetAttribLocation( shader, "position" );
-		GLuint nAttLocNor = glGetAttribLocation( shader, "normal" );
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glDisableVertexAttribArray(nAttLocNor);
 		glDisableVertexAttribArray(nAttLocPos);
+		glUseProgram(0);
 	}
 
 };
@@ -624,21 +714,21 @@ struct Texture3D {
 		}
 		glGenTextures(1, &tex3d);
 		glBindTexture(GL_TEXTURE_3D, tex3d);
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); GL_DEBUG1;
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); GL_DEBUG1;
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT); GL_DEBUG1;
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT); GL_DEBUG1;
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT); GL_DEBUG1;
-		glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA32F, rect, rect, rect, 0, GL_RGBA, GL_FLOAT, src); GL_DEBUG1;
-		glBindTexture(GL_TEXTURE_3D, 0); GL_DEBUG1;
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+		glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA32F, rect, rect, rect, 0, GL_RGBA, GL_FLOAT, src);
+		glBindTexture(GL_TEXTURE_3D, 0);
 	}
 	
 	void Bind() {
-		glBindTexture(GL_TEXTURE_3D, tex3d); GL_DEBUG1;
+		glBindTexture(GL_TEXTURE_3D, tex3d);
 	}
 	
 	void Unbind() {
-		glBindTexture(GL_TEXTURE_3D, 0); GL_DEBUG1;
+		glBindTexture(GL_TEXTURE_3D, 0);
 	}
 };
 
@@ -653,61 +743,71 @@ struct RenderTarget {
 	GLuint rttex2;
 	GLuint rbo;
 	int Width, Height, Sample;
+
+	void SetupState() {
+		struct Param {
+			GLenum pname;
+			GLint  param;
+		};
+		Param param[] = {
+			{ GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST},
+			{ GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST},
+			{ GL_TEXTURE_WRAP_S,     GL_CLAMP_TO_EDGE},
+			{ GL_TEXTURE_WRAP_T,     GL_CLAMP_TO_EDGE},
+			{ GL_TEXTURE_WRAP_R,     GL_CLAMP_TO_EDGE},
+			{ GL_GENERATE_MIPMAP,    GL_FALSE},
+			{ 0, 0},
+		};
+		for(int i = 0 ; param[i].pname; i++) {
+			Param *w = &param[i];
+			glTexParameteri(GL_TEXTURE_2D, w->pname, w->param);
+		}
+	}
 	
 	void Create(int w, int h, int ms = 8) {
 		int status = 0;
 		printf("%s: Width=%d, Height=%d, Ms=%d\n", __FUNCTION__, w, h, ms);
 		
-		//1ST
-		glGenTextures(1, &rttex); GL_DEBUG1;
-		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, rttex); GL_DEBUG1;
-		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, ms, GL_RGBA32F, w, h, GL_TRUE); GL_DEBUG1;
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST); GL_DEBUG1;
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST); GL_DEBUG1;
+		//1ST Create Texture
+		glGenTextures(1, &rttex);
+		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, rttex);
+		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, ms, GL_RGBA32F, w, h, GL_TRUE);
+		SetupState();
+		glBindTexture(GL_TEXTURE_2D, 0);
 		
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); GL_DEBUG1;
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); GL_DEBUG1;
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE); GL_DEBUG1;
-		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE); GL_DEBUG1;
+		glGenFramebuffers(1, &fbo);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, rttex, 0);
 		
-		glBindTexture(GL_TEXTURE_2D, 0); GL_DEBUG1;
-		
-		glGenFramebuffers(1, &fbo); GL_DEBUG1;
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo); GL_DEBUG1;
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, rttex, 0); GL_DEBUG1;
-		
-		glGenRenderBuffers(1, &rbo); GL_DEBUG1;
-		glBindRenderBuffer(GL_RENDERBUFFER, rbo); GL_DEBUG1;
-		glRenderbufferStorageMultisample(GL_RENDERBUFFER, ms, GL_DEPTH_COMPONENT32, w, h); GL_DEBUG1;
-		glBindRenderBuffer(GL_RENDERBUFFER, 0); GL_DEBUG1;
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo); GL_DEBUG1;
+		glGenRenderBuffers(1, &rbo);
+		glBindRenderBuffer(GL_RENDERBUFFER, rbo);
+		glRenderbufferStorageMultisample(GL_RENDERBUFFER, ms, GL_DEPTH_COMPONENT32, w, h);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
 		if((status = glCheckFramebufferStatus(GL_FRAMEBUFFER)) != glCheckFramebufferStatus(GL_FRAMEBUFFER)) {
 			printf("Bind Failed : status=%08X\n", status);
 		} else {
 			printf("Bind OK : %d, %d\n", rttex, fbo);
 		}
+		glBindRenderBuffer(GL_RENDERBUFFER, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		//2ND
-		glGenTextures(1, &rttex2); GL_DEBUG1;
-		glBindTexture(GL_TEXTURE_2D, rttex2); GL_DEBUG1;
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, w, h, 0, GL_RGBA, GL_FLOAT, 0); GL_DEBUG1;
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST); GL_DEBUG1;
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST); GL_DEBUG1;
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); GL_DEBUG1;
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); GL_DEBUG1;
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE); GL_DEBUG1;
-		glBindTexture(GL_TEXTURE_2D, 0); GL_DEBUG1;
+		glGenTextures(1, &rttex2);
+		glBindTexture(GL_TEXTURE_2D, rttex2);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, w, h, 0, GL_RGBA, GL_FLOAT, 0);
+		//glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, ms, GL_RGBA32F, w, h, GL_TRUE);
+		SetupState();
+		glBindTexture(GL_TEXTURE_2D, 0);
 
-		glGenFramebuffers(1, &fbo2); GL_DEBUG1;
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo2); GL_DEBUG1;
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, rttex2, 0); GL_DEBUG1;
+		glGenFramebuffers(1, &fbo2);
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, rttex2, 0);
 		if( (status = glCheckFramebufferStatus(GL_FRAMEBUFFER)) != glCheckFramebufferStatus(GL_FRAMEBUFFER)) {
 			printf("Bind Failed : status=%08X\n", status);
 		} else {
 			printf("Bind OK : %d, %d\n", rttex2, fbo2);
 		}
-		glBindFramebuffer(GL_FRAMEBUFFER, 0); GL_DEBUG1;
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		Width  = w;
 		Height = h;
@@ -715,31 +815,31 @@ struct RenderTarget {
 	}
 
 	void SetTexture() {
-		glActiveTexture(GL_TEXTURE0); GL_DEBUG1;
-		glBindTexture(GL_TEXTURE_2D, rttex2); GL_DEBUG1;
-		glGenerateMipmap(GL_TEXTURE_2D); GL_DEBUG1;
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, rttex2);
+		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	
 	void UnsetTexture() {
-		glBindTexture(GL_TEXTURE_2D, 0); GL_DEBUG1;
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	
 	void Begin() {
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo); GL_DEBUG1;
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	}
 
 	void End() {
 		Resolve();
-		glBindFramebuffer(GL_FRAMEBUFFER, 0); GL_DEBUG1;
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	void Resolve() {
-		glBindFramebuffer( GL_READ_FRAMEBUFFER, fbo); GL_DEBUG1;
-		glBindFramebuffer( GL_DRAW_FRAMEBUFFER, fbo2); GL_DEBUG1;
-		glBlitFramebuffer(0, 0, Width, Height, 0, 0, Width, Height, GL_COLOR_BUFFER_BIT, GL_NEAREST ); GL_DEBUG1;
-		glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0); GL_DEBUG1;
-		glBindFramebuffer( GL_READ_FRAMEBUFFER, 0); GL_DEBUG1;
+		glBindFramebuffer( GL_READ_FRAMEBUFFER, fbo);
+		glBindFramebuffer( GL_DRAW_FRAMEBUFFER, fbo2);
+		glBlitFramebuffer(0, 0, Width, Height, 0, 0, Width, Height, GL_COLOR_BUFFER_BIT, GL_NEAREST );
+		glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0);
+		glBindFramebuffer( GL_READ_FRAMEBUFFER, 0);
 	}
 };
 
