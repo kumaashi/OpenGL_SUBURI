@@ -4,41 +4,42 @@
 #ifndef _UTIL_H_
 #define _UTIL_H_
 
+//Windows
+#include <windows.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
-#include <windows.h>
+#include <mmsystem.h>
 
+//OpenGL
 #include <gl/gl.h>
 #include <gl/glext.h>
 
+//STL
 #include <map>
 #include <vector>
 #include <string>
 #include <algorithm>
 #include <functional>
 
-#pragma comment(lib, "gdi32.lib")
-#pragma comment(lib, "winmm.lib")
-#pragma comment(lib, "user32.lib")
-#pragma comment(lib, "opengl32.lib")
+//TEKITOU
+#pragma  comment(lib, "gdi32.lib")
+#pragma  comment(lib, "winmm.lib")
+#pragma  comment(lib, "user32.lib")
+#pragma  comment(lib, "opengl32.lib")
 
 #define  DEFAULT_WIDTH   (640)
 #define  DEFAULT_HEIGHT  (480)
+
+//HA?
 #define _CRT_SECURE_NO_WARNINGS
 #define sscanf sscanf_s
 #define sprintf sprintf_s
 
 
-
-
-#define GL_DEBUG1  printf("%s:%08d : glErr:%08X\n", __FUNCTION__, __LINE__, glGetError())
-#define GL_DEBUG2  printf("%s:%08d : glErr:%08X\n", __FUNCTION__, __LINE__, glGetError())
-#define GL_DEBUG3  printf("%s:%08d : glErr:%08X\n", __FUNCTION__, __LINE__, glGetError())
-//#define GL_DEBUG1  (void *)0
-//#define GL_DEBUG2  (void *)0
-//#define GL_DEBUG3  (void *)0
+//DEBUG
+#define GL_DEBUG  printf("%s:%08d : glErr:%08X\n", __FUNCTION__, __LINE__, glGetError())
 
 //--------------------------------------------------------------------------------------
 // OpenGL Function
@@ -901,6 +902,18 @@ struct Camera {
 	}
 };
 
+//--------------------------------------------------------------------------------------
+// OS Function
+//--------------------------------------------------------------------------------------
+BOOL ProcMsg();
+int Init(int argc, char *argv[], void (*StartMain)(int argc, char *argv[], HDC hdc));
+
+//--------------------------------------------------------------------------------------
+// MISC Function
+//--------------------------------------------------------------------------------------
+int random();
+float frand();
+void show_fps();
 
 //--------------------------------------------------------------------------------------
 // OpenGL Function
@@ -908,12 +921,12 @@ struct Camera {
 void glInitFunc();
 void glSetInterval(int isinterval);
 GLuint glLoadShader(const char *vsfile, const char *, const char *fsfile);
-int Init(int argc, char *argv[], void (*StartMain)(int argc, char *argv[], HDC hdc));
-BOOL ProcMsg();
-int random();
-float frand();
-void show_fps();
 
+//--------------------------------------------------------------------------------------
+// Input Function
+//--------------------------------------------------------------------------------------
+vec giGetDirection(float a = 1.0);
+vec giGetButton(int a);
 
 #endif //_UTIL_H_
 

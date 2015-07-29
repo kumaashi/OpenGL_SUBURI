@@ -5,13 +5,13 @@
 //--------------------------------------------------------------------------------------
 #include "util.h"
 
+//TEST Shader
 GLuint shader      = 0;
 GLuint shader_rect = 0;
 GLuint shader_blit = 0;
 
-
 void ResetShader() {
-	//shader      = glLoadShader("./res/vvs.fx",   "./res/grect.fx", "./res/vfs.fx");
+	//shader      = glLoadShader("./res/vvs.fx",   "./res/gvs.fx", "./res/vfs.fx");
 	shader      = glLoadShader("./res/vvs.fx",   NULL, "./res/vfs.fx");
 	shader_rect = glLoadShader("./res/vrect.fx", NULL, "./res/frect.fx");
 	shader_blit = glLoadShader("./res/vblit.fx", NULL, "./res/fblit.fx");
@@ -28,12 +28,10 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 	Camera       camera;
 
 	if(argc == 1) {
-		//mesh.Load("./res/cube.obj");
 		mesh.Load("./res/cube.stl");
 	} else {
 		mesh.Load(argv[1]);
 	}
-
 
 	//const 
 	vec pos (0,10,-10);
@@ -55,7 +53,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 	static float g_time = 0;
 	ResetShader();
 	while(ProcMsg()) {
-		show_fps();
+		//show_fps();
 		
 		//Create Delta
 		static unsigned long start = timeGetTime();
@@ -78,6 +76,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			static_cast<float>(zNear),
 			static_cast<float>(zFar)
 		};
+		GLint ulocinfo1 = glGetUniformLocation(shader, "info");
 
 		float info2[4] = {
 			static_cast<float>(Width),
@@ -85,23 +84,23 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			static_cast<float>(g_time),
 			static_cast<float>(g_time)
 		};
+		GLint ulocinfo2 = glGetUniformLocation(shader, "info2");
 
 		//Set Render Path
 		glClearColor(1.0, 0.0, 0.5, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
 		if(1) {
 			glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0);
 			//rt.Begin();
 			Matrix world;
 			mesh.SetShader(shader);
 			mesh.Bind();
-			glEnable(GL_DEPTH_TEST);
-
 			glViewport(0, 0, rt.Width, rt.Height);
 			glClearColor(0.25, 0.25, 0.5, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glUniform4fv(glGetUniformLocation(shader, "info"), 1,  info);
-			glUniform4fv(glGetUniformLocation(shader, "info2"), 1, info2);
+			glUniform4fv(ulocinfo1, 1,  info);
+			glUniform4fv(ulocinfo2, 1, info2);
 			glUniformMatrix4fv(glGetUniformLocation(shader, "view"),  1, GL_FALSE, camera.GetView());
 			glUniformMatrix4fv(glGetUniformLocation(shader, "proj"),  1, GL_FALSE, camera.GetProj());
 
@@ -130,13 +129,9 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			glDisable(GL_DEPTH_TEST);
 			glUseProgram(shader_rect);
 			rt.SetTexture();
-			int loc;
-			loc = glGetUniformLocation(shader_rect,  "tex");
-			glUniform1i(loc, 0);
-			loc = glGetUniformLocation(shader_rect, "info");
-			glUniform4fv(loc, 1, info);
-			loc = glGetUniformLocation(shader_rect, "info2");
-			glUniform4fv(loc, 1, info2);
+			glUniform1i(glGetUniformLocation(shader_rect,  "tex"),   0);
+			glUniform4fv(glGetUniformLocation(shader_rect, "info"),  1, info);
+			glUniform4fv(glGetUniformLocation(shader_rect, "info2"), 1, info2);
 			glRects(-1, -1, 1, 1);
 			rt.UnsetTexture();
 			glEnable(GL_DEPTH_TEST);
@@ -157,7 +152,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			glUniform4fv(glGetUniformLocation(shader_blit, "info"), 1, info);
 			glUniform4fv(glGetUniformLocation(shader_blit, "info2"), 1, info2);
 			glRects(-1, -1, 1, 1);
-			rt.UnsetTexture();
+			rtdisp.UnsetTexture();
 			glEnable(GL_DEPTH_TEST);
 			glUseProgram(0);
 		}
