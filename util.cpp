@@ -198,6 +198,7 @@ PFNGLGENERATEMIPMAPPROC                 glGenerateMipmap            = NULL;
 PFNGLTEXIMAGE2DMULTISAMPLEPROC          glTexImage2DMultisample     = NULL;
 PFNGLRENDERBUFFERSTORAGEMULTISAMPLEPROC glRenderbufferStorageMultisample = NULL;
 PFNGLBLITFRAMEBUFFERPROC                glBlitFramebuffer           = NULL;
+PFNGLGETSHADERIVPROC                    glGetShaderiv               = NULL;
 
 static void glErrorCallbackUser (GLenum source, GLenum type, GLuint id,
 		   GLenum severity, GLsizei length,  const GLchar* message, const void* userParam)
@@ -234,6 +235,7 @@ void glInitFunc() {
 	glEnableVertexAttribArray   = (PFNGLENABLEVERTEXATTRIBARRAYPROC   )wglGetProcAddress("glEnableVertexAttribArray");
 	glDisableVertexAttribArray  = (PFNGLDISABLEVERTEXATTRIBARRAYPROC  )wglGetProcAddress("glDisableVertexAttribArray");
 	glVertexAttribPointer       = (PFNGLVERTEXATTRIBPOINTERPROC       )wglGetProcAddress("glVertexAttribPointer");
+	glGetShaderiv               = (PFNGLGETSHADERIVPROC               )wglGetProcAddress("glGetShaderiv");
 	glGetShaderInfoLog          = (PFNGLGETSHADERINFOLOGPROC          )wglGetProcAddress("glGetShaderInfoLog");
 	glTexImage3D                = (PFNGLTEXIMAGE3DPROC                )wglGetProcAddress("glTexImage3D");
 	glProgramUniform1i          = (PFNGLPROGRAMUNIFORM1IPROC          )wglGetProcAddress("glProgramUniform1i");
@@ -331,10 +333,10 @@ void glSetInterval(int isinterval) {
 //--------------------------------------------------------------------------------------
 void glPrintInfoLog(const char *name, GLuint shader) {
 	int size = 0;
-	glGetShaderInfoLog(shader, 0xFFFF, &size, NULL);
+	glGetShaderiv(shader, GL_INFO_LOG_LENGTH , &size);
 	if(size) {
 		printf("log size = %d\n", size);
-		std::vector<char> buf(size * 2);
+		std::vector<char> buf(size);
 		memset(&buf[0], 0, buf.size());
 		glGetShaderInfoLog(shader, buf.size(), &size, &buf[0]);
 		printf("%s START name=%s, ============================\n", __FUNCTION__, name);
@@ -352,10 +354,8 @@ static GLuint glCreateShaderFromFile(const char *fname, int type) {
 	File fp;
 	int size = fp.Open(fname, "rb");
 	if(size <= 0) return 0;
-	unsigned char *b = NULL;
-	GLuint vs = 0;
-	vs = glCreateShader(type);
-	b = fp.Buf();
+	unsigned char *b = fp.Buf();
+	GLuint vs = glCreateShader(type);
 	glShaderSource(vs, 1, (char **)&b, &size);
 	glCompileShader(vs);
 	glPrintInfoLog(fname, vs);

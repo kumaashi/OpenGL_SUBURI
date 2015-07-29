@@ -1,13 +1,12 @@
 #version 150
 
-attribute vec3 pos;
-attribute vec3 nor;
+in        vec3 pos;
+in        vec3 nor;
 uniform   vec4 info;
 uniform   mat4 proj;
 uniform   mat4 view;
 uniform   mat4 world;
-
-varying   vec4 out_color;
+out       vec4 out_color;
 
 void main() {
 	mat4 wvp    = proj * view * world;

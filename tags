@@ -107,7 +107,7 @@ Normal	.\util.h	/^		Normal,$/;"	e	enum:Mesh::__anon5
 OBJBlob	.\util.h	/^struct OBJBlob {$/;"	s
 Open	.\util.h	/^	int Open(const char *name, bool il) {$/;"	f	struct:File
 PACKET_MAX	.\asset\da.cpp	7;"	d	file:
-PI	.\util.h	106;"	d
+PI	.\util.h	107;"	d
 Perspective	.\util.h	/^	float *Perspective(float fovy, float aspect, float fnear, float ffar) {$/;"	f	struct:Matrix
 Player	.\asset\node.cpp	/^	Player() { printf("%s\\n", __FUNCTION__); }$/;"	f	class:Player
 Player	.\asset\node.cpp	/^class Player : public Bullet {$/;"	c	file:
@@ -167,7 +167,7 @@ WindowProc	.\util.cpp	/^LRESULT WINAPI WindowProc(HWND hWnd, UINT msg, WPARAM wP
 Windowed	.\util.cpp	/^BOOL  Windowed      = TRUE;$/;"	v
 _CRT_SECURE_NO_WARNINGS	.\util.h	36;"	d
 _UTIL_H_	.\util.h	5;"	d
-_VEC3_DEFOP_	.\util.h	138;"	d
+_VEC3_DEFOP_	.\util.h	139;"	d
 a	.\util.cpp	/^static int a = 1, b = 234567, c = 890123;$/;"	v	file:
 b	.\util.cpp	/^static int a = 1, b = 234567, c = 890123;$/;"	v	file:
 bb	.\util.h	/^	BoundingBox bb;$/;"	m	struct:Mesh
@@ -181,7 +181,7 @@ child	.\asset\node.cpp	/^	Node *child;$/;"	m	class:Node	file:
 clamp	.\util.h	/^inline float clamp(float x, float a, float b) {$/;"	f
 cross	.\util.h	/^	vec cross(vec &a, vec &b) {$/;"	f	struct:vec
 cross	.\util.h	/^	vec cross(vec &b) {$/;"	f	struct:vec
-d2r	.\util.h	109;"	d
+d2r	.\util.h	110;"	d
 data	.\util.h	/^		float data[4];$/;"	m	union:vec::__anon2
 data	.\util.h	/^	float data[16];$/;"	m	struct:Matrix
 data_sort	.\asset\data.cpp	/^bool data_sort(DataBase *a, DataBase *b) {$/;"	f
@@ -232,6 +232,7 @@ glGetAttribLocation	.\util.cpp	/^PFNGLGETATTRIBLOCATIONPROC              glGetAt
 glGetBufferSubData	.\util.cpp	/^PFNGLGETBUFFERSUBDATAPROC               glGetBufferSubData          = NULL;$/;"	v
 glGetProgramInfoLog	.\util.cpp	/^PFNGLGETPROGRAMINFOLOGPROC              glGetProgramInfoLog         = NULL;$/;"	v
 glGetShaderInfoLog	.\util.cpp	/^PFNGLGETSHADERINFOLOGPROC               glGetShaderInfoLog          = NULL;$/;"	v
+glGetShaderiv	.\util.cpp	/^PFNGLGETSHADERIVPROC                    glGetShaderiv               = NULL;$/;"	v
 glGetUniformLocation	.\util.cpp	/^PFNGLGETUNIFORMLOCATIONPROC             glGetUniformLocation        = NULL;$/;"	v
 glInitFunc	.\util.cpp	/^void glInitFunc() {$/;"	f
 glLinkProgram	.\util.cpp	/^PFNGLLINKPROGRAMPROC                    glLinkProgram               = NULL;$/;"	v

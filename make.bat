@@ -2,17 +2,16 @@
 ctags -R
 
 REM cl  main.cpp util.cpp /MP4 /Ox /EHsc /GS- /nologo  /c
-
-cl  main.cpp util.cpp /MP4 /Ox /EHsc /GS- /nologo /Zi /c /DEBUG:FASTLINK
+cl  main.cpp util.cpp /MP4 /Ox /EHsc /GS- /nologo /Z7 /c /DEBUG:FASTLINK
 
 link *.obj /nologo
-del *.obj
+REM del *.obj
 @echo on
 
-start main.exe
-
-vim .
-
-
-kill
+REM start main.exe
+REM 
+REM vim .
+REM 
+REM 
+REM kill
 
