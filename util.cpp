@@ -260,6 +260,7 @@ void glInitFunc() {
 	glBlitFramebuffer           = (PFNGLBLITFRAMEBUFFERPROC           )wglGetProcAddress("glBlitFramebuffer");
 	
 	//check
+#if 0
 	bool is_check = false;
 	if(is_check) {
 		printf("glCreateProgram             =%08X\n", glCreateProgram             );
@@ -308,8 +309,9 @@ void glInitFunc() {
 		printf("glTexImage2DMultisample     =%08X\n", glTexImage2DMultisample     );
 		printf("glRenderbufferStorageMultisample    =%08X\n", glRenderbufferStorageMultisample);
 	}
+#endif
 
-	//after
+	//after nanikore
 	glEnable( GL_MULTISAMPLE );
 
 	//Setup Error Callback : www.opengl.org/wiki/Debug_Output

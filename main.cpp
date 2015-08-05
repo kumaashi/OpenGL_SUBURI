@@ -5,7 +5,6 @@
 //--------------------------------------------------------------------------------------
 #include "util.h"
 
-//TEST Shader
 GLuint shader      = 0;
 GLuint shader_rect = 0;
 GLuint shader_blit = 0;
