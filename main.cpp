@@ -12,7 +12,9 @@ GLuint shader_blit = 0;
 void ResetShader() {
 	//shader      = glLoadShader("./res/vvs.fx",   "./res/gvs.fx", "./res/vfs.fx");
 	shader      = glLoadShader("./res/vvs.fx",   NULL, "./res/vfs.fx");
+	printf("%s : Done %d %d %d\n", __FUNCTION__, shader, shader_rect, shader_blit);
 	shader_rect = glLoadShader("./res/vrect.fx", NULL, "./res/frect.fx");
+	printf("%s : Done %d %d %d\n", __FUNCTION__, shader, shader_rect, shader_blit);
 	shader_blit = glLoadShader("./res/vblit.fx", NULL, "./res/fblit.fx");
 	printf("%s : Done %d %d %d\n", __FUNCTION__, shader, shader_rect, shader_blit);
 }
@@ -40,17 +42,23 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 	float zNear    = 1.00;
 	float zFar     = 2560;
 
+	//Setup Camera
 	camera.Reset();
 	camera.SetScreen(Width, Height);
 	camera.SetView(pos, at, up);
 	camera.SetProj(fFov, zNear, zFar);
-
+	printf("DEBUG : done setup camera\n");
+	
 	rt.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	rtdisp.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	
+	printf("DEBUG : done RenderTarget\n");
 
 	// START !!!!!
 	static float g_time = 0;
 	ResetShader();
+	
+	printf("START\n");
 	while(ProcMsg()) {
 		//show_fps();
 		
@@ -161,7 +169,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 }
 
 
-//----------:---------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------
 // ep
 //--------------------------------------------------------------------------------------
 int main(int argc, char *argv[]) { return Init(argc, argv, StartMain);}

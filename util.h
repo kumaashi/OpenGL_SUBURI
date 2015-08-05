@@ -71,6 +71,7 @@ extern PFNGLENABLEVERTEXATTRIBARRAYPROC        glEnableVertexAttribArray   ;
 extern PFNGLDISABLEVERTEXATTRIBARRAYPROC       glDisableVertexAttribArray  ;
 extern PFNGLVERTEXATTRIBPOINTERPROC            glVertexAttribPointer       ;
 extern PFNGLGETSHADERINFOLOGPROC               glGetShaderInfoLog          ;
+extern PFNGLGETSHADERIVPROC                    glGetShaderiv               ;
 extern PFNGLTEXIMAGE3DPROC                     glTexImage3D                ;
 extern PFNGLPROGRAMUNIFORM1IPROC               glProgramUniform1i          ;
 extern PFNGLACTIVETEXTUREPROC                  glActiveTexture             ;
@@ -809,6 +810,7 @@ struct RenderTarget {
 			printf("Bind OK : %d, %d\n", rttex2, fbo2);
 		}
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		printf("%s, DONE\n", __FUNCTION__);
 
 		Width  = w;
 		Height = h;
