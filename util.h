@@ -6,6 +6,7 @@
 
 //Windows
 #include <windows.h>
+#include <windowsX.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,6 +29,14 @@
 #pragma  comment(lib, "winmm.lib")
 #pragma  comment(lib, "user32.lib")
 #pragma  comment(lib, "opengl32.lib")
+
+#pragma warning ( disable : 4313 )
+#pragma warning ( disable : 4477 )
+#pragma warning ( disable : 4838 )
+
+//type w
+#pragma warning ( disable : 4311 ) //todo
+#pragma warning ( disable : 4312 ) //todo
 
 #define  DEFAULT_WIDTH   (640)
 #define  DEFAULT_HEIGHT  (480)
@@ -139,9 +148,7 @@ inline float smoothstep(float e0, float e1, float x) {
 #define _VEC3_DEFOP_(o)  vec operator o (const vec &a) { return vec(x o a.x, y o a.y, z o a.z, w o a.w); }
 __declspec(align(256)) struct vec {
 	union {
-		struct {
-			float x, y, z, w;
-		};
+		struct { float x, y, z, w; };
 		float data[4];
 	};
 
@@ -299,11 +306,11 @@ struct Matrix {
 		float a = r * 2;
 		float b = t * 2;
 		float c = ffar - fnear;
-		d[0]		= fnear * 2 / a;
-		d[5]		= fnear * 2 / b;
-		d[10]	 = -(ffar + fnear) / c;
-		d[11]	 = -1;
-		d[14]	 = -(ffar * fnear * 2) / c;
+		d[0]    = fnear * 2 / a;
+		d[5]    = fnear * 2 / b;
+		d[10]   = -(ffar + fnear) / c;
+		d[11]   = -1;
+		d[14]   = -(ffar * fnear * 2) / c;
 		return d;
 	};
 	
@@ -465,22 +472,24 @@ struct File {
 // BoundingBox
 //--------------------------------------------------------------------------------------
 struct BoundingBox {
-	enum
-	{
+	enum {
 		Max = 99999999 //todo std::honyarara
 	};
 	float bmax[3];
 	float bmin[3];
+
 	void Init() {
 		for(int i = 0 ; i < 3; i++) bmax[i] = -Max;
 		for(int i = 0 ; i < 3; i++) bmin[i] =  Max;
 	}
+
 	void GetParam(float *p) {
 		for(int i = 0; i < 3; i++) {
 			if(bmax[i] < p[i]) bmax[i] = p[i];
 			if(bmin[i] > p[i]) bmin[i] = p[i];
 		}
 	}
+
 	void Print() {
 		printf("\n-----------------------------------\n");
 		for(int i = 0;  i < 3; i++) {
@@ -651,34 +660,34 @@ struct Mesh {
 	
 	void Create(float *v, int vnum, float *n, int nnum) {
 		glGenBuffers(Max, vbo);
-		
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[Vertex]);
 		glBufferData(GL_ARRAY_BUFFER, vnum * sizeof(float), v, GL_STATIC_DRAW);
-		
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[Normal]);
 		glBufferData(GL_ARRAY_BUFFER, nnum * sizeof(float), n, GL_STATIC_DRAW);
-		printf("%s : vnum=%d, nnum=%d\n", __FUNCTION__, vnum, nnum);
-
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		printf("%s : vnum=%d, nnum=%d\n", __FUNCTION__, vnum, nnum);
 	}
 
-	void Bind() {
+	void Begin() {
+		int offset = 0;
 		glUseProgram(shader);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[Vertex]);
 		glEnableVertexAttribArray(nAttLocPos);
-		glVertexAttribPointer(nAttLocPos, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+		glVertexAttribPointer(nAttLocPos, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (const void *)offset);
+		offset += sizeof(float) * 3;
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[Normal]);
 		glEnableVertexAttribArray(nAttLocNor);
-		glVertexAttribPointer(nAttLocNor, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
+		glVertexAttribPointer(nAttLocNor, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (const void *)offset);
 	}
 
 	void Draw() {
 		glDrawArrays(GL_TRIANGLES, 0, trinum * 3);
 	}
 
-	void Unbind() {
+	void End() {
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glDisableVertexAttribArray(nAttLocNor);
@@ -767,9 +776,8 @@ struct RenderTarget {
 	}
 	
 	void Create(int w, int h, int ms = 8) {
-		int status = 0;
 		printf("%s: Width=%d, Height=%d, Ms=%d\n", __FUNCTION__, w, h, ms);
-		
+		int status = 0;
 		//1ST Create Texture
 		glGenTextures(1, &rttex);
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, rttex);
@@ -827,7 +835,6 @@ struct RenderTarget {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	
 	void Begin() {
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	}
@@ -905,6 +912,21 @@ struct Camera {
 };
 
 //--------------------------------------------------------------------------------------
+// MouseInterface
+//--------------------------------------------------------------------------------------
+struct MouseCtrl {
+public:
+	MouseCtrl() {}
+	virtual ~MouseCtrl() {}
+	virtual int PosX()        { return 0; }
+	virtual int PosY()        { return 0; }
+	virtual int LeftClick()   { return 0; }
+	virtual int RightClick()  { return 0; }
+	virtual int CenterClick() { return 0; }
+	virtual int CenterRoll()  { return 0; }
+};
+
+//--------------------------------------------------------------------------------------
 // OS Function
 //--------------------------------------------------------------------------------------
 BOOL ProcMsg();
@@ -929,6 +951,18 @@ GLuint glLoadShader(const char *vsfile, const char *, const char *fsfile);
 //--------------------------------------------------------------------------------------
 vec giGetDirection(float a = 1.0);
 vec giGetButton(int a);
+
+
+//--------------------------------------------------------------------------------------
+// Mouse Function
+//--------------------------------------------------------------------------------------
+POINT GetMousePos();
+BOOL GetMouseLeft()  ;
+BOOL GetMouseRight() ;
+
+//EVENT
+void AddEvent_WM_SIZE(void (*proc)(int, int));
+
 
 #endif //_UTIL_H_
 

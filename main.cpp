@@ -9,38 +9,27 @@ GLuint shader      = 0;
 GLuint shader_rect = 0;
 GLuint shader_blit = 0;
 
+RenderTarget rt;
+RenderTarget rtdisp;
+Mesh         mesh;
+Camera       camera;
+
+vec pos (0,10,-10);
+vec at  (0,0,0);
+vec up  (0,1,0);
+float fFov     = 60.0;
+float zNear    = 1.00;
+float zFar     = 2560;
+
 void ResetShader() {
-	//shader      = glLoadShader("./res/vvs.fx",   "./res/gvs.fx", "./res/vfs.fx");
-	shader      = glLoadShader("./res/vvs.fx",   NULL, "./res/vfs.fx");
-	printf("%s : Done %d %d %d\n", __FUNCTION__, shader, shader_rect, shader_blit);
+	shader      = glLoadShader("./res/vvs.fx",   "./res/gvs.fx", "./res/vfs.fx");
+	//shader      = glLoadShader("./res/vvs.fx",   NULL, "./res/vfs.fx");
 	shader_rect = glLoadShader("./res/vrect.fx", NULL, "./res/frect.fx");
-	printf("%s : Done %d %d %d\n", __FUNCTION__, shader, shader_rect, shader_blit);
 	shader_blit = glLoadShader("./res/vblit.fx", NULL, "./res/fblit.fx");
-	printf("%s : Done %d %d %d\n", __FUNCTION__, shader, shader_rect, shader_blit);
 }
 
-//--------------------------------------------------------------------------------------
-// Main
-//--------------------------------------------------------------------------------------
-void StartMain(int argc, char *argv[], HDC hdc) {
-	RenderTarget rt;
-	RenderTarget rtdisp;
-	Mesh         mesh;
-	Camera       camera;
 
-	if(argc == 1) {
-		mesh.Load("./res/cube.stl");
-	} else {
-		mesh.Load(argv[1]);
-	}
-
-	//const 
-	vec pos (0,10,-10);
-	vec at  (0,0,0);
-	vec up  (0,1,0);
-	float fFov     = 60.0;
-	float zNear    = 1.00;
-	float zFar     = 2560;
+void Handle_WM_SIZE(int w, int h) {
 
 	//Setup Camera
 	camera.Reset();
@@ -51,6 +40,24 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 	
 	rt.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	rtdisp.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+}
+
+
+//--------------------------------------------------------------------------------------
+// Main
+//--------------------------------------------------------------------------------------
+void StartMain(int argc, char *argv[], HDC hdc) {
+
+
+	if(argc == 1) {
+		mesh.Load("./res/cube.stl");
+	} else {
+		mesh.Load(argv[1]);
+	}
+	
+	Handle_WM_SIZE(Width, Height);
+	AddEvent_WM_SIZE(Handle_WM_SIZE);
+
 	
 	printf("DEBUG : done RenderTarget\n");
 
@@ -77,20 +84,11 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		if(GetAsyncKeyState('A') & 0x8000) { vec pos (frand() * r, frand() * r, frand() * r); camera.SetTracking(pos, speed); }
 		camera.Update();
 
-		float info[4]  = {
-			static_cast<float>(rt.Width),
-			static_cast<float>(rt.Height),
-			static_cast<float>(zNear),
-			static_cast<float>(zFar)
-		};
+		float info[4]  = { static_cast<float>(rt.Width), static_cast<float>(rt.Height), static_cast<float>(zNear), static_cast<float>(zFar) };
 		GLint ulocinfo1 = glGetUniformLocation(shader, "info");
 
-		float info2[4] = {
-			static_cast<float>(Width),
-			static_cast<float>(Height),
-			static_cast<float>(g_time),
-			static_cast<float>(g_time)
-		};
+		float info2[4] = { static_cast<float>(Width), static_cast<float>(Height), static_cast<float>(g_time), static_cast<float>(g_time) };
+
 		GLint ulocinfo2 = glGetUniformLocation(shader, "info2");
 
 		//Set Render Path
@@ -99,10 +97,10 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		glEnable(GL_DEPTH_TEST);
 		if(1) {
 			glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0);
-			//rt.Begin();
+			rt.Begin();
 			Matrix world;
 			mesh.SetShader(shader);
-			mesh.Bind();
+			mesh.Begin();
 			glViewport(0, 0, rt.Width, rt.Height);
 			glClearColor(0.25, 0.25, 0.5, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -126,8 +124,8 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 					mesh.Draw();
 				}
 			}
-			mesh.Unbind();
-			//rt.End();
+			mesh.End();
+			rt.End();
 		}
 
 		if(1) {
