@@ -1,5 +1,6 @@
 uniform   sampler2D   tex;
-attribute vec3 pos;
+in        vec3 pos;
+in        vec3 nor;
 varying   vec4 cColor;
 varying   vec4 gColor;
 

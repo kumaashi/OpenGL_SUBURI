@@ -26,7 +26,10 @@ BOOL GetMouseRight() { return mRight; }
 //--------------------------------------------------------------------------------------
 // random
 //--------------------------------------------------------------------------------------
-static int a = 1, b = 234567, c = 890123;
+namespace {
+	static int a = 1, b = 234567, c = 890123;
+}
+
 int random() {
 	a += b;
 	b += c;
@@ -356,21 +359,30 @@ GLuint glLoadShader(const char *vsfile, const char *gsfile, const char *fsfile) 
 	if(!vs && !fs) return 0;
 
 	GLuint ret = glCreateProgram();
-	if(vs) glAttachShader(ret, vs);
-	glPrintInfoLog(vsfile, vs);
-	if(gs) glAttachShader(ret, gs);
-	glPrintInfoLog(gsfile, gs);
-	if(fs) glAttachShader(ret, fs);
-	glPrintInfoLog(fsfile, fs);
+	if(vs) {
+		glAttachShader(ret, vs);
+		glPrintInfoLog(vsfile, vs);
+	}
+
+	if(gs) {
+		glAttachShader(ret, gs);
+		glPrintInfoLog(gsfile, gs);
+	}
+	if(fs) {
+		glAttachShader(ret, fs);
+		glPrintInfoLog(fsfile, fs);
+	}
 	glLinkProgram(ret);
 	glPrintInfoLog("glLinkProgram", ret);
 	
+	/*
 	if(fs) glDeleteShader(fs);
 	glPrintInfoLog(fsfile, fs);
 	if(gs) glDeleteShader(gs);
 	glPrintInfoLog(gsfile, gs);
 	if(vs) glDeleteShader(vs);
 	glPrintInfoLog(vsfile, vs);
+	*/
 	return ret;
 }
 

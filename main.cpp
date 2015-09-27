@@ -4,28 +4,31 @@
 //
 //--------------------------------------------------------------------------------------
 #include "util.h"
-
-GLuint shader      = 0;
-GLuint shader_rect = 0;
-GLuint shader_blit = 0;
-
-RenderTarget rt;
-RenderTarget rtdisp;
-Mesh         mesh;
-Camera       camera;
-
-vec pos (0,10,-10);
-vec at  (0,0,0);
-vec up  (0,1,0);
-float fFov     = 60.0;
-float zNear    = 1.00;
-float zFar     = 2560;
+namespace {
+	GLuint       shader      = 0;
+	GLuint       shader_rect = 0;
+	GLuint       shader_blit = 0;
+	RenderTarget rt;
+	RenderTarget rtdisp;
+	Mesh         mesh;
+	Camera       camera;
+	Matrix       ctrlMatrix;
+	vec          pos(0,10,-10);
+	vec          at(0,0,0);
+	vec          up(0,1,0);
+	float        fFov     = 60.0;
+	float        zNear    = 1.00;
+	float        zFar     = 2560;
+}
 
 void ResetShader() {
 	shader      = glLoadShader("./res/vvs.fx",   "./res/gvs.fx", "./res/vfs.fx");
-	//shader      = glLoadShader("./res/vvs.fx",   NULL, "./res/vfs.fx");
 	shader_rect = glLoadShader("./res/vrect.fx", NULL, "./res/frect.fx");
 	shader_blit = glLoadShader("./res/vblit.fx", NULL, "./res/fblit.fx");
+	printf("shader     :%08X\n", shader     );
+	printf("shader_rect:%08X\n", shader_rect);
+	printf("shader_blit:%08X\n", shader_blit);
+	Sleep(1000);
 }
 
 
@@ -47,18 +50,14 @@ void Handle_WM_SIZE(int w, int h) {
 // Main
 //--------------------------------------------------------------------------------------
 void StartMain(int argc, char *argv[], HDC hdc) {
-
+	Handle_WM_SIZE(Width, Height);
+	AddEvent_WM_SIZE(Handle_WM_SIZE);
 
 	if(argc == 1) {
 		mesh.Load("./res/cube.stl");
 	} else {
 		mesh.Load(argv[1]);
 	}
-	
-	Handle_WM_SIZE(Width, Height);
-	AddEvent_WM_SIZE(Handle_WM_SIZE);
-
-	
 	printf("DEBUG : done RenderTarget\n");
 
 	// START !!!!!
@@ -92,19 +91,21 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		GLint ulocinfo2 = glGetUniformLocation(shader, "info2");
 
 		//Set Render Path
-		glClearColor(1.0, 0.0, 0.5, 0);
+		printf("\n\n=======================================================================\n");
+		glClearColor(0.0, 0.0, 1.0, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glEnable(GL_DEPTH_TEST);
+		printf("%08X\n", glGetError());
 		if(1) {
-			glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0);
 			rt.Begin();
 			Matrix world;
 			mesh.SetShader(shader);
 			mesh.Begin();
+			
 			glViewport(0, 0, rt.Width, rt.Height);
 			glClearColor(0.25, 0.25, 0.5, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glUniform4fv(ulocinfo1, 1,  info);
+			glUniform4fv(ulocinfo1, 1, info);
 			glUniform4fv(ulocinfo2, 1, info2);
 			glUniformMatrix4fv(glGetUniformLocation(shader, "view"),  1, GL_FALSE, camera.GetView());
 			glUniformMatrix4fv(glGetUniformLocation(shader, "proj"),  1, GL_FALSE, camera.GetProj());
@@ -116,6 +117,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			static float ugoki = 0.0;
 			ugoki += dtime;
 			int loc = glGetUniformLocation(shader, "world");
+			printf("glGetUniformLocation = %d\n", loc);
 			for(float z = -begin ;z < begin;z += margin) {
 				for(float x = -begin ;x < begin;x += margin) {
 					world.Ident();
@@ -128,7 +130,8 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			rt.End();
 		}
 
-		if(1) {
+		if(1)
+		{
 			rtdisp.Begin();
 			glViewport(0, 0, rt.Width, rt.Height);
 			glDisable(GL_DEPTH_TEST);
@@ -145,7 +148,8 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		}
 
 		//blit
-		if(1) {
+		if(1)
+		{
 			glUseProgram(shader_blit);
 			glViewport(0, 0, Width, Height);
 			glClearColor(0.25, 0.25, 0.5, 0);
@@ -163,6 +167,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		}
 		wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
 		g_time += (1.0 / 60.0);
+		printf("=======================================================================\n");
 	}
 }
 

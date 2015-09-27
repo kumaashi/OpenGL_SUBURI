@@ -48,7 +48,8 @@
 
 
 //DEBUG
-#define GL_DEBUG  printf("%s:%08d : glErr:%08X\n", __FUNCTION__, __LINE__, glGetError())
+#define GL_DEBUG       printf("%08d%s:%08d : glErr:%08X\n", __LINE__, __FUNCTION__, __LINE__, glGetError())
+#define GL_DEBUGEx(x)  printf("%08d%s:%08d : glErr:%08X %08X\n", __LINE__, __FUNCTION__, __LINE__, glGetError(), x)
 
 //--------------------------------------------------------------------------------------
 // OpenGL Function
@@ -103,6 +104,7 @@ extern PFNGLGENERATEMIPMAPPROC                 glGenerateMipmap            ;
 extern PFNGLTEXIMAGE2DMULTISAMPLEPROC          glTexImage2DMultisample     ;
 extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEPROC glRenderbufferStorageMultisample;
 extern PFNGLBLITFRAMEBUFFERPROC                glBlitFramebuffer           ;
+//extern PFNGLDEBUGMESSAGECALLBACKPROC           glDebugMessageCallback      ;
 
 extern  BOOL  Windowed;
 extern  int   Width   ;
@@ -615,8 +617,6 @@ struct Mesh {
 	};
 	GLuint      vbo[Max];
 	GLint       shader;
-	GLuint      nAttLocPos;
-	GLuint      nAttLocNor;
 	BoundingBox bb;
 	int         trinum;
 	
@@ -650,11 +650,13 @@ struct Mesh {
 	
 	void SetShader(int p) {
 		if(p) {
-			const char *locpos = "pos";
-			const char *locnor = "nor";
 			shader = p;
-			nAttLocPos = glGetAttribLocation( shader, locpos );
-			nAttLocNor = glGetAttribLocation( shader, locnor );
+			//GL_DEBUG;
+			//nAttLocPos = glGetAttribLocation( shader, locpos );
+			//nAttLocNor = glGetAttribLocation( shader, locnor );
+			//GL_DEBUG;
+			//printf("%d\n", nAttLocPos);
+			//printf("%d\n", nAttLocNor);
 		}
 	}
 	
@@ -671,16 +673,24 @@ struct Mesh {
 
 	void Begin() {
 		int offset = 0;
+		const char *locpos = "pos";
+		const char *locnor = "nor";
 		glUseProgram(shader);
+		glBindAttribLocation(shader, Vertex, locpos);
+		glBindAttribLocation(shader, Normal, locnor);
+
+		//DEBUG
+		printf("shader = %d\n", shader);
+		printf("vbo(Pos) = %d\n", vbo[Vertex]);
+		printf("vbo(Nor) = %d\n", vbo[Normal]);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[Vertex]);
-		glEnableVertexAttribArray(nAttLocPos);
-		glVertexAttribPointer(nAttLocPos, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (const void *)offset);
-		offset += sizeof(float) * 3;
+		glEnableVertexAttribArray(Vertex);
+		glVertexAttribPointer(Vertex, 3, GL_FLOAT, GL_FALSE, 0, (const void *)NULL);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[Normal]);
-		glEnableVertexAttribArray(nAttLocNor);
-		glVertexAttribPointer(nAttLocNor, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (const void *)offset);
+		glEnableVertexAttribArray(Normal);
+		glVertexAttribPointer(Normal, 3, GL_FLOAT, GL_FALSE, 0, (const void *)NULL);
 	}
 
 	void Draw() {
@@ -688,11 +698,14 @@ struct Mesh {
 	}
 
 	void End() {
+		/*
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glDisableVertexAttribArray(nAttLocNor);
-		glDisableVertexAttribArray(nAttLocPos);
+		glDisableVertexAttribArray(Normal);
+		glDisableVertexAttribArray(Vertex);
+		*/
 		glUseProgram(0);
+		GL_DEBUG;
 	}
 
 };
@@ -755,13 +768,13 @@ struct RenderTarget {
 	GLuint rbo;
 	int Width, Height, Sample;
 
-	void SetupState() {
+	void glSetupState() {
 		struct Param {
 			GLenum pname;
 			GLint  param;
 		};
 		Param param[] = {
-			{ GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST},
+			//{ GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST},
 			{ GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST},
 			{ GL_TEXTURE_WRAP_S,     GL_CLAMP_TO_EDGE},
 			{ GL_TEXTURE_WRAP_T,     GL_CLAMP_TO_EDGE},
@@ -772,52 +785,73 @@ struct RenderTarget {
 		for(int i = 0 ; param[i].pname; i++) {
 			Param *w = &param[i];
 			glTexParameteri(GL_TEXTURE_2D, w->pname, w->param);
+			GL_DEBUG;
 		}
 	}
 	
 	void Create(int w, int h, int ms = 8) {
 		printf("%s: Width=%d, Height=%d, Ms=%d\n", __FUNCTION__, w, h, ms);
 		int status = 0;
-		//1ST Create Texture
-		glGenTextures(1, &rttex);
+		glGenTextures(1, &rttex);  //1ST Create Texture
+		GL_DEBUG;
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, rttex);
+		GL_DEBUG;
 		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, ms, GL_RGBA32F, w, h, GL_TRUE);
-		SetupState();
+		GL_DEBUG;
+		glSetupState();
 		glBindTexture(GL_TEXTURE_2D, 0);
+		GL_DEBUG;
 		
 		glGenFramebuffers(1, &fbo);
+		GL_DEBUG;
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		GL_DEBUG;
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, rttex, 0);
+		GL_DEBUG;
 		
 		glGenRenderBuffers(1, &rbo);
+		GL_DEBUG;
 		glBindRenderBuffer(GL_RENDERBUFFER, rbo);
+		GL_DEBUG;
 		glRenderbufferStorageMultisample(GL_RENDERBUFFER, ms, GL_DEPTH_COMPONENT32, w, h);
+		GL_DEBUG;
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
+		GL_DEBUG;
 		if((status = glCheckFramebufferStatus(GL_FRAMEBUFFER)) != glCheckFramebufferStatus(GL_FRAMEBUFFER)) {
 			printf("Bind Failed : status=%08X\n", status);
 		} else {
 			printf("Bind OK : %d, %d\n", rttex, fbo);
 		}
 		glBindRenderBuffer(GL_RENDERBUFFER, 0);
+		GL_DEBUG;
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		GL_DEBUG;
 
 		//2ND
 		glGenTextures(1, &rttex2);
+		GL_DEBUG;
 		glBindTexture(GL_TEXTURE_2D, rttex2);
+		GL_DEBUG;
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, w, h, 0, GL_RGBA, GL_FLOAT, 0);
+		GL_DEBUG;
 		//glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, ms, GL_RGBA32F, w, h, GL_TRUE);
-		SetupState();
+		glSetupState();
 		glBindTexture(GL_TEXTURE_2D, 0);
+		GL_DEBUG;
 
 		glGenFramebuffers(1, &fbo2);
+		GL_DEBUG;
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
+		GL_DEBUG;
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, rttex2, 0);
+		GL_DEBUG;
 		if( (status = glCheckFramebufferStatus(GL_FRAMEBUFFER)) != glCheckFramebufferStatus(GL_FRAMEBUFFER)) {
 			printf("Bind Failed : status=%08X\n", status);
 		} else {
 			printf("Bind OK : %d, %d\n", rttex2, fbo2);
 		}
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		GL_DEBUG;
 		printf("%s, DONE\n", __FUNCTION__);
 
 		Width  = w;
@@ -827,29 +861,40 @@ struct RenderTarget {
 
 	void SetTexture() {
 		glActiveTexture(GL_TEXTURE0);
+		GL_DEBUG;
 		glBindTexture(GL_TEXTURE_2D, rttex2);
+		GL_DEBUG;
 		glGenerateMipmap(GL_TEXTURE_2D);
+		GL_DEBUG;
 	}
 	
 	void UnsetTexture() {
 		glBindTexture(GL_TEXTURE_2D, 0);
+		GL_DEBUG;
 	}
 
 	void Begin() {
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		GL_DEBUGEx(fbo);
 	}
 
 	void End() {
 		Resolve();
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		GL_DEBUG;
 	}
 
 	void Resolve() {
 		glBindFramebuffer( GL_READ_FRAMEBUFFER, fbo);
+		GL_DEBUG;
 		glBindFramebuffer( GL_DRAW_FRAMEBUFFER, fbo2);
+		GL_DEBUG;
 		glBlitFramebuffer(0, 0, Width, Height, 0, 0, Width, Height, GL_COLOR_BUFFER_BIT, GL_NEAREST );
+		GL_DEBUG;
 		glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0);
+		GL_DEBUG;
 		glBindFramebuffer( GL_READ_FRAMEBUFFER, 0);
+		GL_DEBUG;
 	}
 };
 
@@ -911,20 +956,6 @@ struct Camera {
 	}
 };
 
-//--------------------------------------------------------------------------------------
-// MouseInterface
-//--------------------------------------------------------------------------------------
-struct MouseCtrl {
-public:
-	MouseCtrl() {}
-	virtual ~MouseCtrl() {}
-	virtual int PosX()        { return 0; }
-	virtual int PosY()        { return 0; }
-	virtual int LeftClick()   { return 0; }
-	virtual int RightClick()  { return 0; }
-	virtual int CenterClick() { return 0; }
-	virtual int CenterRoll()  { return 0; }
-};
 
 //--------------------------------------------------------------------------------------
 // OS Function
