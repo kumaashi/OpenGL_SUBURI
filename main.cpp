@@ -33,12 +33,10 @@ void ResetShader() {
 	printf("shader     :%08X\n", shader     );
 	printf("shader_rect:%08X\n", shader_rect);
 	printf("shader_blit:%08X\n", shader_blit);
-	Sleep(1000);
 }
 
 
 void Handle_WM_SIZE(int w, int h) {
-
 	//Setup Camera
 	camera.Reset();
 	camera.SetScreen(Width, Height);
@@ -59,23 +57,16 @@ void Handle_WM_SIZE(int w, int h) {
 void StartMain(int argc, char *argv[], HDC hdc) {
 	Handle_WM_SIZE(Width, Height);
 	AddEvent_WM_SIZE(Handle_WM_SIZE);
-
+	ResetShader();
+	
 	if(argc == 1) {
 		mesh.Load(shader, "./res/cube.stl");
 	} else {
 		mesh.Load(shader, argv[1]);
 	}
-	printf("DEBUG : done RenderTarget\n");
-
-	// START !!!!!
-	static float g_time = 0;
-	ResetShader();
 	
-	printf("START\n");
+	static float g_time = 0;
 	while(ProcMsg()) {
-		//show_fps();
-		
-		//Create Delta
 		static unsigned long start = timeGetTime();
 		unsigned long delta = timeGetTime() - start;
 		float dtime = float(delta) / 1000.0f;
@@ -84,10 +75,11 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		//Update
 		float r = 30;
 		float speed = 0.3 * dtime;
-		if(GetAsyncKeyState(VK_F5) & 0x8000) { ResetShader(); }
+		if(GetAsyncKeyState('S') & 0x8000) { ResetShader(); }
 		if(GetAsyncKeyState('1') & 0x8000) { vec pos (r, r, -r); camera.SetTracking(pos, speed); }
 		if(GetAsyncKeyState('2') & 0x8000) { vec pos (-r, r, -r); camera.SetTracking(pos, speed); }
 		if(GetAsyncKeyState('A') & 0x8000) { vec pos (frand() * r, frand() * r, frand() * r); camera.SetTracking(pos, speed); }
+		
 		camera.Update();
 
 		float info[4]  = { static_cast<float>(rt.Width), static_cast<float>(rt.Height), static_cast<float>(zNear), static_cast<float>(zFar) };
@@ -96,8 +88,8 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		//Set Render Path
 		if(1) {
 			//rt.Begin();
-
-			glViewport(0, 0, rt.Width, rt.Height);
+			//glViewport(0, 0, rt.Width, rt.Height);
+			glViewport(0, 0, Width, Height);
 			glClearColor(0.25, 0.25, 0.5, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glEnable(GL_DEPTH_TEST);
@@ -105,21 +97,6 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			Matrix world;
 			mesh.Begin(shader);
 
-			enum {
-				LocInfo1 = 1,
-				LocInfo2,
-				LocViewMatrix,
-				LocProjMatrix,
-				LocWorldMatrix,
-				LocMax,
-			};
-			/*
-			glUniform4fv(LocInfo1, 1, info);
-			glUniform4fv(LocInfo2, 1, info2);
-			printf("view  = %d\n",  glGetUniformLocation(shader,  "view")  );
-			printf("proj  = %d\n",  glGetUniformLocation(shader,  "proj")  );
-			printf("world = %d\n",  glGetUniformLocation(shader,  "world") );
-			*/
 			glUniformMatrix4fv(glGetUniformLocation(shader,  "view"),  1, GL_FALSE, camera.GetView());
 			glUniformMatrix4fv(glGetUniformLocation(shader,  "proj"),  1, GL_FALSE, camera.GetProj());
 
@@ -139,6 +116,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			}
 			mesh.End();
 			//rt.End();
+			
 		}
 
 		if(0)

@@ -52,7 +52,10 @@ struct Mesh {
 	}
 
 	void Create(int p, float *v, int vnum, float *n, int nnum) {
-		if(!p) return;
+		if(!p) {
+			printf("%s : Invalid program\n", __FUNCTION__);
+			return;
+		}
 		int index = 0;
 		int size  = sizeof(float) * 3;
 		shader = p;
@@ -62,19 +65,31 @@ struct Mesh {
 		glBindVertexArray(layout);
 		
 		glGenBuffers(Max, vbo);
+		GL_DEBUG;
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[VertexLayout]);
+		GL_DEBUG;
 		glBufferData(GL_ARRAY_BUFFER, vnum * sizeof(float), v, GL_STATIC_DRAW);
+		GL_DEBUG;
 		int LocPos = glGetAttribLocation( shader, "pos" );
 		glEnableVertexAttribArray(LocPos);
+		GL_DEBUG;
 		glVertexAttribPointer(LocPos, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (const void *)0);
+		GL_DEBUG;
 		
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[NormalLayout]);
+		GL_DEBUG;
 		glBufferData(GL_ARRAY_BUFFER, nnum * sizeof(float), n, GL_STATIC_DRAW);
+		GL_DEBUG;
 		int LocNor = glGetAttribLocation( shader, "nor" );
+		GL_DEBUG;
 		glEnableVertexAttribArray(LocNor);
+		GL_DEBUG;
 		glVertexAttribPointer(LocNor, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (const void *)0);
+		GL_DEBUG;
 
+		GL_DEBUG;
 		glBindVertexArray(0);
+		GL_DEBUG;
 	}
 
 	void Begin(int p) {
