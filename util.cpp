@@ -146,13 +146,29 @@ int Init(int argc, char *argv[], void (*StartMain)(int argc, char *argv[], HDC h
 		NULL, appname, NULL
 	};
 	wcex.hInstance = GetModuleHandle(NULL);
-	RegisterClassEx(&wcex);
-	DWORD styleex = WS_EX_APPWINDOW | (Windowed ? WS_EX_WINDOWEDGE : 0);
 	DWORD style   = Windowed ? WS_OVERLAPPEDWINDOW : WS_POPUP;
+	DWORD styleex = WS_EX_APPWINDOW | (Windowed ? WS_EX_WINDOWEDGE : 0);
 	
-	//TODO GetWindowMetrics
-	HWND  hWnd    = CreateWindowEx(
-		styleex, appname, appname, style, 0, 0, Width, Height, NULL, NULL, wcex.hInstance, NULL);
+	RECT   rc;
+	SetRect(&rc, 0, 0, Width, Height);
+	AdjustWindowRectEx(&rc, style, FALSE, styleex);
+	rc.right  -= rc.left;
+	rc.bottom -= rc.top;
+	if (!RegisterClassEx(&wcex)) {
+		printf("%s : failed RegisterClassEx\n", __FUNCTION__);
+		return -1;
+	}
+	HWND hWnd = CreateWindowEx(
+	           styleex, appname, appname, style,
+	           (GetSystemMetrics(SM_CXSCREEN) - rc.right)  / 2,
+	           (GetSystemMetrics(SM_CYSCREEN) - rc.bottom) / 2,
+	           rc.right, rc.bottom, 0, 0, wcex.hInstance, 0);
+	printf("%d %d\n", (GetSystemMetrics(SM_CXSCREEN) - rc.right)  / 2, (GetSystemMetrics(SM_CYSCREEN) - rc.bottom) / 2);
+	printf("%d %d\n", rc.right, rc.bottom);
+	if(!hWnd) {
+		printf("%s : failed CreateWindowEx\n", __FUNCTION__);
+		return -1;
+	}
 	ShowWindow(hWnd, SW_SHOW);
 	UpdateWindow(hWnd);
 	if(!Windowed) {
