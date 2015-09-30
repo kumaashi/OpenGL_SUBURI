@@ -206,6 +206,7 @@ int Init(int argc, char *argv[], void (*StartMain)(int argc, char *argv[], HDC h
 //
 //--------------------------------------------------------------------------------------
 PFNGLCREATEPROGRAMPROC                  glCreateProgram             = NULL;
+PFNGLDELETEPROGRAMPROC                  glDeleteProgram             = NULL;
 PFNGLCREATESHADERPROC                   glCreateShader              = NULL;
 PFNGLSHADERSOURCEPROC                   glShaderSource              = NULL;
 PFNGLCOMPILESHADERPROC                  glCompileShader             = NULL;
@@ -235,10 +236,12 @@ PFNGLTEXIMAGE3DPROC                     glTexImage3D                = NULL;
 PFNGLPROGRAMUNIFORM1IPROC               glProgramUniform1i          = NULL;
 PFNGLACTIVETEXTUREPROC                  glActiveTexture             = NULL;
 PFNGLGETPROGRAMINFOLOGPROC              glGetProgramInfoLog         = NULL;
+PFNGLGETPROGRAMIVPROC                   glGetProgramiv              = NULL;
 PFNGLGETATTRIBLOCATIONPROC              glGetAttribLocation         = NULL;
 PFNGLBINDVERTEXARRAYPROC                glBindVertexArray           = NULL;
 PFNGLBINDATTRIBLOCATIONPROC             glBindAttribLocation        = NULL;
 PFNGLGENVERTEXARRAYSPROC                glGenVertexArrays           = NULL;
+PFNGLDELETEVERTEXARRAYSPROC             glDeleteVertexArrays        = NULL;
 PFNGLGENFRAMEBUFFERSPROC                glGenFramebuffers           = NULL;
 PFNGLBINDFRAMEBUFFERPROC                glBindFramebuffer           = NULL;
 PFNGLGENRENDERBUFFERSPROC               glGenRenderBuffers          = NULL;
@@ -266,6 +269,7 @@ static void glErrorCallbackUser (GLenum source, GLenum type, GLuint id,
 
 void glInitFunc() {
 	glCreateProgram             = (PFNGLCREATEPROGRAMPROC             )wglGetProcAddress("glCreateProgram");
+	glDeleteProgram             = (PFNGLDELETEPROGRAMPROC             )wglGetProcAddress("glDeleteProgram");
 	glCreateShader              = (PFNGLCREATESHADERPROC              )wglGetProcAddress("glCreateShader");
 	glShaderSource              = (PFNGLSHADERSOURCEPROC              )wglGetProcAddress("glShaderSource");
 	glCompileShader             = (PFNGLCOMPILESHADERPROC             )wglGetProcAddress("glCompileShader");
@@ -296,10 +300,12 @@ void glInitFunc() {
 	glProgramUniform1i          = (PFNGLPROGRAMUNIFORM1IPROC          )wglGetProcAddress("glProgramUniform1i");
 	glActiveTexture             = (PFNGLACTIVETEXTUREPROC             )wglGetProcAddress("glActiveTexture");
 	glGetProgramInfoLog         = (PFNGLGETPROGRAMINFOLOGPROC         )wglGetProcAddress("glGetProgramInfoLog");
+	glGetProgramiv              = (PFNGLGETPROGRAMIVPROC              )wglGetProcAddress("glGetProgramiv");
 	glGetAttribLocation         = (PFNGLGETATTRIBLOCATIONPROC         )wglGetProcAddress("glGetAttribLocation");
 	glBindVertexArray           = (PFNGLBINDVERTEXARRAYPROC           )wglGetProcAddress("glBindVertexArray");
 	glBindAttribLocation        = (PFNGLBINDATTRIBLOCATIONPROC        )wglGetProcAddress("glBindAttribLocation");
 	glGenVertexArrays           = (PFNGLGENVERTEXARRAYSPROC           )wglGetProcAddress("glGenVertexArrays");
+	glDeleteVertexArrays        = (PFNGLDELETEVERTEXARRAYSPROC        )wglGetProcAddress("glDeleteVertexArrays");
 	glGenFramebuffers           = (PFNGLGENFRAMEBUFFERSPROC           )wglGetProcAddress("glGenFramebuffers");
 	glBindFramebuffer           = (PFNGLBINDFRAMEBUFFERPROC           )wglGetProcAddress("glBindFramebuffer");
 	glGenRenderBuffers          = (PFNGLGENRENDERBUFFERSPROC          )wglGetProcAddress("glGenRenderbuffers");
@@ -327,83 +333,5 @@ void glSetInterval(int isinterval) {
 	if( strstr( (char*)glGetString( GL_EXTENSIONS ), "WGL_EXT_swap_control") == 0) return;
 	wglSwapIntervalEXT = (BOOL (WINAPI*)(int))wglGetProcAddress("WGL_EXT_swap_control");
 	if(wglSwapIntervalEXT) wglSwapIntervalEXT(isinterval);
-}
-
-//--------------------------------------------------------------------------------------
-// glPrintInfoLog
-//--------------------------------------------------------------------------------------
-void glPrintInfoLog(const char *name, GLuint shader) {
-	int size = 0;
-	glGetShaderiv(shader, GL_INFO_LOG_LENGTH , &size);
-	if(size) {
-		printf("log size = %d\n", size);
-		std::vector<char> buf(size);
-		memset(&buf[0], 0, buf.size());
-		glGetShaderInfoLog(shader, buf.size(), &size, &buf[0]);
-		printf("%s START name=%s, ============================\n", __FUNCTION__, name);
-		char *s = &buf[0];
-		printf("%s\n", s);
-		printf("%s END   name=%s, ============================\n", __FUNCTION__, name);
-	}
-}
-
-
-//--------------------------------------------------------------------------------------
-// glCreateShaderFromFile
-//--------------------------------------------------------------------------------------
-static GLuint glCreateShaderFromFile(const char *fname, int type) {
-	File fp;
-	int size = fp.Open(fname, "rb");
-	if(size <= 0) return 0;
-	unsigned char *b = fp.Buf();
-	GLuint vs = glCreateShader(type);
-	glShaderSource(vs, 1, (char **)&b, &size);
-	glCompileShader(vs);
-	glPrintInfoLog(fname, vs);
-	return vs;
-}
-
-//--------------------------------------------------------------------------------------
-// glLoadShader
-//--------------------------------------------------------------------------------------
-GLuint glLoadShader(const char *vsfile, const char *gsfile, const char *fsfile) {
-	GLsizei size;
-	GLuint vs = glCreateShaderFromFile(vsfile, GL_VERTEX_SHADER);
-	GLuint gs = glCreateShaderFromFile(gsfile, GL_GEOMETRY_SHADER);
-	GLuint fs = glCreateShaderFromFile(fsfile, GL_FRAGMENT_SHADER);
-	
-	//printf("%s:%d %s:%d %s:%d Done\n", vsfile, vs, gsfile, gs, fsfile, fs);
-	if(!vs && !fs) return 0;
-
-	GLuint ret = glCreateProgram();
-	if(vs) {
-		glAttachShader(ret, vs);
-		glPrintInfoLog(vsfile, vs);
-	}
-
-	if(gs) {
-		glAttachShader(ret, gs);
-		glPrintInfoLog(gsfile, gs);
-	}
-	if(fs) {
-		glAttachShader(ret, fs);
-		glPrintInfoLog(fsfile, fs);
-	}
-	/*
-	glBindAttribLocation(ret, Vertex, "pos");
-	glBindAttribLocation(ret, Normal, "nor");
-	*/
-	glLinkProgram(ret);
-	glPrintInfoLog("glLinkProgram", ret);
-	
-	/*
-	if(fs) glDeleteShader(fs);
-	glPrintInfoLog(fsfile, fs);
-	if(gs) glDeleteShader(gs);
-	glPrintInfoLog(gsfile, gs);
-	if(vs) glDeleteShader(vs);
-	glPrintInfoLog(vsfile, vs);
-	*/
-	return ret;
 }
 

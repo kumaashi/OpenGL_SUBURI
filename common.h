@@ -23,6 +23,7 @@
 //--------------------------------------------------------------------------------------
 extern PFNGLDEBUGMESSAGECALLBACKPROC           glDebugMessageCallback      ;
 extern PFNGLCREATEPROGRAMPROC                  glCreateProgram             ;
+extern PFNGLDELETEPROGRAMPROC                  glDeleteProgram             ;
 extern PFNGLCREATESHADERPROC                   glCreateShader              ;
 extern PFNGLSHADERSOURCEPROC                   glShaderSource              ;
 extern PFNGLCOMPILESHADERPROC                  glCompileShader             ;
@@ -52,11 +53,13 @@ extern PFNGLGETSHADERIVPROC                    glGetShaderiv               ;
 extern PFNGLTEXIMAGE3DPROC                     glTexImage3D                ;
 extern PFNGLPROGRAMUNIFORM1IPROC               glProgramUniform1i          ;
 extern PFNGLACTIVETEXTUREPROC                  glActiveTexture             ;
+extern PFNGLGETPROGRAMIVPROC                   glGetProgramiv              ;
 extern PFNGLGETPROGRAMINFOLOGPROC              glGetProgramInfoLog         ;
 extern PFNGLGETATTRIBLOCATIONPROC              glGetAttribLocation         ;
 extern PFNGLBINDVERTEXARRAYPROC                glBindVertexArray           ;
 extern PFNGLBINDATTRIBLOCATIONPROC             glBindAttribLocation        ;
 extern PFNGLGENVERTEXARRAYSPROC                glGenVertexArrays           ;
+extern PFNGLDELETEVERTEXARRAYSPROC             glDeleteVertexArrays        ;
 extern PFNGLGENFRAMEBUFFERSPROC                glGenFramebuffers           ;
 extern PFNGLBINDFRAMEBUFFERPROC                glBindFramebuffer           ;
 extern PFNGLGENRENDERBUFFERSPROC               glGenRenderBuffers          ;

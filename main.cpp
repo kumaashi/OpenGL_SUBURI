@@ -9,12 +9,15 @@
 #include "camera.h"
 
 namespace {
-	GLuint       shader      = 0;
-	GLuint       shader_rect = 0;
-	GLuint       shader_blit = 0;
+	
+	Shader       mshader;
+	Shader       rectshader;
+	Shader       blitshader;
+	Mesh         mesh;
+	
 	RenderTarget rt;
 	RenderTarget rtdisp;
-	Mesh         mesh;
+	
 	Camera       camera;
 	Matrix       ctrlMatrix;
 	vec          pos(0,10,-10);
@@ -26,13 +29,14 @@ namespace {
 }
 
 void ResetShader() {
-	//shader      = glLoadShader("./res/vvs.fx",   "./res/gvs.fx", "./res/vfs.fx");
-	shader      = glLoadShader("./res/vvs.fx",   NULL, "./res/vfs.fx");
-	shader_rect = glLoadShader("./res/vrect.fx", NULL, "./res/frect.fx");
-	shader_blit = glLoadShader("./res/vblit.fx", NULL, "./res/fblit.fx");
-	printf("shader     :%08X\n", shader     );
-	printf("shader_rect:%08X\n", shader_rect);
-	printf("shader_blit:%08X\n", shader_blit);
+	//mshader      = LoadProgramFromFile("./res/vvs.fx",   "./res/gvs.fx", "./res/vfs.fx");
+	mshader.LoadProgramFromFile("./res/vvs.fx",   NULL, "./res/vfs.fx");
+	rectshader.LoadProgramFromFile("./res/vrect.fx", NULL, "./res/frect.fx");
+	blitshader.LoadProgramFromFile("./res/vblit.fx", NULL, "./res/fblit.fx");
+	if(!mshader.Get()) WAIT(1000);
+	if(!rectshader.Get()) WAIT(1000);
+	if(!blitshader.Get()) WAIT(1000);
+	printf("DEBUG : done ResetShader\n");
 }
 
 
@@ -44,10 +48,8 @@ void Handle_WM_SIZE(int w, int h) {
 	camera.SetProj(fFov, zNear, zFar);
 	printf("DEBUG : done setup camera\n");
 	
-	/*
 	rt.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	rtdisp.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-	*/
 }
 
 
@@ -60,9 +62,9 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 	ResetShader();
 	
 	if(argc == 1) {
-		mesh.Load(shader, "./res/cube.stl");
+		mesh.Load(&mshader, "./res/cube.stl");
 	} else {
-		mesh.Load(shader, argv[1]);
+		mesh.Load(&mshader, argv[1]);
 	}
 	
 	static float g_time = 0;
@@ -87,21 +89,22 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 
 		//Set Render Path
 		if(1) {
-			//rt.Begin();
-			//glViewport(0, 0, rt.Width, rt.Height);
-			glViewport(0, 0, Width, Height);
+			rt.Begin();
+			glViewport(0, 0, rt.Width, rt.Height);
 			glClearColor(0.25, 0.25, 0.5, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glEnable(GL_DEPTH_TEST);
 
 			Matrix world;
-			mesh.Begin(shader);
-
-			glUniformMatrix4fv(glGetUniformLocation(shader,  "view"),  1, GL_FALSE, camera.GetView());
-			glUniformMatrix4fv(glGetUniformLocation(shader,  "proj"),  1, GL_FALSE, camera.GetProj());
+			mesh.Begin();
+			
+			GLint locview  = mshader.GetUniformLocation("view");
+			GLint locproj  = mshader.GetUniformLocation("proj");
+			GLint locworld = mshader.GetUniformLocation("world");
+			glUniformMatrix4fv(locview, 1, GL_FALSE, camera.GetView());
+			glUniformMatrix4fv(locproj, 1, GL_FALSE, camera.GetProj());
 
 			//RANDOM MOVE
-			srand(0);
 			float begin  = 50;
 			float margin = 2.2;
 			static float ugoki = 0.0;
@@ -110,25 +113,24 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 				for(float x = -begin ;x < begin;x += margin) {
 					world.Ident();
 					world.Trans(x, sin(3.0 * x + z + x * z + ugoki * 3.2) * 0.5, z);
-					glUniformMatrix4fv(glGetUniformLocation(shader,  "world"), 1, GL_FALSE, (float *)&world);
+					glUniformMatrix4fv(locworld, 1, GL_FALSE, (float *)&world);
 					mesh.Draw();
 				}
 			}
 			mesh.End();
-			//rt.End();
-			
+			rt.End();
 		}
 
-		if(0)
+		if(1)
 		{
 			rtdisp.Begin();
+			glUseProgram(rectshader.Get());
 			glViewport(0, 0, rt.Width, rt.Height);
 			glDisable(GL_DEPTH_TEST);
-			glUseProgram(shader_rect);
 			rt.SetTexture();
-			glUniform1i(glGetUniformLocation(shader_rect,  "tex"),   0);
-			glUniform4fv(glGetUniformLocation(shader_rect, "info"),  1, info);
-			glUniform4fv(glGetUniformLocation(shader_rect, "info2"), 1, info2);
+			glUniform1i( rectshader.GetUniformLocation("tex"),   0);
+			glUniform4fv(rectshader.GetUniformLocation("info"),  1, info);
+			glUniform4fv(rectshader.GetUniformLocation("info2"), 1, info2);
 			glRects(-1, -1, 1, 1);
 			rt.UnsetTexture();
 			glEnable(GL_DEPTH_TEST);
@@ -137,18 +139,18 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		}
 
 		//blit
-		if(0)
+		if(1)
 		{
-			glUseProgram(shader_blit);
+			glUseProgram(blitshader.Get());
 			glViewport(0, 0, Width, Height);
 			glClearColor(0.25, 0.25, 0.5, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			glDisable(GL_DEPTH_TEST);
 			rtdisp.SetTexture();
-			glUniform1i(glGetUniformLocation(shader_blit,  "tex"), 0);
-			glUniform4fv(glGetUniformLocation(shader_blit, "info"), 1, info);
-			glUniform4fv(glGetUniformLocation(shader_blit, "info2"), 1, info2);
+			glUniform1i( blitshader.GetUniformLocation("tex"), 0);
+			glUniform4fv(blitshader.GetUniformLocation("info"), 1, info);
+			glUniform4fv(blitshader.GetUniformLocation("info2"), 1, info2);
 			glRects(-1, -1, 1, 1);
 			rtdisp.UnsetTexture();
 			glEnable(GL_DEPTH_TEST);
@@ -156,6 +158,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		}
 		wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
 		g_time += (1.0 / 60.0);
+		//Sleep(16);
 	}
 }
 
