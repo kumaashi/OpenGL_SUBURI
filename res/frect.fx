@@ -66,8 +66,8 @@ void main() {
 	vec3  L      = normalize(vec3(1, 2, 3));
 	float D      = max(0.0, dot(col.xyz, L));
 	float AO     = getao2(uv);
-	gl_FragColor = texture2D(tex, uv) * D * vec4(AO);
-	//gl_FragColor = vec4(AO);
+	//gl_FragColor = texture2D(tex, uv) * D * vec4(AO);
+	gl_FragColor = vec4(AO);
 }
 
 

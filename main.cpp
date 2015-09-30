@@ -69,6 +69,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 	
 	static float g_time = 0;
 	while(ProcMsg()) {
+		show_fps();
 		static unsigned long start = timeGetTime();
 		unsigned long delta = timeGetTime() - start;
 		float dtime = float(delta) / 1000.0f;
