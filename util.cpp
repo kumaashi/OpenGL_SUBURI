@@ -1,4 +1,5 @@
 #include "util.h"
+#include "file.h"
 
 //--------------------------------------------------------------------------------------
 // Global
@@ -388,6 +389,10 @@ GLuint glLoadShader(const char *vsfile, const char *gsfile, const char *fsfile) 
 		glAttachShader(ret, fs);
 		glPrintInfoLog(fsfile, fs);
 	}
+	/*
+	glBindAttribLocation(ret, Vertex, "pos");
+	glBindAttribLocation(ret, Normal, "nor");
+	*/
 	glLinkProgram(ret);
 	glPrintInfoLog("glLinkProgram", ret);
 	
