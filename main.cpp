@@ -28,9 +28,11 @@ namespace {
 	float        zFar     = 2560;
 }
 
+//ResetShader
 void ResetShader() {
 	//mshader      = LoadProgramFromFile("./res/vvs.fx",   "./res/gvs.fx", "./res/vfs.fx");
-	mshader.LoadProgramFromFile("./res/vvs.fx",   NULL, "./res/vfs.fx");
+	//mshader.LoadProgramFromFile("./res/vvs.fx",   NULL, "./res/vfs.fx");
+	mshader.LoadProgramFromFile("./res/vvs.fx",   "./res/gvs.fx", "./res/vfs.fx");
 	rectshader.LoadProgramFromFile("./res/vrect.fx", NULL, "./res/frect.fx");
 	blitshader.LoadProgramFromFile("./res/vblit.fx", NULL, "./res/fblit.fx");
 
@@ -38,19 +40,27 @@ void ResetShader() {
 	if(!mshader.Get())    WAIT(1000);
 	if(!rectshader.Get()) WAIT(1000);
 	if(!blitshader.Get()) WAIT(1000);
-	printf("DEBUG : done ResetShader\n");
+	printf("%s:done ResetShader\n", __FUNCTION__);
 }
 
+//Setup RenderTarget
+void ResetRenderTarget() {
+	rt.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	rtdisp.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+}
 
-void Handle_WM_SIZE(int w, int h) {
-	printf("%s : Call", __FUNCTION__);
-	//Setup Camera
+//Setup Camera
+void ResetCamera() {
 	camera.Reset();
 	camera.SetScreen(GetWidth(), GetHeight());
 	camera.SetView(pos, at, up);
 	camera.SetProj(fFov, zNear, zFar);
-	rt.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-	rtdisp.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+}
+
+void Handle_WM_SIZE(int w, int h) {
+	printf("%s : Call", __FUNCTION__);
+	ResetCamera();
+	ResetRenderTarget();
 }
 
 
