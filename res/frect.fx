@@ -1,4 +1,4 @@
-#define AO_REP      32
+#define AO_REP      8
 #define SAMPLES     8
 #define PI          3.14159265358979323846
 #define ADSAMPLES   ((2 * PI) / SAMPLES)
@@ -66,6 +66,7 @@ void main() {
 	vec3  L      = normalize(vec3(1, 2, 3));
 	float D      = max(0.0, dot(col.xyz, L));
 	float AO     = getao2(uv);
+	//float AO     = getao(uv);
 	//gl_FragColor = texture2D(tex, uv) * D * vec4(AO);
 	gl_FragColor = vec4(AO);
 }

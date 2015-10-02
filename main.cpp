@@ -41,12 +41,14 @@ void ResetShader() {
 
 
 void Handle_WM_SIZE(int w, int h) {
+	printf("%s : Call", __FUNCTION__);
 	//Setup Camera
 	camera.Reset();
-	camera.SetScreen(Width, Height);
+	camera.SetScreen(GetWidth(), GetHeight());
+	/*
 	camera.SetView(pos, at, up);
 	camera.SetProj(fFov, zNear, zFar);
-	printf("DEBUG : done setup camera\n");
+	*/
 	
 	rt.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	rtdisp.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
@@ -57,7 +59,7 @@ void Handle_WM_SIZE(int w, int h) {
 // Main
 //--------------------------------------------------------------------------------------
 void StartMain(int argc, char *argv[], HDC hdc) {
-	Handle_WM_SIZE(Width, Height);
+	Handle_WM_SIZE(GetWidth(), GetHeight());
 	AddEvent_WM_SIZE(Handle_WM_SIZE);
 	ResetShader();
 	
@@ -86,7 +88,8 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		camera.Update();
 
 		float info[4]  = { static_cast<float>(rt.Width), static_cast<float>(rt.Height), static_cast<float>(zNear), static_cast<float>(zFar) };
-		float info2[4] = { static_cast<float>(Width), static_cast<float>(Height), static_cast<float>(g_time), static_cast<float>(g_time) };
+		float info2[4] = { static_cast<float>(GetWidth()), static_cast<float>(GetHeight()), static_cast<float>(g_time), static_cast<float>(g_time) };
+		//float info2[4] = { static_cast<float>(rt.Width), static_cast<float>(rt.Height), static_cast<float>(g_time), static_cast<float>(g_time) };
 
 		//Set Render Path
 		if(1) {
@@ -143,7 +146,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		if(1)
 		{
 			glUseProgram(blitshader.Get());
-			glViewport(0, 0, Width, Height);
+			glViewport(0, 0, GetWidth(), GetHeight());
 			glClearColor(0.25, 0.25, 0.5, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);

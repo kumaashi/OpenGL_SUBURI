@@ -25,10 +25,6 @@
 #define DEFAULT_WIDTH     (1280)
 #define DEFAULT_HEIGHT    (720)
 
-extern  BOOL  Windowed;
-extern  int   Width   ;
-extern  int   Height  ;
-
 //OS Function
 BOOL ProcMsg();
 int Init(int argc, char *argv[], void (*StartMain)(int argc, char *argv[], HDC hdc));
@@ -45,9 +41,12 @@ GLuint glLoadShader(const char *vsfile, const char *, const char *fsfile);
 //Input Function
 vec   giGetDirection(float a = 1.0);
 vec   giGetButton(int a);
+
 POINT GetMousePos();
 BOOL  GetMouseLeft()  ;
 BOOL  GetMouseRight() ;
+int   GetWidth();
+int   GetHeight();
 
 //EVENT
 void AddEvent_WM_SIZE(void (*proc)(int, int));

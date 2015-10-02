@@ -4,47 +4,26 @@
 //--------------------------------------------------------------------------------------
 // Global
 //--------------------------------------------------------------------------------------
-BOOL  Windowed      = TRUE;
-int   Width         = DEFAULT_WIDTH;
-int   Height        = DEFAULT_HEIGHT;
-static int xPos     = 0;
-static int yPos     = 0;
-static BOOL mLeft   = FALSE;
-static BOOL mRight  = FALSE;
-static BOOL mCenter  = FALSE;
-
-//--------------------------------------------------------------------------------------
-// random
-//--------------------------------------------------------------------------------------
-POINT GetMousePos() {
-	POINT p = {xPos, yPos};
-	return p;
-}
-
-BOOL GetMouseLeft()  { return mLeft; }
-BOOL GetMouseRight() { return mRight; }
-
-//--------------------------------------------------------------------------------------
-// random
-//--------------------------------------------------------------------------------------
 namespace {
+	BOOL  Windowed      = TRUE;
+	int   Width         = DEFAULT_WIDTH;
+	int   Height        = DEFAULT_HEIGHT;
+	static int xPos     = 0;
+	static int yPos     = 0;
+	static BOOL mLeft   = FALSE;
+	static BOOL mRight  = FALSE;
+	static BOOL mCenter = FALSE;
+
 	static int a = 1, b = 234567, c = 890123;
 }
 
-int random() {
-	a += b;
-	b += c;
-	c += a;
-	return (a >> 16);
-}
-
-
-//--------------------------------------------------------------------------------------
-// frand
-//--------------------------------------------------------------------------------------
-float frand() {
-	return float(random()) / float(0x7FFF);
-}
+int   GetWidth ()     { return Width; }
+int   GetHeight()     { return Height; }
+BOOL  GetMouseLeft()  { return mLeft; }
+BOOL  GetMouseRight() { return mRight; }
+POINT GetMousePos()   { POINT p = {xPos, yPos}; return p; }
+int   random()        { a += b; b += c; c += a; return (a >> 16); }
+float frand()         { return float(random()) / float(0x7FFF); }
 
 //--------------------------------------------------------------------------------------
 // show_fps
@@ -67,6 +46,7 @@ void show_fps() {
 	}
 }
 
+
 //--------------------------------------------------------------------------------------
 //
 // Windows Function
@@ -85,12 +65,12 @@ BOOL ProcMsg() {
 	}
 	return TRUE;
 }
-//GetCursorPos
 
-void (*ProcHandleResize)(int, int); //Width, Height
-void AddEvent_WM_SIZE(void (*proc)(int, int)) {
-	ProcHandleResize = proc;
-}
+//--------------------------------------------------------------------------------------
+// Handler
+//--------------------------------------------------------------------------------------
+static void (*ProcHandleResize)(int, int); //Width, Height
+void AddEvent_WM_SIZE(void (*proc)(int, int)) { ProcHandleResize = proc; }
 
 //--------------------------------------------------------------------------------------
 // WindowProc
@@ -164,8 +144,6 @@ int Init(int argc, char *argv[], void (*StartMain)(int argc, char *argv[], HDC h
 	           (GetSystemMetrics(SM_CXSCREEN) - rc.right)  / 2,
 	           (GetSystemMetrics(SM_CYSCREEN) - rc.bottom) / 2,
 	           rc.right, rc.bottom, 0, 0, wcex.hInstance, 0);
-	printf("%d %d\n", (GetSystemMetrics(SM_CXSCREEN) - rc.right)  / 2, (GetSystemMetrics(SM_CYSCREEN) - rc.bottom) / 2);
-	printf("%d %d\n", rc.right, rc.bottom);
 	if(!hWnd) {
 		printf("%s : failed CreateWindowEx\n", __FUNCTION__);
 		return -1;
