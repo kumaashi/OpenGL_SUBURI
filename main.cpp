@@ -33,7 +33,9 @@ void ResetShader() {
 	mshader.LoadProgramFromFile("./res/vvs.fx",   NULL, "./res/vfs.fx");
 	rectshader.LoadProgramFromFile("./res/vrect.fx", NULL, "./res/frect.fx");
 	blitshader.LoadProgramFromFile("./res/vblit.fx", NULL, "./res/fblit.fx");
-	if(!mshader.Get()) WAIT(1000);
+
+	//FOR FAILED CASE 
+	if(!mshader.Get())    WAIT(1000);
 	if(!rectshader.Get()) WAIT(1000);
 	if(!blitshader.Get()) WAIT(1000);
 	printf("DEBUG : done ResetShader\n");
@@ -45,11 +47,8 @@ void Handle_WM_SIZE(int w, int h) {
 	//Setup Camera
 	camera.Reset();
 	camera.SetScreen(GetWidth(), GetHeight());
-	/*
 	camera.SetView(pos, at, up);
 	camera.SetProj(fFov, zNear, zFar);
-	*/
-	
 	rt.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	rtdisp.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 }
