@@ -30,8 +30,6 @@ namespace {
 
 //ResetShader
 void ResetShader() {
-	//mshader      = LoadProgramFromFile("./res/vvs.fx",   "./res/gvs.fx", "./res/vfs.fx");
-	//mshader.LoadProgramFromFile("./res/vvs.fx",   NULL, "./res/vfs.fx");
 	mshader.LoadProgramFromFile("./res/vvs.fx",   "./res/gvs.fx", "./res/vfs.fx");
 	rectshader.LoadProgramFromFile("./res/vrect.fx", NULL, "./res/frect.fx");
 	blitshader.LoadProgramFromFile("./res/vblit.fx", NULL, "./res/fblit.fx");
@@ -79,6 +77,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 	}
 	
 	static float g_time = 0;
+	glSetInterval(1);
 	while(ProcMsg()) {
 		show_fps();
 		static unsigned long start = timeGetTime();
@@ -96,9 +95,15 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		
 		camera.Update();
 
-		float info[4]  = { static_cast<float>(rt.Width), static_cast<float>(rt.Height), static_cast<float>(zNear), static_cast<float>(zFar) };
-		float info2[4] = { static_cast<float>(GetWidth()), static_cast<float>(GetHeight()), static_cast<float>(g_time), static_cast<float>(g_time) };
-		//float info2[4] = { static_cast<float>(rt.Width), static_cast<float>(rt.Height), static_cast<float>(g_time), static_cast<float>(g_time) };
+		float info[4]  = {
+			static_cast<float>(rt.Width), static_cast<float>(rt.Height),
+			static_cast<float>(zNear), static_cast<float>(zFar)
+		};
+
+		float info2[4] = {
+			static_cast<float>(GetWidth()), static_cast<float>(GetHeight()),
+			static_cast<float>(g_time), static_cast<float>(g_time)
+		};
 
 		//Set Render Path
 		if(1) {
@@ -118,8 +123,9 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			glUniformMatrix4fv(locproj, 1, GL_FALSE, camera.GetProj());
 
 			//RANDOM MOVE
-			float begin  = 50;
-			float margin = 2.2;
+			float begin  = 30;
+			//float margin = 2.2;
+			float margin = 2.0;
 			static float ugoki = 0.0;
 			ugoki += dtime;
 			for(float z = -begin ;z < begin;z += margin) {
