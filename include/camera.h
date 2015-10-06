@@ -9,21 +9,27 @@
 struct Camera {
 	Matrix view;
 	Matrix proj;
-	vec  Pos, At, Up;
-	vec  PosStart;
-	vec  PosEnd;
+	vec    Pos, At, Up;
+	vec    PosStart;
+	vec    PosEnd;
 	float  tt;
-	float dtt;
-	int Width, Height;
-	int state;
-	float ffov, fnear, ffar;
+	float  dtt;
+	int    Width, Height;
+	int    state;
+	float  ffov, fnear, ffar;
 
-	void SetScreen(int w, int h) {
-		Width  = w;
-		Height = h;
-	}
+	float   GetFov()  { return ffov; }
+	float   GetNear() { return fnear; }
+	float   GetFar()  { return ffar; }
+	vec     GetPos()  { return Pos; }
+	vec     GetAt()   { return At; }
+	vec     GetUp()   { return Up; }
+	float*  GetView() { return (float *)&view; }
+	float*  GetProj() { return (float *)&proj; }
 
-	void SetView(vec &p, vec &a, vec &u) {
+	void    Reset() { state = 0; tt    = 0; }
+	void    SetScreen(int w, int h) { Width  = w; Height = h; }
+	void    SetView(vec &p, vec &a, vec &u) {
 		if(!state) {
 			Pos = p;
 		}
@@ -32,8 +38,6 @@ struct Camera {
 	}
 
 	void SetProj(float fov, float fn, float ff) { ffov = fov, fnear = fn, ffar = ff; }
-	float *GetView() { return (float *)&view; }
-	float *GetProj() { return (float *)&proj; }
 
 	void SetTracking(vec &p, float dt, int ty = 0) {
 		Reset();
@@ -42,8 +46,7 @@ struct Camera {
 		dtt      = dt;
 		state    = 1;
 	}
-	
-	void Reset() { state = 0; tt    = 0; }
+
 	void Update() {
 		view.LookAt(Pos, At, Up);
 		proj.Perspective(ffov, float(Width) / float(Height), fnear, ffar);
