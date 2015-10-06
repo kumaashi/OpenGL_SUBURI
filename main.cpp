@@ -42,6 +42,8 @@ void ResetShader() {
 
 void Handle_WM_SIZE(int w, int h) {
 	//Setup Camera
+	Width = w;
+	Height = h;
 	camera.Reset();
 	camera.SetScreen(Width, Height);
 	camera.SetView(pos, at, up);
