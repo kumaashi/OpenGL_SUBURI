@@ -45,8 +45,6 @@ void ResetShader() {
 void Handle_WM_SIZE(int w, int h) {
 	printf("%s : Call", __FUNCTION__);
 	//Setup Camera
-	Width = w;
-	Height = h;
 	camera.Reset();
 	camera.SetScreen(GetWidth(), GetHeight());
 	camera.SetView(pos, at, up);
