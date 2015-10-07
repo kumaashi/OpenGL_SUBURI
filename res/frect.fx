@@ -45,18 +45,18 @@ float getao2(vec2 uv) {
 	float depth  = GetDepth(col.w);
 	float radius = RADIUS * 0.25;
 	float g      = 0.0;
-	float mult   = 1.0;
 	float angle  = 0.0;
 	for(int i = 0; i < SAMPLES; i++) {
 		angle = i * ADSAMPLES;
 		vec2 duv = vec2(cos(angle) * radius, sin(angle) * radius);
 		vec4  tex  = texture2D(tex, uv + duv);
 		float temp = 1.0 - (GetDepth(tex.w) / depth);
-		if(temp > 0.00001 && temp < 0.01) {
-			g += 1.0;
+		if(abs(temp) < 0.1) {
+			g += min(1.0, abs(temp));
 		}
 	}
 	g = 1.0 - (g / SAMPLES);
+	g= pow(g, 5.0);
 	return g;
 }
 
