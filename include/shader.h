@@ -47,7 +47,6 @@ public:
 		*/
 		glGetShaderiv(shader, GL_INFO_LOG_LENGTH , &size);
 		if(size) {
-			printf("log size = %d\n", size);
 			std::vector<char> buf(size);
 			memset(&buf[0], 0, buf.size());
 			glGetShaderInfoLog(shader, buf.size(), &size, &buf[0]);
