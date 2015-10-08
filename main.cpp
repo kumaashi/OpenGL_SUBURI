@@ -9,15 +9,15 @@
 #include "camera.h"
 
 namespace {
-	
+
 	Shader       mshader;
 	Shader       rectshader;
 	Shader       blitshader;
 	Mesh         mesh;
-	
+
 	RenderTarget rt;
 	RenderTarget rtdisp;
-	
+
 	Camera       camera;
 	Matrix       ctrlMatrix;
 	vec          pos(0,10,-10);
@@ -61,13 +61,13 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 	Handle_WM_SIZE(GetWidth(), GetHeight());
 	AddEvent_WM_SIZE(Handle_WM_SIZE);
 	ResetShader();
-	
+
 	if(argc == 1) {
 		mesh.Load(&mshader, "./res/cube.stl");
 	} else {
 		mesh.Load(&mshader, argv[1]);
 	}
-	
+
 	static float g_time = 0;
 	while(ProcMsg()) {
 		show_fps();
@@ -83,7 +83,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		if(GetAsyncKeyState('1') & 0x8000) { vec pos (r, r, -r); camera.SetTracking(pos, speed); }
 		if(GetAsyncKeyState('2') & 0x8000) { vec pos (-r, r, -r); camera.SetTracking(pos, speed); }
 		if(GetAsyncKeyState('A') & 0x8000) { vec pos (frand() * r, frand() * r, frand() * r); camera.SetTracking(pos, speed); }
-		
+
 		camera.Update();
 
 		float info[4]  = { static_cast<float>(rt.Width), static_cast<float>(rt.Height), static_cast<float>(zNear), static_cast<float>(zFar) };
@@ -94,13 +94,13 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		if(1) {
 			rt.SetTexture();
 			glViewport(0, 0, rt.Width, rt.Height);
-			glClearColor(0.25, 0.25, 0.5, 0);
+			glClearColor(1.25, 0.25, 0.5, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glEnable(GL_DEPTH_TEST);
 
 			Matrix world;
 			mesh.Begin();
-			
+
 			GLint locview  = mshader.GetUniformLocation("view");
 			GLint locproj  = mshader.GetUniformLocation("proj");
 			GLint locworld = mshader.GetUniformLocation("world");
@@ -146,7 +146,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		{
 			glUseProgram(blitshader.Get());
 			glViewport(0, 0, GetWidth(), GetHeight());
-			glClearColor(0.25, 0.25, 0.5, 0);
+			glClearColor(0.25, 1.25, 0.5, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			glDisable(GL_DEPTH_TEST);
