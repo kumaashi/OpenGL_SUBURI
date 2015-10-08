@@ -3,10 +3,10 @@
 // main.cpp
 //
 //--------------------------------------------------------------------------------------
-#include "util.h"
-#include "rendertarget.h"
-#include "mesh.h"
-#include "camera.h"
+#include "include/util.h"
+#include "include/rendertarget.h"
+#include "include/mesh.h"
+#include "include/camera.h"
 
 namespace {
 
@@ -94,7 +94,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		if(1) {
 			rt.SetTexture();
 			glViewport(0, 0, rt.Width, rt.Height);
-			glClearColor(1.25, 0.25, 0.5, 0);
+			glClearColor(1, 0, 0, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glEnable(GL_DEPTH_TEST);
 
@@ -108,7 +108,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			glUniformMatrix4fv(locproj, 1, GL_FALSE, camera.GetProj());
 
 			//RANDOM MOVE
-			float begin  = 50;
+			float begin  = 3;
 			float margin = 2.2;
 			static float ugoki = 0.0;
 			ugoki += dtime;
@@ -146,7 +146,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		{
 			glUseProgram(blitshader.Get());
 			glViewport(0, 0, GetWidth(), GetHeight());
-			glClearColor(0.25, 1.25, 0.5, 0);
+			glClearColor(0, 1, 1, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			glDisable(GL_DEPTH_TEST);
