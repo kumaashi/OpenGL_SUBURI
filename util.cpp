@@ -233,6 +233,7 @@ PFNGLDRAWBUFFERSPROC                    glDrawBuffers               = NULL;
 PFNGLGENERATEMIPMAPPROC                 glGenerateMipmap            = NULL;
 PFNGLTEXIMAGE2DMULTISAMPLEPROC          glTexImage2DMultisample     = NULL;
 PFNGLRENDERBUFFERSTORAGEMULTISAMPLEPROC glRenderbufferStorageMultisample = NULL;
+PFNGLRENDERBUFFERSTORAGEPROC            glRenderbufferStorage       = NULL;
 PFNGLBLITFRAMEBUFFERPROC                glBlitFramebuffer           = NULL;
 PFNGLGETSHADERIVPROC                    glGetShaderiv               = NULL;
 
@@ -298,6 +299,7 @@ void glInitFunc() {
 	glGenerateMipmap            = (PFNGLGENERATEMIPMAPPROC            )wglGetProcAddress("glGenerateMipmap");
 	glTexImage2DMultisample     = (PFNGLTEXIMAGE2DMULTISAMPLEPROC     )wglGetProcAddress("glTexImage2DMultisample");
 	glRenderbufferStorageMultisample = (PFNGLRENDERBUFFERSTORAGEMULTISAMPLEPROC)wglGetProcAddress("glRenderbufferStorageMultisample");
+	glRenderbufferStorage       = (PFNGLRENDERBUFFERSTORAGEPROC       )wglGetProcAddress("glRenderbufferStorage");
 	glBlitFramebuffer           = (PFNGLBLITFRAMEBUFFERPROC           )wglGetProcAddress("glBlitFramebuffer");
 	
 	glEnable( GL_MULTISAMPLE );

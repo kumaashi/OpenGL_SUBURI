@@ -92,7 +92,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 
 		//Set Render Path
 		if(1) {
-			rt.SetTexture();
+			rt.Begin();
 			glViewport(0, 0, rt.Width, rt.Height);
 			glClearColor(1, 0, 0, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -121,24 +121,25 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 				}
 			}
 			mesh.End();
-			rt.UnsetTexture();
+			rt.End();
 		}
 
 		if(1)
 		{
-			rtdisp.SetTexture();
-			glUseProgram(rectshader.Get());
-			glViewport(0, 0, rt.Width, rt.Height);
 			glDisable(GL_DEPTH_TEST);
-			rt.SetTexture();
+			rtdisp.Begin();
+			rt.Begin();
+			glViewport(0, 0, rt.Width, rt.Height);
+			glUseProgram(rectshader.Get());
 			glUniform1i( rectshader.GetUniformLocation("tex"),   0);
+			glUniform1i( rectshader.GetUniformLocation("tex2"),  1);
 			glUniform4fv(rectshader.GetUniformLocation("info"),  1, info);
 			glUniform4fv(rectshader.GetUniformLocation("info2"), 1, info2);
 			glRects(-1, -1, 1, 1);
-			rt.UnsetTexture();
-			glEnable(GL_DEPTH_TEST);
-			rtdisp.UnsetTexture();
 			glUseProgram(0);
+			rt.End();
+			rtdisp.End();
+			glEnable(GL_DEPTH_TEST);
 		}
 
 		//blit
@@ -150,12 +151,12 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			glDisable(GL_DEPTH_TEST);
-			rtdisp.SetTexture();
+			rtdisp.Begin();
 			glUniform1i( blitshader.GetUniformLocation("tex"), 0);
 			glUniform4fv(blitshader.GetUniformLocation("info"), 1, info);
 			glUniform4fv(blitshader.GetUniformLocation("info2"), 1, info2);
 			glRects(-1, -1, 1, 1);
-			rtdisp.UnsetTexture();
+			rtdisp.End();
 			glEnable(GL_DEPTH_TEST);
 			glUseProgram(0);
 		}
