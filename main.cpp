@@ -28,9 +28,9 @@ namespace {
 	float        zFar     = 2560;
 }
 
+//ResetShader
 void ResetShader() {
-	//mshader      = LoadProgramFromFile("./res/vvs.fx",   "./res/gvs.fx", "./res/vfs.fx");
-	mshader.LoadProgramFromFile("./res/vvs.fx",   NULL, "./res/vfs.fx");
+	mshader.LoadProgramFromFile("./res/vvs.fx",   "./res/gvs.fx", "./res/vfs.fx");
 	rectshader.LoadProgramFromFile("./res/vrect.fx", NULL, "./res/frect.fx");
 	blitshader.LoadProgramFromFile("./res/vblit.fx", NULL, "./res/fblit.fx");
 
@@ -38,19 +38,27 @@ void ResetShader() {
 	if(!mshader.Get())    WAIT(1000);
 	if(!rectshader.Get()) WAIT(1000);
 	if(!blitshader.Get()) WAIT(1000);
-	printf("DEBUG : done ResetShader\n");
+	printf("%s:done ResetShader\n", __FUNCTION__);
 }
 
+//Setup RenderTarget
+void ResetRenderTarget() {
+	rt.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	rtdisp.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+}
 
-void Handle_WM_SIZE(int w, int h) {
-	printf("%s : Call", __FUNCTION__);
-	//Setup Camera
+//Setup Camera
+void ResetCamera() {
 	camera.Reset();
 	camera.SetScreen(GetWidth(), GetHeight());
 	camera.SetView(pos, at, up);
 	camera.SetProj(fFov, zNear, zFar);
-	rt.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-	rtdisp.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+}
+
+void Handle_WM_SIZE(int w, int h) {
+	printf("%s : Call", __FUNCTION__);
+	ResetCamera();
+	ResetRenderTarget();
 }
 
 
@@ -69,6 +77,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 	}
 
 	static float g_time = 0;
+	glSetInterval(1);
 	while(ProcMsg()) {
 		show_fps();
 		static unsigned long start = timeGetTime();
@@ -86,9 +95,15 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 
 		camera.Update();
 
-		float info[4]  = { static_cast<float>(rt.Width), static_cast<float>(rt.Height), static_cast<float>(zNear), static_cast<float>(zFar) };
-		float info2[4] = { static_cast<float>(GetWidth()), static_cast<float>(GetHeight()), static_cast<float>(g_time), static_cast<float>(g_time) };
-		//float info2[4] = { static_cast<float>(rt.Width), static_cast<float>(rt.Height), static_cast<float>(g_time), static_cast<float>(g_time) };
+		float info[4]  = {
+			static_cast<float>(rt.Width), static_cast<float>(rt.Height),
+			static_cast<float>(zNear), static_cast<float>(zFar)
+		};
+
+		float info2[4] = {
+			static_cast<float>(GetWidth()), static_cast<float>(GetHeight()),
+			static_cast<float>(g_time), static_cast<float>(g_time)
+		};
 
 		//Set Render Path
 		if(1) {

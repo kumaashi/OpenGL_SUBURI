@@ -310,8 +310,13 @@ void glInitFunc() {
 //--------------------------------------------------------------------------------------
 void glSetInterval(int isinterval) {
 	BOOL (WINAPI *wglSwapIntervalEXT)(int) = NULL;
-	if( strstr( (char*)glGetString( GL_EXTENSIONS ), "WGL_EXT_swap_control") == 0) return;
-	wglSwapIntervalEXT = (BOOL (WINAPI*)(int))wglGetProcAddress("WGL_EXT_swap_control");
+	const char *name = "WGL_EXT_swap_control";
+	if( strstr( (char*)glGetString( GL_EXTENSIONS ), name) == 0) {
+		printf("%s is not have ext\n", name);
+		return;
+	}
+	//wglSwapIntervalEXT = (BOOL (WINAPI*)(int))wglGetProcAddress("WGL_EXT_swap_control");
+	wglSwapIntervalEXT = (BOOL (WINAPI*)(int))wglGetProcAddress("wglGetSwapIntervalEXT");
 	if(wglSwapIntervalEXT) wglSwapIntervalEXT(isinterval);
 }
 
