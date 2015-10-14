@@ -302,7 +302,11 @@ void glInitFunc() {
 	glRenderbufferStorage       = (PFNGLRENDERBUFFERSTORAGEPROC       )wglGetProcAddress("glRenderbufferStorage");
 	glBlitFramebuffer           = (PFNGLBLITFRAMEBUFFERPROC           )wglGetProcAddress("glBlitFramebuffer");
 	
-	glEnable( GL_MULTISAMPLE );
+	//glEnable( GL_MULTISAMPLE );
+	/*
+	glDebugMessageCallback((GLDEBUGPROC)glErrorCallbackUser, NULL);
+	*/
+	
 }
 
 //--------------------------------------------------------------------------------------

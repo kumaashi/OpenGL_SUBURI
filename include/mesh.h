@@ -32,21 +32,31 @@ class Mesh {
 	}
 	
 	int CreateBuffer(float *v, int vnum, float *n, int nnum) {
+		GL_DEBUG0;
 		glGenVertexArrays(1, &layout);
+		GL_DEBUG0;
 		if(!layout) {
 			printf("%s:Cant glGenVertexArrays\n", __FUNCTION__);
 			return -1;
 		}
 
+		GL_DEBUG0;
 		glGenBuffers(Max, vbo);
+		GL_DEBUG0;
 		glBindVertexArray(layout);
+		GL_DEBUG0;
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, vbo[VertexLayout]);
+			GL_DEBUG0;
 			glBufferData(GL_ARRAY_BUFFER, vnum * sizeof(float), v, GL_STATIC_DRAW);
+			GL_DEBUG0;
 			glBindBuffer(GL_ARRAY_BUFFER, vbo[NormalLayout]);
+			GL_DEBUG0;
 			glBufferData(GL_ARRAY_BUFFER, nnum * sizeof(float), n, GL_STATIC_DRAW);
+			GL_DEBUG0;
 		}
 		glBindVertexArray(0);
+		GL_DEBUG0;
 		return 0;
 	}
 
@@ -58,17 +68,37 @@ class Mesh {
 
 		printf("Setup program layout : %d\n", program);
 		int LocPos = glGetAttribLocation( program, "pos" );
+		GL_DEBUG0;
 		int LocNor = glGetAttribLocation( program, "nor" );
+		GL_DEBUG0;
 
 		glBindVertexArray(layout);
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[VertexLayout]);
-		glEnableVertexAttribArray(LocPos);
-		glVertexAttribPointer(LocPos, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (const void *)0);
+		
+		if(LocPos >= 0) {
+			GL_DEBUG0;
+			glBindBuffer(GL_ARRAY_BUFFER, vbo[VertexLayout]);
+			GL_DEBUG0;
+			glEnableVertexAttribArray(LocPos);
+			GL_DEBUG0;
+			glVertexAttribPointer(LocPos, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (const void *)0);
+			GL_DEBUG0;
+		} else {
+			printf("ERROR : LocPos = %08X\n", LocPos);
+		}
 
-		glBindBuffer(GL_ARRAY_BUFFER, vbo[NormalLayout]);
-		glEnableVertexAttribArray(LocNor);
-		glVertexAttribPointer(LocNor, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (const void *)0);
+		if(LocPos >= 0) {
+			glBindBuffer(GL_ARRAY_BUFFER, vbo[NormalLayout]);
+			GL_DEBUG0;
+			glEnableVertexAttribArray(LocNor);
+			GL_DEBUG0;
+			glVertexAttribPointer(LocNor, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (const void *)0);
+			GL_DEBUG0;
+		} else {
+			printf("ERROR : LocNor = %08X\n", LocNor);
+		}
+		
 		glBindVertexArray(0);
+		GL_DEBUG0;
 		
 		return 0;
 	}
@@ -146,22 +176,32 @@ public:
 
 	void Begin() {
 		if(shader) {
+			GL_DEBUG0;
 			glUseProgram(shader->Get());
+			GL_DEBUG0;
 			glBindVertexArray(layout);
+			GL_DEBUG0;
 		} else {
 			printf("%s : Not setup Shader\n", __FUNCTION__);
 		}
 	}
 
 	void Draw() {
+		GL_DEBUG0;
 		glDrawArrays(GL_TRIANGLES, 0, trinum * 3);
+		GL_DEBUG0;
 	}
 
 	void End() {
+		GL_DEBUG0;
 		glBindVertexArray(0);
+		GL_DEBUG0;
 		glDisableVertexAttribArray(NormalLayout);
+		GL_DEBUG0;
 		glDisableVertexAttribArray(VertexLayout);
+		GL_DEBUG0;
 		glUseProgram(0);
+		GL_DEBUG0;
 	}
 
 };
