@@ -15,7 +15,7 @@ namespace {
 	Shader       blitshader;
 	Mesh         mesh;
 
-	View         
+	View         view;
 	RenderTarget rt;
 	RenderTarget rtdisp;
 
@@ -55,6 +55,10 @@ void Handle_WM_SIZE(int w, int h) {
 	//Reconstruct Render Target
 	rt.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	rtdisp.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	
+	//Setup View
+	view.SetRenderTarget(&rt);
+
 }
 
 
@@ -102,9 +106,10 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			rt.Begin();
 			mesh.Begin();
 
-			glViewport(0, 0, rt.Width, rt.Height);
-			glClearColor(1, 0, 0, 0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			view.SetViewPort(0, 0, rt.Width, rt.Height);
+			view.SetClearColor(0.1, 0.1, 0.3, 1.0);
+			view.Begin();
+
 			glEnable(GL_DEPTH_TEST);
 
 			mshader.SetUniformMatrix4fv("view",  1, GL_FALSE, camera.GetView());
