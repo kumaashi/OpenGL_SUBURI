@@ -1,0 +1,30 @@
+view
+  rendertarget
+  rendertarget
+  rendertarget
+  rendertarget
+  ※
+
+
+vertexbuffer 
+  texture 
+  texture 
+  texture 
+  texture 
+
+
+scene
+  view
+  view
+  view
+  view
+
+
+※
+使う人から見たら、おそらく
+
+・テクスチャを画面に出したい
+・メッシュを画面に出したい
+・ビュー単位でレンダリングしたい
+↑
+・ビュー
