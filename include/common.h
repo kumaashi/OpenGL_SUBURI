@@ -73,6 +73,7 @@ extern PFNGLDRAWBUFFERSPROC                    glDrawBuffers               ;
 extern PFNGLGENERATEMIPMAPPROC                 glGenerateMipmap            ;
 extern PFNGLTEXIMAGE2DMULTISAMPLEPROC          glTexImage2DMultisample     ;
 extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEPROC glRenderbufferStorageMultisample;
+extern PFNGLRENDERBUFFERSTORAGEPROC            glRenderbufferStorage;
 extern PFNGLBLITFRAMEBUFFERPROC                glBlitFramebuffer           ;
 //extern PFNGLDEBUGMESSAGECALLBACKPROC           glDebugMessageCallback      ;
 

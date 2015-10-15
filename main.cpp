@@ -3,10 +3,10 @@
 // main.cpp
 //
 //--------------------------------------------------------------------------------------
-#include "util.h"
-#include "rendertarget.h"
-#include "mesh.h"
-#include "camera.h"
+#include "include/util.h"
+#include "include/rendertarget.h"
+#include "include/mesh.h"
+#include "include/camera.h"
 
 namespace {
 
@@ -107,9 +107,9 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 
 		//Set Render Path
 		if(1) {
-			rt.SetTexture();
+			rt.Begin();
 			glViewport(0, 0, rt.Width, rt.Height);
-			glClearColor(1.25, 0.25, 0.5, 0);
+			glClearColor(1, 0, 0, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glEnable(GL_DEPTH_TEST);
 
@@ -123,9 +123,8 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			glUniformMatrix4fv(locproj, 1, GL_FALSE, camera.GetProj());
 
 			//RANDOM MOVE
-			float begin  = 30;
-			//float margin = 2.2;
-			float margin = 2.0;
+			float begin  = 3;
+			float margin = 2.2;
 			static float ugoki = 0.0;
 			ugoki += dtime;
 			for(float z = -begin ;z < begin;z += margin) {
@@ -137,24 +136,25 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 				}
 			}
 			mesh.End();
-			rt.UnsetTexture();
+			rt.End();
 		}
 
 		if(1)
 		{
-			rtdisp.SetTexture();
-			glUseProgram(rectshader.Get());
-			glViewport(0, 0, rt.Width, rt.Height);
 			glDisable(GL_DEPTH_TEST);
-			rt.SetTexture();
+			rtdisp.Begin();
+			rt.Begin();
+			glViewport(0, 0, rt.Width, rt.Height);
+			glUseProgram(rectshader.Get());
 			glUniform1i( rectshader.GetUniformLocation("tex"),   0);
+			glUniform1i( rectshader.GetUniformLocation("tex2"),  1);
 			glUniform4fv(rectshader.GetUniformLocation("info"),  1, info);
 			glUniform4fv(rectshader.GetUniformLocation("info2"), 1, info2);
 			glRects(-1, -1, 1, 1);
-			rt.UnsetTexture();
-			glEnable(GL_DEPTH_TEST);
-			rtdisp.UnsetTexture();
 			glUseProgram(0);
+			rt.End();
+			rtdisp.End();
+			glEnable(GL_DEPTH_TEST);
 		}
 
 		//blit
@@ -162,16 +162,16 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		{
 			glUseProgram(blitshader.Get());
 			glViewport(0, 0, GetWidth(), GetHeight());
-			glClearColor(0.25, 1.25, 0.5, 0);
+			glClearColor(0, 1, 1, 0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			glDisable(GL_DEPTH_TEST);
-			rtdisp.SetTexture();
+			rtdisp.Begin();
 			glUniform1i( blitshader.GetUniformLocation("tex"), 0);
 			glUniform4fv(blitshader.GetUniformLocation("info"), 1, info);
 			glUniform4fv(blitshader.GetUniformLocation("info2"), 1, info2);
 			glRects(-1, -1, 1, 1);
-			rtdisp.UnsetTexture();
+			rtdisp.End();
 			glEnable(GL_DEPTH_TEST);
 			glUseProgram(0);
 		}

@@ -1,0 +1,159 @@
+./res/cube.stl -> size = 684
+trimax = 12
+
+-----------------------------------
+X : min=-1.00000, max=1.00000
+Y : min=-1.00000, max=1.00000
+Z : min=-1.00000, max=1.00000
+-----------------------------------
+./res/cube.stl : 12, vpsize=108, npsize=108
+Mesh::Create : vnum=108, nnum=108
+DEBUG : done setup camera
+RenderTarget::Create: Width=640, Height=480, Ms=8
+Bind OK : 1, 1
+Bind OK : 2, 2
+RenderTarget::Create, DONE
+RenderTarget::Create: Width=640, Height=480, Ms=8
+Bind OK : 3, 3
+Bind OK : 4, 4
+RenderTarget::Create, DONE
+DEBUG : done RenderTarget
+log size = 138
+glPrintInfoLog START name=./res/vvs.fx, ============================
+0(9) : warning C7555: 'varying' is deprecated, use 'in/out' instead
+0(10) : warning C7555: 'varying' is deprecated, use 'in/out' instead
+
+glPrintInfoLog END   name=./res/vvs.fx, ============================
+log size = 557
+glPrintInfoLog START name=./res/gvs.fx, ============================
+0(6) : error C0000: syntax error, unexpected '(', expecting "::" at token "("
+0(15) : warning C7532: global variable gl_in requires "#version 150" or later
+0(16) : warning C7532: global variable gl_Position requires "#version 150" or later
+0(19) : warning C7532: global function EmitVertex requires "#version 150" or later
+0(19) : warning C0000: ... or #extension GL_EXT_geometry_shader4 : enable
+0(21) : warning C7532: global function EndPrimitive requires "#version 150" or later
+0(21) : warning C0000: ... or #extension GL_EXT_geometry_shader4 : enable
+
+glPrintInfoLog END   name=./res/gvs.fx, ============================
+log size = 220
+glPrintInfoLog START name=./res/vfs.fx, ============================
+0(4) : warning C7555: 'varying' is deprecated, use 'in/out' instead
+0(5) : warning C7555: 'varying' is deprecated, use 'in/out' instead
+0(8) : warning C7533: global variable gl_FragColor is deprecated after version 120
+
+glPrintInfoLog END   name=./res/vfs.fx, ============================
+log size = 138
+glPrintInfoLog START name=./res/vvs.fx, ============================
+0(9) : warning C7555: 'varying' is deprecated, use 'in/out' instead
+0(10) : warning C7555: 'varying' is deprecated, use 'in/out' instead
+
+glPrintInfoLog END   name=./res/vvs.fx, ============================
+log size = 557
+glPrintInfoLog START name=./res/gvs.fx, ============================
+0(6) : error C0000: syntax error, unexpected '(', expecting "::" at token "("
+0(15) : warning C7532: global variable gl_in requires "#version 150" or later
+0(16) : warning C7532: global variable gl_Position requires "#version 150" or later
+0(19) : warning C7532: global function EmitVertex requires "#version 150" or later
+0(19) : warning C0000: ... or #extension GL_EXT_geometry_shader4 : enable
+0(21) : warning C7532: global function EndPrimitive requires "#version 150" or later
+0(21) : warning C0000: ... or #extension GL_EXT_geometry_shader4 : enable
+
+glPrintInfoLog END   name=./res/gvs.fx, ============================
+log size = 220
+glPrintInfoLog START name=./res/vfs.fx, ============================
+0(4) : warning C7555: 'varying' is deprecated, use 'in/out' instead
+0(5) : warning C7555: 'varying' is deprecated, use 'in/out' instead
+0(8) : warning C7533: global variable gl_FragColor is deprecated after version 120
+
+glPrintInfoLog END   name=./res/vfs.fx, ============================
+log size = 220
+glPrintInfoLog START name=./res/vfs.fx, ============================
+0(4) : warning C7555: 'varying' is deprecated, use 'in/out' instead
+0(5) : warning C7555: 'varying' is deprecated, use 'in/out' instead
+0(8) : warning C7533: global variable gl_FragColor is deprecated after version 120
+
+glPrintInfoLog END   name=./res/vfs.fx, ============================
+log size = 557
+glPrintInfoLog START name=./res/gvs.fx, ============================
+0(6) : error C0000: syntax error, unexpected '(', expecting "::" at token "("
+0(15) : warning C7532: global variable gl_in requires "#version 150" or later
+0(16) : warning C7532: global variable gl_Position requires "#version 150" or later
+0(19) : warning C7532: global function EmitVertex requires "#version 150" or later
+0(19) : warning C0000: ... or #extension GL_EXT_geometry_shader4 : enable
+0(21) : warning C7532: global function EndPrimitive requires "#version 150" or later
+0(21) : warning C0000: ... or #extension GL_EXT_geometry_shader4 : enable
+
+glPrintInfoLog END   name=./res/gvs.fx, ============================
+log size = 138
+glPrintInfoLog START name=./res/vvs.fx, ============================
+0(9) : warning C7555: 'varying' is deprecated, use 'in/out' instead
+0(10) : warning C7555: 'varying' is deprecated, use 'in/out' instead
+
+glPrintInfoLog END   name=./res/vvs.fx, ============================
+log size = 1
+glPrintInfoLog START name=./res/vrect.fx, ============================
+
+glPrintInfoLog END   name=./res/vrect.fx, ============================
+log size = 591
+glPrintInfoLog START name=./res/frect.fx, ============================
+0(31) : warning C7011: implicit cast from "int" to "float"
+0(31) : warning C7011: implicit cast from "int" to "float"
+0(31) : warning C7011: implicit cast from "int" to "float"
+0(35) : warning C7011: implicit cast from "int" to "float"
+0(35) : warning C7011: implicit cast from "int" to "float"
+0(40) : warning C7011: implicit cast from "int" to "float"
+0(51) : warning C7011: implicit cast from "int" to "float"
+0(51) : warning C7011: implicit cast from "int" to "float"
+0(51) : warning C7011: implicit cast from "int" to "float"
+0(59) : warning C7011: implicit cast from "int" to "float"
+
+glPrintInfoLog END   name=./res/frect.fx, ============================
+log size = 1
+glPrintInfoLog START name=./res/vrect.fx, ============================
+
+glPrintInfoLog END   name=./res/vrect.fx, ============================
+log size = 591
+glPrintInfoLog START name=./res/frect.fx, ============================
+0(31) : warning C7011: implicit cast from "int" to "float"
+0(31) : warning C7011: implicit cast from "int" to "float"
+0(31) : warning C7011: implicit cast from "int" to "float"
+0(35) : warning C7011: implicit cast from "int" to "float"
+0(35) : warning C7011: implicit cast from "int" to "float"
+0(40) : warning C7011: implicit cast from "int" to "float"
+0(51) : warning C7011: implicit cast from "int" to "float"
+0(51) : warning C7011: implicit cast from "int" to "float"
+0(51) : warning C7011: implicit cast from "int" to "float"
+0(59) : warning C7011: implicit cast from "int" to "float"
+
+glPrintInfoLog END   name=./res/frect.fx, ============================
+log size = 591
+glPrintInfoLog START name=./res/frect.fx, ============================
+0(31) : warning C7011: implicit cast from "int" to "float"
+0(31) : warning C7011: implicit cast from "int" to "float"
+0(31) : warning C7011: implicit cast from "int" to "float"
+0(35) : warning C7011: implicit cast from "int" to "float"
+0(35) : warning C7011: implicit cast from "int" to "float"
+0(40) : warning C7011: implicit cast from "int" to "float"
+0(51) : warning C7011: implicit cast from "int" to "float"
+0(51) : warning C7011: implicit cast from "int" to "float"
+0(51) : warning C7011: implicit cast from "int" to "float"
+0(59) : warning C7011: implicit cast from "int" to "float"
+
+glPrintInfoLog END   name=./res/frect.fx, ============================
+log size = 1
+glPrintInfoLog START name=./res/vrect.fx, ============================
+
+glPrintInfoLog END   name=./res/vrect.fx, ============================
+log size = 1
+glPrintInfoLog START name=./res/vblit.fx, ============================
+
+glPrintInfoLog END   name=./res/vblit.fx, ============================
+log size = 1
+glPrintInfoLog START name=./res/vblit.fx, ============================
+
+glPrintInfoLog END   name=./res/vblit.fx, ============================
+log size = 1
+glPrintInfoLog START name=./res/vblit.fx, ============================
+
+glPrintInfoLog END   name=./res/vblit.fx, ============================
+START
