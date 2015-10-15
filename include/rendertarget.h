@@ -128,7 +128,7 @@ public:
 			glBindTexture(GL_TEXTURE_2D, rttex[i]); GL_DEBUG0;
 			printf("%s : fbo:%d bindtexture -> %d\n", __FUNCTION__, fbo, rttex[i]);
 		}
-		glActiveTexture(GL_TEXTURE0); GL_DEBUG0;
+		//glActiveTexture(GL_TEXTURE0); GL_DEBUG0;
 	}
 
 	void Unbind() {
