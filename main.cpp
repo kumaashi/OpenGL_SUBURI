@@ -4,9 +4,11 @@
 //
 //--------------------------------------------------------------------------------------
 #include "include/util.h"
+#include "include/view.h"
 #include "include/rendertarget.h"
 #include "include/mesh.h"
 #include "include/camera.h"
+#include "include/shader.h"
 
 namespace {
 
@@ -106,7 +108,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		camera.Update();
 
 		float info[4]  = {
-			static_cast<float>(rt.Width), static_cast<float>(rt.Height),
+			static_cast<float>(rt.GetWidth()), static_cast<float>(rt.GetHeight()),
 			static_cast<float>(zNear), static_cast<float>(zFar)
 		};
 
@@ -121,7 +123,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			rt.Begin();
 			mesh.Begin();
 
-			view.SetViewPort(0, 0, rt.Width, rt.Height);
+			view.SetViewPort(0, 0, rt.GetWidth(), rt.GetHeight());
 			view.SetClearColor(0.1, 0.1, 0.3, 1.0);
 			view.Begin();
 
@@ -153,22 +155,14 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			glDisable(GL_DEPTH_TEST);
 			rtdisp.Begin();
 			rt.Begin();
-			glViewport(0, 0, rt.Width, rt.Height);
+			glViewport(0, 0, rt.GetWidth(), rt.GetHeight());
 			
-			/*
-			glUseProgram(rectshader.Get());
-			glUniform1i( rectshader.GetUniform("tex"),   0);
-			glUniform1i( rectshader.GetUniform("tex2"),  1);
-			glUniform4fv(rectshader.GetUniform("info"),  1, info);
-			glUniform4fv(rectshader.GetUniform("info2"), 1, info2);
-			*/
-					
-			rectshader.Use();
+			rectshader.Begin();
 			rectshader.SetUniform1i("tex",    0);
 			rectshader.SetUniform1i("tex2",   1);
-			rectshader.SetUniform4fv("info",  1, GL_FALSE, info);
-			rectshader.SetUniform4fv("info2", 1, GL_FALSE, info2);
-			glUseProgram(0);
+			rectshader.SetUniform4fv("info",  1, info);
+			rectshader.SetUniform4fv("info2", 1, info2);
+			rectshader.End();
 			rt.End();
 			rtdisp.End();
 			glEnable(GL_DEPTH_TEST);
@@ -182,7 +176,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glViewport(0, 0, GetWidth(), GetHeight());
 
-			blitshader.Use();
+			blitshader.Begin();
 			rt.Bind();
 			blitshader.SetUniform1i("tex0", 0);
 			blitshader.SetUniform1i("tex1", 1);
@@ -192,8 +186,8 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			glRects(-1, -1 * 0.5, 1, 1);
 			glFlush();
 			rt.Unbind();
+			blitshader.End();
 			glEnable(GL_DEPTH_TEST);
-			glUseProgram(0);
 		}
 		wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
 		g_time += (1.0 / 60.0);

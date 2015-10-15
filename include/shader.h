@@ -110,7 +110,7 @@ public:
 		GLint prog = Get();
 		if(prog < 0) {
 			GL_DEBUG0;
-			return
+			return;
 		}
 		glUseProgram(prog);
 	}
@@ -146,6 +146,7 @@ public:
 			return loc;
 		}
 		glUniformMatrix4fv(loc, n, inv, (float *)data);
+		return loc;
 	}
 
 	int LoadProgramFromFile(const char *vsfile, const char *gsfile, const char *fsfile) {
