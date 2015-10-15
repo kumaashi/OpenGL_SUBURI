@@ -45,8 +45,10 @@ public:
 
 	void Begin() {
 		if(rt) {
+			GL_DEBUG;
 			rt->Begin();
 		} else {
+			GL_DEBUG;
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 		glViewport(vp[0], vp[1], vp[2], vp[3]);
@@ -56,8 +58,10 @@ public:
 
 	void End() {
 		if(rt) {
+			GL_DEBUG;
 			rt->End();
 		} else {
+			GL_DEBUG;
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
 		

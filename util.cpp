@@ -82,8 +82,8 @@ LRESULT WINAPI WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		{
 			xPos = GET_X_LPARAM(lParam);
 			yPos = GET_Y_LPARAM(lParam);
-			break;
 		}
+		break;
 	case WM_LBUTTONDOWN: mLeft  = TRUE;  break;
 	case WM_LBUTTONUP:   mLeft  = FALSE; break;
 	case WM_RBUTTONDOWN: mRight = TRUE;  break;

@@ -17,6 +17,7 @@ namespace {
 	Shader       blitshader;
 	Mesh         mesh;
 
+	View         firstview;
 	View         view;
 	RenderTarget rt;
 	RenderTarget rtdisp;
@@ -53,6 +54,7 @@ void ResetRenderTarget() {
 //Setup Camera
 void ResetCamera() {
 	printf("%s : Call", __FUNCTION__);
+
 	camera.Reset();
 	camera.SetScreen(GetWidth(), GetHeight());
 	camera.SetView(pos, at, up);
@@ -61,6 +63,7 @@ void ResetCamera() {
 
 void Handle_WM_SIZE(int w, int h) {
 	printf("%s : Call", __FUNCTION__);
+
 	ResetCamera();
 	ResetRenderTarget();
 	
@@ -69,7 +72,7 @@ void Handle_WM_SIZE(int w, int h) {
 	rtdisp.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	
 	//Setup View
-	view.SetRenderTarget(&rt);
+	firstview.SetRenderTarget(&rt);
 }
 
 
@@ -90,6 +93,11 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 
 	static float g_time = 0;
 	glSetInterval(1);
+	{
+		GLint oldfbo = -1;
+		glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &oldfbo);
+		printf("Old = %08X\n", oldfbo);
+	}
 	while(ProcMsg()) {
 		show_fps();
 		static unsigned long start = timeGetTime();
@@ -120,13 +128,11 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		//Set Render Path
 		if(1) {
 			Matrix world;
-			rt.Begin();
+
+			firstview.SetViewPort(0, 0, rt.GetWidth(), rt.GetHeight());
+			firstview.SetClearColor(0.1, 0.1, 0.3, 1.0);
+			firstview.Begin();
 			mesh.Begin();
-
-			view.SetViewPort(0, 0, rt.GetWidth(), rt.GetHeight());
-			view.SetClearColor(0.1, 0.1, 0.3, 1.0);
-			view.Begin();
-
 			glEnable(GL_DEPTH_TEST);
 
 			mshader.SetUniformMatrix4fv("view",  1, GL_FALSE, camera.GetView());
@@ -145,9 +151,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 				}
 			}
 			mesh.End();
-			
-			
-			rt.End();
+			firstview.End();
 		}
 
 		if(0)
@@ -172,21 +176,20 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		if(1)
 		{
 			glDisable(GL_DEPTH_TEST);
-			glClearColor(0, 1, 1, 0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glViewport(0, 0, GetWidth(), GetHeight());
-
+			view.SetViewPort(0, 0,  GetWidth(), GetHeight());
+			view.SetClearColor(0, 1, 1, 0);
+			view.Begin();
 			blitshader.Begin();
 			rt.Bind();
 			blitshader.SetUniform1i("tex0", 0);
 			blitshader.SetUniform1i("tex1", 1);
-			
-			glUniform4fv(blitshader.GetUniform("info") , 1, info);
-			glUniform4fv(blitshader.GetUniform("info2"), 1, info2);
-			glRects(-1, -1 * 0.5, 1, 1);
+			blitshader.SetUniform4fv("info",  1, info);
+			blitshader.SetUniform4fv("info2",  1, info2); 
+			glRects(-1, -1, 1, 1);
 			glFlush();
 			rt.Unbind();
 			blitshader.End();
+			view.End();
 			glEnable(GL_DEPTH_TEST);
 		}
 		wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);

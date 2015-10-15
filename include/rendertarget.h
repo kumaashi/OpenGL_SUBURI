@@ -65,6 +65,13 @@ public:
 		GL_DEBUG0;
 		*/
 	}
+	~RenderTarget() {
+	}
+
+	void Release() {
+		for(int i = 0 ; i < Max; i++) {
+		}
+	}
 	
 	void Create(int w, int h, int ms = 8) {
 		printf("%s: Width=%d, Height=%d, Ms=%d\n", __FUNCTION__, w, h, ms);
@@ -142,8 +149,11 @@ public:
 
 	void Begin() {
 		GL_DEBUG0;
+		GLint oldfbo = -1;
+		glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &oldfbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo); GL_DEBUG0;
 		SetupDrawBuffers(); GL_DEBUG0;
+		printf("RT : Old = %08X, New=\n", oldfbo, fbo);
 	}
 
 
@@ -161,6 +171,11 @@ public:
 		}
 		glActiveTexture(GL_TEXTURE0); GL_DEBUG0;
 		glBindFramebuffer(GL_FRAMEBUFFER, 0); GL_DEBUG0;
+
+		GLint oldfbo = -1;
+		glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &oldfbo);
+		printf("END fbo = %08X\n", oldfbo);
+		printf("---------------------------------------------");
 	}
 };
 

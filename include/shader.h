@@ -34,16 +34,7 @@ public:
 	}
 
 	void PrintShaderLog(const char *name, GLuint shader) {
-		//printf("%s:name=%s, shader=%d\n", __FUNCTION__, name, shader);
 		int size = 0;
-		/*
-		GLint isCompiled = 0;
-		glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
-		if(isCompiled != GL_FALSE) {
-			printf("%s:name=%s, Compiled!\n", __FUNCTION__, name);
-			return;
-		}
-		*/
 		glGetShaderiv(shader, GL_INFO_LOG_LENGTH , &size);
 		if(size) {
 			std::vector<char> buf(size);
@@ -65,12 +56,9 @@ public:
 		}
 		unsigned char *b = fp.Buf();
 		GL_DEBUG0;
-		GLuint shader = glCreateShader(type);
-		GL_DEBUG0;
-		glShaderSource(shader, 1, (char **)&b, &size);
-		GL_DEBUG0;
-		glCompileShader(shader);
-		GL_DEBUG0;
+		GLuint shader = glCreateShader(type); GL_DEBUG0;
+		glShaderSource(shader, 1, (char **)&b, &size); GL_DEBUG0;
+		glCompileShader(shader); GL_DEBUG0;
 		PrintShaderLog(fname, shader);
 		printf("%s:name=%s, Done!\n", __FUNCTION__, fname);
 		return shader;
@@ -87,12 +75,10 @@ public:
 
 	void CleanShader() {
 		GL_DEBUG0;
-		if(fs) glDeleteShader(fs);
-		GL_DEBUG0;
-		if(gs) glDeleteShader(gs);
-		GL_DEBUG0;
-		if(vs) glDeleteShader(vs);
-		GL_DEBUG0;
+
+		if(fs) { glDeleteShader(fs); GL_DEBUG0; }
+		if(gs) { glDeleteShader(gs); GL_DEBUG0; }
+		if(vs) { glDeleteShader(vs); GL_DEBUG0; }
 		vs = 0;
 		gs = 0;
 		fs = 0;
@@ -101,8 +87,7 @@ public:
 	GLint GetUniform(const char *name) {
 		if(!program) return -1;
 		GL_DEBUG0;
-		GLint loc = glGetUniformLocation(program,  name);
-		GL_DEBUG0;
+		GLint loc = glGetUniformLocation(program,  name); GL_DEBUG0;
 		return loc;
 	}
 	
@@ -112,30 +97,30 @@ public:
 			GL_DEBUG0;
 			return;
 		}
-		glUseProgram(prog);
+		glUseProgram(prog); GL_DEBUG0;
 	}
 	
 	void End() {
-		glUseProgram(0);
+		glUseProgram(0); GL_DEBUG0;
 	}
 
 	GLint SetUniform1i(const char *name, int data) {
 		GLint loc = GetUniform(name);
 		if(loc < 0) {
+			GL_DEBUG;
 			return loc;
 		}
-		glUniform1i(loc, data);
-		GL_DEBUG0;
+		glUniform1i(loc, data); GL_DEBUG0;
 		return loc;
 	}
 
 	GLint SetUniform4fv(const char *name, int n, void *data) {
 		GLint loc = GetUniform(name);
 		if(loc < 0) {
+			GL_DEBUG;
 			return loc;
 		}
-		glUniform4fv(loc, n, (float *)data);
-		GL_DEBUG0;
+		glUniform4fv(loc, n, (float *)data); GL_DEBUG0;
 		return loc;
 	}
 	
@@ -143,9 +128,10 @@ public:
 	GLint SetUniformMatrix4fv(const char *name, int n, int inv, void *data) {
 		GLint loc = GetUniform(name);
 		if(loc < 0) {
+			GL_DEBUG;
 			return loc;
 		}
-		glUniformMatrix4fv(loc, n, inv, (float *)data);
+		glUniformMatrix4fv(loc, n, inv, (float *)data); GL_DEBUG0;
 		return loc;
 	}
 
@@ -183,34 +169,28 @@ public:
 		program = glCreateProgram();
 		GL_DEBUG0;
 		if(vs) {
-			glAttachShader(program, vs);
-			GL_DEBUG0;
+			glAttachShader(program, vs); GL_DEBUG0;
 			PrintShaderLog(vsfile, vs);
 		}
 
 		if(gs) {
-			glAttachShader(program, gs);
-			GL_DEBUG0;
+			glAttachShader(program, gs); GL_DEBUG0;
 			PrintShaderLog(gsfile, gs);
 		}
 
 		if(fs) {
-			glAttachShader(program, fs);
-			GL_DEBUG0;
+			glAttachShader(program, fs); GL_DEBUG0;
 			PrintShaderLog(fsfile, fs);
 		}
 
-		glLinkProgram(program);
-		GL_DEBUG0;
+		glLinkProgram(program); GL_DEBUG0;
 		int result = 0;
-		glGetProgramiv(program, GL_LINK_STATUS, &result);
-		GL_DEBUG0;
+		glGetProgramiv(program, GL_LINK_STATUS, &result); GL_DEBUG0;
 		if(result == GL_FALSE) {
 			printf("%s:Failed glLinkProgram\n", __FUNCTION__);
 			int maxLength;
 			int length;
-			glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
-			GL_DEBUG0;
+			glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength); GL_DEBUG0;
 			if(maxLength) {
 				std::vector<char> vlog(maxLength);
 				memset(&vlog[0], 0, vlog.size());
