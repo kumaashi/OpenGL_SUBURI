@@ -7,6 +7,9 @@ void main() {
 	//gl_FragColor = vec4(out_color.xyz, 1.0);
 	//gl_FragColor = vec4(gl_FragCoord.z / gl_FragCoord.w);
 	//gl_FragColor = vec4(out_color.xyz, 1.0);
-	gl_FragColor = vec4(out_color.xyz, gl_FragCoord.z / gl_FragCoord.w);
+
+	//gl_FragColor = vec4(out_color.xyz, gl_FragCoord.z / gl_FragCoord.w);
+	gl_FragData[0] = vec4(0.5, 1.0, 5.0, 1.0);
+	gl_FragData[1] = vec4(0.5, 1.0, 5.0, 1.0);
 }
 
