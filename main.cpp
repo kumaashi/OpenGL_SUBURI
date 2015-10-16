@@ -11,16 +11,15 @@
 #include "include/shader.h"
 
 namespace {
+	View         firstview;
+	View         view;
+	RenderTarget rt;
+	RenderTarget rtdisp;
 
 	Shader       mshader;
 	Shader       rectshader;
 	Shader       blitshader;
 	Mesh         mesh;
-
-	View         firstview;
-	View         view;
-	RenderTarget rt;
-	RenderTarget rtdisp;
 
 	Camera       camera;
 	Matrix       ctrlMatrix;
@@ -185,8 +184,10 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			blitshader.SetUniform1i("tex1", 1);
 			blitshader.SetUniform4fv("info",  1, info);
 			blitshader.SetUniform4fv("info2",  1, info2); 
+			
 			glRects(-1, -1, 1, 1);
 			glFlush();
+
 			rt.Unbind();
 			blitshader.End();
 			view.End();
