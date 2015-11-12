@@ -77,6 +77,8 @@ extern PFNGLRENDERBUFFERSTORAGEMULTISAMPLEPROC glRenderbufferStorageMultisample;
 extern PFNGLRENDERBUFFERSTORAGEPROC            glRenderbufferStorage;
 extern PFNGLBLITFRAMEBUFFERPROC                glBlitFramebuffer           ;
 extern PFNGLDEBUGMESSAGECALLBACKPROC           glDebugMessageCallback      ;
+extern PFNGLDELETEFRAMEBUFFERSPROC             glDeleteFramebuffers        ;
+extern PFNGLDELETERENDERBUFFERSPROC            glDeleteRenderBuffers       ;
 
 
 void   glInitFunc();

@@ -46,8 +46,8 @@ void ResetShader() {
 
 //Setup RenderTarget
 void ResetRenderTarget() {
-	rt.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-	rtdisp.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	rt.Create("RT", DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	rtdisp.Create("RTDISP", DEFAULT_WIDTH, DEFAULT_HEIGHT);
 }
 
 //Setup Camera
@@ -66,9 +66,12 @@ void Handle_WM_SIZE(int w, int h) {
 	ResetCamera();
 	ResetRenderTarget();
 	
+	/*
 	//Reconstruct Render Target
-	rt.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-	rtdisp.Create(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	rt.Create("RT", DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	rtdisp.Create("RTDISP", DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	
+	*/
 	
 	//Setup View
 	firstview.SetRenderTarget(&rt);
@@ -129,7 +132,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			Matrix world;
 
 			firstview.SetViewPort(0, 0, rt.GetWidth(), rt.GetHeight());
-			firstview.SetClearColor(0.1, 0.1, 0.3, 1.0);
+			firstview.SetClearColor(0.0, 0.0, 0.0, 1.0);
 			firstview.Begin();
 			mesh.Begin();
 			glEnable(GL_DEPTH_TEST);
@@ -177,14 +180,17 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			glDisable(GL_DEPTH_TEST);
 			view.SetViewPort(0, 0,  GetWidth(), GetHeight());
 			view.SetClearColor(0, 1, 1, 0);
-			view.Begin();
+			
+			//view.Begin();
 			blitshader.Begin();
+			blitshader.SetUniform4fv("info2",  1, info2); 
+			/*
 			rt.Bind();
+			
 			blitshader.SetUniform1i("tex0", 0);
 			blitshader.SetUniform1i("tex1", 1);
 			blitshader.SetUniform4fv("info",  1, info);
-			blitshader.SetUniform4fv("info2",  1, info2); 
-			
+			*/
 			glRects(-1, -1, 1, 1);
 			glFlush();
 

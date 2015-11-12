@@ -1,342 +1,348 @@
-main.cpp
-util.cpp
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(94) : error C2146: 構文エラー : ';' が、識別子 'MMVERSION' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(94) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(98) : error C2059: 構文エラー : 'return' (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(102) : error C2143: 構文エラー : ';' が '*' の前にありません。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(102) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(112) : error C2146: 構文エラー : ';' が、識別子 'ms' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(112) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(94) : error C2146: 構文エラー : ';' が、識別子 'MMVERSION' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(113) : error C2146: 構文エラー : ';' が、識別子 'sample' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(94) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(113) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(98) : error C2059: 構文エラー : 'return' (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(114) : error C2146: 構文エラー : ';' が、識別子 'cb' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(102) : error C2143: 構文エラー : ';' が '*' の前にありません。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(114) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(102) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(112) : error C2146: 構文エラー : ';' が、識別子 'ms' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(115) : error C2146: 構文エラー : ';' が、識別子 'ticks' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(112) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(115) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(113) : error C2146: 構文エラー : ';' が、識別子 'sample' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(120) : error C2146: 構文エラー : ';' が、識別子 'hour' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(113) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(120) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(114) : error C2146: 構文エラー : ';' が、識別子 'cb' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(121) : error C2146: 構文エラー : ';' が、識別子 'min' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(114) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(121) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(115) : error C2146: 構文エラー : ';' が、識別子 'ticks' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(122) : error C2146: 構文エラー : ';' が、識別子 'sec' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(115) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(122) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(120) : error C2146: 構文エラー : ';' が、識別子 'hour' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(123) : error C2146: 構文エラー : ';' が、識別子 'frame' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(120) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(123) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(121) : error C2146: 構文エラー : ';' が、識別子 'min' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(124) : error C2146: 構文エラー : ';' が、識別子 'fps' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(121) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(124) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(122) : error C2146: 構文エラー : ';' が、識別子 'sec' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(125) : error C2146: 構文エラー : ';' が、識別子 'dummy' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(122) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(125) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(123) : error C2146: 構文エラー : ';' が、識別子 'frame' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(127) : error C2146: 構文エラー : ';' が、識別子 'pad' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(123) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(127) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(124) : error C2146: 構文エラー : ';' が、識別子 'fps' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(134) : error C2146: 構文エラー : ';' が、識別子 'songptrpos' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(124) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(134) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(125) : error C2146: 構文エラー : ';' が、識別子 'dummy' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(137) : error C2143: 構文エラー : ';' が '*' の前にありません。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(125) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(137) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(127) : error C2146: 構文エラー : ';' が、識別子 'pad' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(127) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(137) : error C2377: 'FAR' : 再定義されています。typedef は他のどのシンボルでもオーバーロードできません (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(102) : 'FAR' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(134) : error C2146: 構文エラー : ';' が、識別子 'songptrpos' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(275) : error C2065: 'HDRVR' : 定義されていない識別子です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(134) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(275) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(297) : error C2146: 構文エラー : ')' が、識別子 'DRVCALLBACK' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(137) : error C2143: 構文エラー : ';' が '*' の前にありません。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(297) : error C2146: 構文エラー : ';' が、識別子 'DRVCALLBACK' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(137) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(297) : error C2059: 構文エラー : ')' (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(297) : error C2065: 'HDRVR' : 定義されていない識別子です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(297) : error C2146: 構文エラー : ')' が、識別子 'hdrvr' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(137) : error C2377: 'FAR' : 再定義されています。typedef は他のどのシンボルでもオーバーロードできません (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(102) : 'FAR' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(297) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(275) : error C2065: 'HDRVR' : 定義されていない識別子です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(299) : error C2146: 構文エラー : ';' が、識別子 'FAR' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(275) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(299) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(297) : error C2146: 構文エラー : ')' が、識別子 'DRVCALLBACK' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(299) : error C2378: 'DRVCALLBACK' : 再定義されています。シンボルは typedef でオーバーロードできません (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(297) : 'DRVCALLBACK' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(297) : error C2146: 構文エラー : ';' が、識別子 'DRVCALLBACK' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(299) : error C2143: 構文エラー : ';' が '*' の前にありません。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(297) : error C2059: 構文エラー : ')' (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(297) : error C2065: 'HDRVR' : 定義されていない識別子です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(299) : error C2086: 'int FAR' : 再定義されました。 (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(137) : 'FAR' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(297) : error C2146: 構文エラー : ')' が、識別子 'hdrvr' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(297) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(301) : error C2143: 構文エラー : ';' が '*' の前にありません。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(301) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(299) : error C2146: 構文エラー : ';' が、識別子 'FAR' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(301) : error C2378: 'DRVCALLBACK' : 再定義されています。シンボルは typedef でオーバーロードできません (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(297) : 'DRVCALLBACK' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(299) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(299) : error C2378: 'DRVCALLBACK' : 再定義されています。シンボルは typedef でオーバーロードできません (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(297) : 'DRVCALLBACK' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(299) : error C2143: 構文エラー : ';' が '*' の前にありません。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(299) : error C2086: 'int FAR' : 再定義されました。 (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(137) : 'FAR' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(301) : error C2143: 構文エラー : ';' が '*' の前にありません。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(301) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(301) : error C2378: 'DRVCALLBACK' : 再定義されています。シンボルは typedef でオーバーロードできません (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(297) : 'DRVCALLBACK' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(49) : error C2146: 構文エラー : ';' が、識別子 'MCIERROR' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(49) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(58) : error C2143: 構文エラー : ')' が '*' の前にありません。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(58) : error C2143: 構文エラー : ';' が '*' の前にありません。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(58) : error C2371: 'CALLBACK' : 再定義されています。異なる基本型です。 (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(297) : 'CALLBACK' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(49) : error C2146: 構文エラー : ';' が、識別子 'MCIERROR' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(58) : error C2059: 構文エラー : ')' (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(49) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(58) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(65) : error C2146: 構文エラー : ';' が、識別子 'MCIERROR' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(58) : error C2143: 構文エラー : ')' が '*' の前にありません。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(65) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(58) : error C2143: 構文エラー : ';' が '*' の前にありません。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : error C2146: 構文エラー : ';' が、識別子 'WINAPI' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(58) : error C2371: 'CALLBACK' : 再定義されています。異なる基本型です。 (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mmsyscom.h(297) : 'CALLBACK' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(58) : error C2059: 構文エラー : ')' (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : error C2086: 'int MCIERROR' : 再定義されました。 (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(49) : 'MCIERROR' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(58) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : error C2146: 構文エラー : ';' が、識別子 'mciSendCommandA' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(65) : error C2146: 構文エラー : ';' が、識別子 'MCIERROR' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(65) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(67) : error C2065: '_In_' : 定義されていない識別子です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : error C2146: 構文エラー : ';' が、識別子 'WINAPI' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(67) : error C2146: 構文エラー : ')' が、識別子 'MCIDEVICEID' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(67) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : error C2086: 'int MCIERROR' : 再定義されました。 (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(49) : 'MCIERROR' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(71) : error C2059: 構文エラー : ')' (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : error C2146: 構文エラー : ';' が、識別子 'mciSendCommandA' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(75) : error C2146: 構文エラー : ';' が、識別子 'MCIERROR' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(75) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(67) : error C2065: '_In_' : 定義されていない識別子です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(75) : error C2086: 'int DECLSPEC_IMPORT' : 再定義されました。 (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(64) : 'DECLSPEC_IMPORT' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(67) : error C2146: 構文エラー : ')' が、識別子 'MCIDEVICEID' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(76) : error C2146: 構文エラー : ';' が、識別子 'WINAPI' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(67) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(76) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(71) : error C2059: 構文エラー : ')' (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(76) : error C2086: 'int MCIERROR' : 再定義されました。 (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(49) : 'MCIERROR' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(75) : error C2146: 構文エラー : ';' が、識別子 'MCIERROR' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(76) : error C2146: 構文エラー : ';' が、識別子 'mciSendCommandW' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(75) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(75) : error C2086: 'int DECLSPEC_IMPORT' : 再定義されました。 (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(64) : 'DECLSPEC_IMPORT' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(76) : error C2086: 'int WINAPI' : 再定義されました。 (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : 'WINAPI' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(76) : error C2146: 構文エラー : ';' が、識別子 'WINAPI' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(77) : error C2065: '_In_' : 定義されていない識別子です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(76) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(77) : error C2146: 構文エラー : ')' が、識別子 'MCIDEVICEID' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(76) : error C2086: 'int MCIERROR' : 再定義されました。 (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(49) : 'MCIERROR' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(77) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(76) : error C2146: 構文エラー : ';' が、識別子 'mciSendCommandW' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(81) : error C2059: 構文エラー : ')' (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(90) : error C2146: 構文エラー : ';' が、識別子 'MCIERROR' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(76) : error C2086: 'int WINAPI' : 再定義されました。 (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : 'WINAPI' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(90) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(77) : error C2065: '_In_' : 定義されていない識別子です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(90) : error C2086: 'int DECLSPEC_IMPORT' : 再定義されました。 (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(64) : 'DECLSPEC_IMPORT' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(77) : error C2146: 構文エラー : ')' が、識別子 'MCIDEVICEID' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(91) : error C2146: 構文エラー : ';' が、識別子 'WINAPI' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(77) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(91) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(81) : error C2059: 構文エラー : ')' (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(91) : error C2086: 'int MCIERROR' : 再定義されました。 (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(49) : 'MCIERROR' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(90) : error C2146: 構文エラー : ';' が、識別子 'MCIERROR' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(91) : error C2146: 構文エラー : ';' が、識別子 'mciSendStringA' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(90) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(90) : error C2086: 'int DECLSPEC_IMPORT' : 再定義されました。 (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(64) : 'DECLSPEC_IMPORT' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(91) : error C2086: 'int WINAPI' : 再定義されました。 (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : 'WINAPI' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(91) : error C2146: 構文エラー : ';' が、識別子 'WINAPI' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(92) : error C2065: '_In_' : 定義されていない識別子です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(91) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(92) : error C2146: 構文エラー : ')' が、識別子 'LPCSTR' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(91) : error C2086: 'int MCIERROR' : 再定義されました。 (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(49) : 'MCIERROR' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(92) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(91) : error C2146: 構文エラー : ';' が、識別子 'mciSendStringA' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(96) : error C2059: 構文エラー : ')' (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(100) : error C2146: 構文エラー : ';' が、識別子 'MCIERROR' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(91) : error C2086: 'int WINAPI' : 再定義されました。 (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : 'WINAPI' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(100) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(92) : error C2065: '_In_' : 定義されていない識別子です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(100) : error C2086: 'int DECLSPEC_IMPORT' : 再定義されました。 (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(64) : 'DECLSPEC_IMPORT' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(92) : error C2146: 構文エラー : ')' が、識別子 'LPCSTR' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(101) : error C2146: 構文エラー : ';' が、識別子 'WINAPI' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(92) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(101) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(96) : error C2059: 構文エラー : ')' (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(101) : error C2086: 'int MCIERROR' : 再定義されました。 (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(49) : 'MCIERROR' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(100) : error C2146: 構文エラー : ';' が、識別子 'MCIERROR' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(101) : error C2146: 構文エラー : ';' が、識別子 'mciSendStringW' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(100) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(100) : error C2086: 'int DECLSPEC_IMPORT' : 再定義されました。 (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(64) : 'DECLSPEC_IMPORT' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(101) : error C2086: 'int WINAPI' : 再定義されました。 (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : 'WINAPI' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(101) : error C2146: 構文エラー : ';' が、識別子 'WINAPI' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(102) : error C2065: '_In_' : 定義されていない識別子です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(101) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(102) : error C2146: 構文エラー : ')' が、識別子 'LPCWSTR' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(101) : error C2086: 'int MCIERROR' : 再定義されました。 (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(49) : 'MCIERROR' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(102) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(101) : error C2146: 構文エラー : ';' が、識別子 'mciSendStringW' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(106) : error C2059: 構文エラー : ')' (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(115) : error C2146: 構文エラー : ';' が、識別子 'MCIDEVICEID' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(101) : error C2086: 'int WINAPI' : 再定義されました。 (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : 'WINAPI' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(115) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(102) : error C2065: '_In_' : 定義されていない識別子です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(115) : error C2086: 'int DECLSPEC_IMPORT' : 再定義されました。 (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(64) : 'DECLSPEC_IMPORT' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(102) : error C2146: 構文エラー : ')' が、識別子 'LPCWSTR' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(116) : error C2146: 構文エラー : ';' が、識別子 'mciGetDeviceIDA' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(102) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(116) : error C2086: 'int WINAPI' : 再定義されました。 (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : 'WINAPI' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(106) : error C2059: 構文エラー : ')' (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(117) : error C2065: '_In_' : 定義されていない識別子です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(115) : error C2146: 構文エラー : ';' が、識別子 'MCIDEVICEID' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(117) : error C2146: 構文エラー : ')' が、識別子 'LPCSTR' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(115) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(117) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(115) : error C2086: 'int DECLSPEC_IMPORT' : 再定義されました。 (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(64) : 'DECLSPEC_IMPORT' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(118) : error C2059: 構文エラー : ')' (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(116) : error C2146: 構文エラー : ';' が、識別子 'mciGetDeviceIDA' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(122) : error C2146: 構文エラー : ';' が、識別子 'MCIDEVICEID' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(116) : error C2086: 'int WINAPI' : 再定義されました。 (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : 'WINAPI' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(122) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(117) : error C2065: '_In_' : 定義されていない識別子です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(122) : error C2086: 'int DECLSPEC_IMPORT' : 再定義されました。 (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(64) : 'DECLSPEC_IMPORT' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(117) : error C2146: 構文エラー : ')' が、識別子 'LPCSTR' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(123) : error C2146: 構文エラー : ';' が、識別子 'mciGetDeviceIDW' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(117) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(123) : error C2086: 'int WINAPI' : 再定義されました。 (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : 'WINAPI' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(118) : error C2059: 構文エラー : ')' (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(124) : error C2065: '_In_' : 定義されていない識別子です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(122) : error C2146: 構文エラー : ';' が、識別子 'MCIDEVICEID' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(124) : error C2146: 構文エラー : ')' が、識別子 'LPCWSTR' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(122) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(124) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(122) : error C2086: 'int DECLSPEC_IMPORT' : 再定義されました。 (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(64) : 'DECLSPEC_IMPORT' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(125) : error C2059: 構文エラー : ')' (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(123) : error C2146: 構文エラー : ';' が、識別子 'mciGetDeviceIDW' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(134) : error C2146: 構文エラー : ';' が、識別子 'MCIDEVICEID' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(123) : error C2086: 'int WINAPI' : 再定義されました。 (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : 'WINAPI' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(134) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(124) : error C2065: '_In_' : 定義されていない識別子です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(134) : error C2086: 'int DECLSPEC_IMPORT' : 再定義されました。 (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(64) : 'DECLSPEC_IMPORT' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(124) : error C2146: 構文エラー : ')' が、識別子 'LPCWSTR' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(135) : error C2146: 構文エラー : ';' が、識別子 'mciGetDeviceIDFromElementIDA' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(124) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(135) : error C2086: 'int WINAPI' : 再定義されました。 (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : 'WINAPI' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(125) : error C2059: 構文エラー : ')' (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(136) : error C2065: '_In_' : 定義されていない識別子です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(134) : error C2146: 構文エラー : ';' が、識別子 'MCIDEVICEID' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(136) : error C2146: 構文エラー : ')' が、識別子 'DWORD' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(134) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(136) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(134) : error C2086: 'int DECLSPEC_IMPORT' : 再定義されました。 (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(64) : 'DECLSPEC_IMPORT' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(138) : error C2059: 構文エラー : ')' (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(135) : error C2146: 構文エラー : ';' が、識別子 'mciGetDeviceIDFromElementIDA' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(142) : error C2146: 構文エラー : ';' が、識別子 'MCIDEVICEID' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(135) : error C2086: 'int WINAPI' : 再定義されました。 (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : 'WINAPI' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(142) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(136) : error C2065: '_In_' : 定義されていない識別子です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(142) : error C2086: 'int DECLSPEC_IMPORT' : 再定義されました。 (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(64) : 'DECLSPEC_IMPORT' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(136) : error C2146: 構文エラー : ')' が、識別子 'DWORD' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(143) : error C2146: 構文エラー : ';' が、識別子 'mciGetDeviceIDFromElementIDW' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(136) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(143) : error C2086: 'int WINAPI' : 再定義されました。 (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : 'WINAPI' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(138) : error C2059: 構文エラー : ')' (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(144) : error C2065: '_In_' : 定義されていない識別子です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(142) : error C2146: 構文エラー : ';' が、識別子 'MCIDEVICEID' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(144) : error C2146: 構文エラー : ')' が、識別子 'DWORD' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(142) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(144) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(142) : error C2086: 'int DECLSPEC_IMPORT' : 再定義されました。 (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(64) : 'DECLSPEC_IMPORT' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(146) : error C2059: 構文エラー : ')' (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(143) : error C2146: 構文エラー : ';' が、識別子 'mciGetDeviceIDFromElementIDW' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(155) : error C2146: 構文エラー : ';' が、識別子 'BOOL' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(143) : error C2086: 'int WINAPI' : 再定義されました。 (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : 'WINAPI' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(155) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(144) : error C2065: '_In_' : 定義されていない識別子です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(155) : error C2086: 'int DECLSPEC_IMPORT' : 再定義されました。 (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(64) : 'DECLSPEC_IMPORT' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(144) : error C2146: 構文エラー : ')' が、識別子 'DWORD' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(156) : error C2146: 構文エラー : ';' が、識別子 'WINAPI' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(144) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(156) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(146) : error C2059: 構文エラー : ')' (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(156) : error C2146: 構文エラー : ';' が、識別子 'mciGetErrorStringA' の前に必要です。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(155) : error C2146: 構文エラー : ';' が、識別子 'BOOL' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(155) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(156) : error C2086: 'int WINAPI' : 再定義されました。 (main.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : 'WINAPI' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(155) : error C2086: 'int DECLSPEC_IMPORT' : 再定義されました。 (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(64) : 'DECLSPEC_IMPORT' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(156) : fatal error C1003: プログラム内のエラーが 100 個を超えました。コンパイルは中断されます。 (main.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(156) : error C2146: 構文エラー : ';' が、識別子 'WINAPI' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(156) : error C4430: 型指定子がありません - int と仮定しました。メモ: C++ は int を既定値としてサポートしていません (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(156) : error C2146: 構文エラー : ';' が、識別子 'mciGetErrorStringA' の前に必要です。 (util.cpp)
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(156) : error C2086: 'int WINAPI' : 再定義されました。 (util.cpp)
-        C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(66) : 'WINAPI' の宣言を確認してください。
-C:\Program Files (x86)\Windows Kits\8.1\include\um\mciapi.h(156) : fatal error C1003: プログラム内のエラーが 100 個を超えました。コンパイルは中断されます。 (util.cpp)
+Handle_WM_SIZE : CallResetCamera : CallRenderTarget::Create: RT, Width=1280, Height=720, Ms=8
+00000083:RenderTarget::Create: glErr:00000000
+00000086:RenderTarget::Create: glErr:00000000
+00000087:RenderTarget::Create: glErr:00000000
+00000088:RenderTarget::Create: glErr:00000000
+00000089:RenderTarget::Create: glErr:00000000
+00000092:RenderTarget::Create: glErr:00000000
+00000096:RenderTarget::Create: glErr:00000000
+00000097:RenderTarget::Create: glErr:00000000
+00000098:RenderTarget::Create: glErr:00000000
+00000096:RenderTarget::Create: glErr:00000000
+00000097:RenderTarget::Create: glErr:00000000
+00000098:RenderTarget::Create: glErr:00000000
+00000096:RenderTarget::Create: glErr:00000000
+00000097:RenderTarget::Create: glErr:00000000
+00000098:RenderTarget::Create: glErr:00000000
+00000096:RenderTarget::Create: glErr:00000000
+00000097:RenderTarget::Create: glErr:00000000
+00000098:RenderTarget::Create: glErr:00000000
+00000102:RenderTarget::Create: glErr:00000000
+00000103:RenderTarget::Create: glErr:00000000
+00000104:RenderTarget::Create: glErr:00000000
+00000107:RenderTarget::Create: glErr:00000000
+00000108:RenderTarget::Create: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000111:RenderTarget::Create: glErr:00000000
+00000107:RenderTarget::Create: glErr:00000000
+00000108:RenderTarget::Create: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000111:RenderTarget::Create: glErr:00000000
+00000107:RenderTarget::Create: glErr:00000000
+00000108:RenderTarget::Create: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000111:RenderTarget::Create: glErr:00000000
+00000107:RenderTarget::Create: glErr:00000000
+00000108:RenderTarget::Create: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000111:RenderTarget::Create: glErr:00000000
+00000053:RenderTarget::SetupDrawBuffers: glErr:00000000
+Bind OK index=0: 1, 1
+Bind OK index=1: 2, 1
+Bind OK index=2: 3, 1
+Bind OK index=3: 4, 1
+00000124:RenderTarget::Create: glErr:00000000
+00000125:RenderTarget::Create: glErr:00000000
+00000126:RenderTarget::Create: glErr:00000000
+RenderTarget::Create: RTDISP, Width=1280, Height=720, Ms=8
+00000083:RenderTarget::Create: glErr:00000000
+00000086:RenderTarget::Create: glErr:00000000
+00000087:RenderTarget::Create: glErr:00000000
+00000088:RenderTarget::Create: glErr:00000000
+00000089:RenderTarget::Create: glErr:00000000
+00000092:RenderTarget::Create: glErr:00000000
+00000096:RenderTarget::Create: glErr:00000000
+00000097:RenderTarget::Create: glErr:00000000
+00000098:RenderTarget::Create: glErr:00000000
+00000096:RenderTarget::Create: glErr:00000000
+00000097:RenderTarget::Create: glErr:00000000
+00000098:RenderTarget::Create: glErr:00000000
+00000096:RenderTarget::Create: glErr:00000000
+00000097:RenderTarget::Create: glErr:00000000
+00000098:RenderTarget::Create: glErr:00000000
+00000096:RenderTarget::Create: glErr:00000000
+00000097:RenderTarget::Create: glErr:00000000
+00000098:RenderTarget::Create: glErr:00000000
+00000102:RenderTarget::Create: glErr:00000000
+00000103:RenderTarget::Create: glErr:00000000
+00000104:RenderTarget::Create: glErr:00000000
+00000107:RenderTarget::Create: glErr:00000000
+00000108:RenderTarget::Create: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000111:RenderTarget::Create: glErr:00000000
+00000107:RenderTarget::Create: glErr:00000000
+00000108:RenderTarget::Create: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000111:RenderTarget::Create: glErr:00000000
+00000107:RenderTarget::Create: glErr:00000000
+00000108:RenderTarget::Create: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000111:RenderTarget::Create: glErr:00000000
+00000107:RenderTarget::Create: glErr:00000000
+00000108:RenderTarget::Create: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000111:RenderTarget::Create: glErr:00000000
+00000053:RenderTarget::SetupDrawBuffers: glErr:00000000
+Bind OK index=0: 5, 2
+Bind OK index=1: 6, 2
+Bind OK index=2: 7, 2
+Bind OK index=3: 8, 2
+00000124:RenderTarget::Create: glErr:00000000
+00000125:RenderTarget::Create: glErr:00000000
+00000126:RenderTarget::Create: glErr:00000000
+RenderTarget::Create: RT, Width=1280, Height=720, Ms=8
+00000083:RenderTarget::Create: glErr:00000000
+00000086:RenderTarget::Create: glErr:00000000
+00000087:RenderTarget::Create: glErr:00000000
+00000088:RenderTarget::Create: glErr:00000000
+00000089:RenderTarget::Create: glErr:00000000
+00000092:RenderTarget::Create: glErr:00000000
+00000096:RenderTarget::Create: glErr:00000000
+00000097:RenderTarget::Create: glErr:00000000
+00000098:RenderTarget::Create: glErr:00000000
+00000096:RenderTarget::Create: glErr:00000000
+00000097:RenderTarget::Create: glErr:00000000
+00000098:RenderTarget::Create: glErr:00000000
+00000096:RenderTarget::Create: glErr:00000000
+00000097:RenderTarget::Create: glErr:00000000
+00000098:RenderTarget::Create: glErr:00000000
+00000096:RenderTarget::Create: glErr:00000000
+00000097:RenderTarget::Create: glErr:00000000
+00000098:RenderTarget::Create: glErr:00000000
+00000102:RenderTarget::Create: glErr:00000000
+00000103:RenderTarget::Create: glErr:00000000
+00000104:RenderTarget::Create: glErr:00000000
+00000107:RenderTarget::Create: glErr:00000000
+00000108:RenderTarget::Create: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000111:RenderTarget::Create: glErr:00000000
+00000107:RenderTarget::Create: glErr:00000000
+00000108:RenderTarget::Create: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000111:RenderTarget::Create: glErr:00000000
+00000107:RenderTarget::Create: glErr:00000000
+00000108:RenderTarget::Create: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000111:RenderTarget::Create: glErr:00000000
+00000107:RenderTarget::Create: glErr:00000000
+00000108:RenderTarget::Create: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000111:RenderTarget::Create: glErr:00000000
+00000053:RenderTarget::SetupDrawBuffers: glErr:00000000
+Bind OK index=0: 9, 3
+Bind OK index=1: 10, 3
+Bind OK index=2: 11, 3
+Bind OK index=3: 12, 3
+00000124:RenderTarget::Create: glErr:00000000
+00000125:RenderTarget::Create: glErr:00000000
+00000126:RenderTarget::Create: glErr:00000000
+RenderTarget::Create: RTDISP, Width=1280, Height=720, Ms=8
+00000083:RenderTarget::Create: glErr:00000000
+00000086:RenderTarget::Create: glErr:00000000
+00000087:RenderTarget::Create: glErr:00000000
+00000088:RenderTarget::Create: glErr:00000000
+00000089:RenderTarget::Create: glErr:00000000
+00000092:RenderTarget::Create: glErr:00000000
+00000096:RenderTarget::Create: glErr:00000000
+00000097:RenderTarget::Create: glErr:00000505
+00000098:RenderTarget::Create: glErr:00000000
+00000096:RenderTarget::Create: glErr:00000000
+00000097:RenderTarget::Create: glErr:00000505
+00000098:RenderTarget::Create: glErr:00000000
+00000096:RenderTarget::Create: glErr:00000000
+00000097:RenderTarget::Create: glErr:00000505
+00000098:RenderTarget::Create: glErr:00000000
+00000096:RenderTarget::Create: glErr:00000000
+00000097:RenderTarget::Create: glErr:00000505
+00000098:RenderTarget::Create: glErr:00000000
+00000102:RenderTarget::Create: glErr:00000000
+00000103:RenderTarget::Create: glErr:00000000
+00000104:RenderTarget::Create: glErr:00000000
+00000107:RenderTarget::Create: glErr:00000000
+00000108:RenderTarget::Create: glErr:00000505
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000111:RenderTarget::Create: glErr:00000000
+00000107:RenderTarget::Create: glErr:00000000
+00000108:RenderTarget::Create: glErr:00000505
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000111:RenderTarget::Create: glErr:00000000
+00000107:RenderTarget::Create: glErr:00000000
+00000108:RenderTarget::Create: glErr:00000505
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000111:RenderTarget::Create: glErr:00000000
+00000107:RenderTarget::Create: glErr:00000000
+00000108:RenderTarget::Create: glErr:00000505
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000042:RenderTarget::glSetupState: glErr:00000000
+00000111:RenderTarget::Create: glErr:00000000
+00000053:RenderTarget::SetupDrawBuffers: glErr:00000000
+Bind Failed : status=00008CD6
+00000124:RenderTarget::Create: glErr:00000000
+00000125:RenderTarget::Create: glErr:00000000
+00000126:RenderTarget::Create: glErr:00000000
+00000077:Shader::CleanShader: glErr:00000000
+00000058:Shader::CreateShaderFromFile: glErr:00000000
+00000059:Shader::CreateShaderFromFile: glErr:00000000
+00000060:Shader::CreateShaderFromFile: glErr:00000000
+00000061:Shader::CreateShaderFromFile: glErr:00000000
+Shader::CreateShaderFromFile:name=./res/vvs.fx, Done!
+00000058:Shader::CreateShaderFromFile: glErr:00000000
+00000059:Shader::CreateShaderFromFile: glErr:00000000
+00000060:Shader::CreateShaderFromFile: glErr:00000000
+00000061:Shader::CreateShaderFromFile: glErr:00000000
+Shader::CreateShaderFromFile:name=./res/vfs.fx, Done!
+00000058:Shader::CreateShaderFromFile: glErr:00000000
+00000059:Shader::CreateShaderFromFile: glErr:00000000
+00000060:Shader::CreateShaderFromFile: glErr:00000000
+00000061:Shader::CreateShaderFromFile: glErr:00000000
+Shader::CreateShaderFromFile:name=./res/gvs.fx, Done!
+Shader::LoadProgramFromFile:vs=0001 gs=0003 fs=0002
+00000170:Shader::LoadProgramFromFile: glErr:00000000
+00000172:Shader::LoadProgramFromFile: glErr:00000000
+00000177:Shader::LoadProgramFromFile: glErr:00000000
+00000182:Shader::LoadProgramFromFile: glErr:00000000
+00000186:Shader::LoadProgramFromFile: glErr:00000000
+00000188:Shader::LoadProgramFromFile: glErr:00000000
+00000077:Shader::CleanShader: glErr:00000502
+00000058:Shader::CreateShaderFromFile: glErr:00000000
+00000059:Shader::CreateShaderFromFile: glErr:00000000
+00000060:Shader::CreateShaderFromFile: glErr:00000000
+00000061:Shader::CreateShaderFromFile: glErr:00000000
+Shader::CreateShaderFromFile:name=./res/vrect.fx, Done!
+00000058:Shader::CreateShaderFromFile: glErr:00000000
+00000059:Shader::CreateShaderFromFile: glErr:00000000
+00000060:Shader::CreateShaderFromFile: glErr:00000000
+00000061:Shader::CreateShaderFromFile: glErr:00000000
+Shader::CreateShaderFromFile:name=./res/frect.fx, Done!
+Shader::LoadProgramFromFile:vs=0005 gs=0000 fs=0006
+00000170:Shader::LoadProgramFromFile: glErr:00000000
+00000172:Shader::LoadProgramFromFile: glErr:00000000
+00000182:Shader::LoadProgramFromFile: glErr:00000000
+00000186:Shader::LoadProgramFromFile: glErr:00000000
+00000188:Shader::LoadProgramFromFile: glErr:00000000
+00000077:Shader::CleanShader: glErr:00000502
+00000058:Shader::CreateShaderFromFile: glErr:00000000
+00000059:Shader::CreateShaderFromFile: glErr:00000000
+00000060:Shader::CreateShaderFromFile: glErr:00000000
+00000061:Shader::CreateShaderFromFile: glErr:00000000
+Shader::CreateShaderFromFile:name=./res/vblit.fx, Done!
+00000058:Shader::CreateShaderFromFile: glErr:00000000
+00000059:Shader::CreateShaderFromFile: glErr:00000000
+00000060:Shader::CreateShaderFromFile: glErr:00000000
+00000061:Shader::CreateShaderFromFile: glErr:00000000
+Shader::CreateShaderFromFile:name=./res/fblit.fx, Done!
+Shader::LoadProgramFromFile:vs=0008 gs=0000 fs=0009
+00000170:Shader::LoadProgramFromFile: glErr:00000000
+00000172:Shader::LoadProgramFromFile: glErr:00000000
+00000182:Shader::LoadProgramFromFile: glErr:00000000
+00000186:Shader::LoadProgramFromFile: glErr:00000000
+00000188:Shader::LoadProgramFromFile: glErr:00000000
+ResetShader:done ResetShader
+./res/cube.stl -> size = 684
+trimax = 12
+
+-----------------------------------
+X : min=-1.00000, max=1.00000
+Y : min=-1.00000, max=1.00000
+Z : min=-1.00000, max=1.00000
+-----------------------------------
+./res/cube.stl : 12, vpsize=108, npsize=108
+00000035:Mesh::CreateBuffer: glErr:00000502
+00000037:Mesh::CreateBuffer: glErr:00000000
+00000043:Mesh::CreateBuffer: glErr:00000000
+00000045:Mesh::CreateBuffer: glErr:00000000
+00000047:Mesh::CreateBuffer: glErr:00000000
+00000050:Mesh::CreateBuffer: glErr:00000000
+00000052:Mesh::CreateBuffer: glErr:00000000
+00000054:Mesh::CreateBuffer: glErr:00000000
+00000056:Mesh::CreateBuffer: glErr:00000000
+00000059:Mesh::CreateBuffer: glErr:00000000
+Setup program layout : 4
+00000071:Mesh::SetupProgramAndLayout: glErr:00000000
+00000073:Mesh::SetupProgramAndLayout: glErr:00000000
+00000078:Mesh::SetupProgramAndLayout: glErr:00000000
+00000080:Mesh::SetupProgramAndLayout: glErr:00000000
+00000082:Mesh::SetupProgramAndLayout: glErr:00000000
+00000084:Mesh::SetupProgramAndLayout: glErr:00000000
+00000091:Mesh::SetupProgramAndLayout: glErr:00000000
+00000093:Mesh::SetupProgramAndLayout: glErr:00000000
+00000095:Mesh::SetupProgramAndLayout: glErr:00000000
+00000101:Mesh::SetupProgramAndLayout: glErr:00000000
+Mesh::SetShader : Done shader
+Old = 00000000
+00000077:Shader::CleanShader: glErr:00000000
+00000079:Shader::CleanShader: glErr:00000000
+00000081:Shader::CleanShader: glErr:00000000
+00000071:Shader::Unload: glErr:00000000
+00000077:Shader::CleanShader: glErr:00000000
+00000079:Shader::CleanShader: glErr:00000000
+00000081:Shader::CleanShader: glErr:00000000
+00000071:Shader::Unload: glErr:00000000
+00000077:Shader::CleanShader: glErr:00000000
+00000079:Shader::CleanShader: glErr:00000000
+00000080:Shader::CleanShader: glErr:00000000
+00000081:Shader::CleanShader: glErr:00000000
+00000071:Shader::Unload: glErr:00000000
