@@ -222,7 +222,7 @@ PFNGLGENVERTEXARRAYSPROC                glGenVertexArrays           = NULL;
 PFNGLDELETEVERTEXARRAYSPROC             glDeleteVertexArrays        = NULL;
 PFNGLGENFRAMEBUFFERSPROC                glGenFramebuffers           = NULL;
 PFNGLBINDFRAMEBUFFERPROC                glBindFramebuffer           = NULL;
-PFNGLGENRENDERBUFFERSPROC               glGenRenderBuffers          = NULL;
+PFNGLGENRENDERBUFFERSPROC               glGenRenderbuffers          = NULL;
 PFNGLBINDRENDERBUFFERPROC               glBindRenderBuffer          = NULL;
 PFNGLFRAMEBUFFERRENDERBUFFERPROC        glFramebufferRenderbuffer   = NULL;
 PFNGLRENDERBUFFERSTORAGEPROC            glRenderBufferStorage       = NULL;
@@ -237,7 +237,7 @@ PFNGLRENDERBUFFERSTORAGEPROC            glRenderbufferStorage       = NULL;
 PFNGLBLITFRAMEBUFFERPROC                glBlitFramebuffer           = NULL;
 PFNGLGETSHADERIVPROC                    glGetShaderiv               = NULL;
 PFNGLDELETEFRAMEBUFFERSPROC             glDeleteFramebuffers        = NULL;
-PFNGLDELETERENDERBUFFERSPROC            glDeleteRenderBuffers       = NULL;
+PFNGLDELETERENDERBUFFERSPROC            glDeleteRenderbuffers       = NULL;
 
 static void glErrorCallbackUser (GLenum source, GLenum type, GLuint id,
 		   GLenum severity, GLsizei length,  const GLchar* message, const void* userParam)
@@ -289,7 +289,7 @@ void glInitFunc() {
 	glDeleteVertexArrays        = (PFNGLDELETEVERTEXARRAYSPROC        )wglGetProcAddress("glDeleteVertexArrays");
 	glGenFramebuffers           = (PFNGLGENFRAMEBUFFERSPROC           )wglGetProcAddress("glGenFramebuffers");
 	glBindFramebuffer           = (PFNGLBINDFRAMEBUFFERPROC           )wglGetProcAddress("glBindFramebuffer");
-	glGenRenderBuffers          = (PFNGLGENRENDERBUFFERSPROC          )wglGetProcAddress("glGenRenderbuffers");
+	glGenRenderbuffers          = (PFNGLGENRENDERBUFFERSPROC          )wglGetProcAddress("glGenRenderbuffers");
 	glBindRenderBuffer          = (PFNGLBINDRENDERBUFFERPROC          )wglGetProcAddress("glBindRenderbuffer");
 	glFramebufferRenderbuffer   = (PFNGLFRAMEBUFFERRENDERBUFFERPROC   )wglGetProcAddress("glFramebufferRenderbuffer");
 	glRenderBufferStorage       = (PFNGLRENDERBUFFERSTORAGEPROC       )wglGetProcAddress("glRenderbufferStorage");
@@ -304,7 +304,7 @@ void glInitFunc() {
 	glRenderbufferStorage       = (PFNGLRENDERBUFFERSTORAGEPROC       )wglGetProcAddress("glRenderbufferStorage");
 	glBlitFramebuffer           = (PFNGLBLITFRAMEBUFFERPROC           )wglGetProcAddress("glBlitFramebuffer");
 	glDeleteFramebuffers        = (PFNGLDELETEFRAMEBUFFERSPROC        )wglGetProcAddress("glDeleteFramebuffers");
-	glDeleteRenderBuffers       = (PFNGLDELETERENDERBUFFERSPROC       )wglGetProcAddress("glDeleteRenderBuffers");
+	glDeleteRenderbuffers       = (PFNGLDELETERENDERBUFFERSPROC       )wglGetProcAddress("glDeleteRenderbuffers");
 	
 	
 	

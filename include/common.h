@@ -63,7 +63,7 @@ extern PFNGLGENVERTEXARRAYSPROC                glGenVertexArrays           ;
 extern PFNGLDELETEVERTEXARRAYSPROC             glDeleteVertexArrays        ;
 extern PFNGLGENFRAMEBUFFERSPROC                glGenFramebuffers           ;
 extern PFNGLBINDFRAMEBUFFERPROC                glBindFramebuffer           ;
-extern PFNGLGENRENDERBUFFERSPROC               glGenRenderBuffers          ;
+extern PFNGLGENRENDERBUFFERSPROC               glGenRenderbuffers          ;
 extern PFNGLBINDRENDERBUFFERPROC               glBindRenderBuffer          ;
 extern PFNGLFRAMEBUFFERRENDERBUFFERPROC        glFramebufferRenderbuffer   ;
 extern PFNGLRENDERBUFFERSTORAGEPROC            glRenderBufferStorage       ;
@@ -78,7 +78,7 @@ extern PFNGLRENDERBUFFERSTORAGEPROC            glRenderbufferStorage;
 extern PFNGLBLITFRAMEBUFFERPROC                glBlitFramebuffer           ;
 extern PFNGLDEBUGMESSAGECALLBACKPROC           glDebugMessageCallback      ;
 extern PFNGLDELETEFRAMEBUFFERSPROC             glDeleteFramebuffers        ;
-extern PFNGLDELETERENDERBUFFERSPROC            glDeleteRenderBuffers       ;
+extern PFNGLDELETERENDERBUFFERSPROC            glDeleteRenderbuffers       ;
 
 
 void   glInitFunc();

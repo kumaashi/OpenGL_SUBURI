@@ -12,7 +12,8 @@
 
 namespace {
 	View         firstview;
-	View         view;
+	View         mainview;
+	
 	RenderTarget rt;
 	RenderTarget rtdisp;
 
@@ -65,15 +66,6 @@ void Handle_WM_SIZE(int w, int h) {
 
 	ResetCamera();
 	ResetRenderTarget();
-	
-	/*
-	//Reconstruct Render Target
-	rt.Create("RT", DEFAULT_WIDTH, DEFAULT_HEIGHT);
-	rtdisp.Create("RTDISP", DEFAULT_WIDTH, DEFAULT_HEIGHT);
-	
-	*/
-	
-	//Setup View
 	firstview.SetRenderTarget(&rt);
 }
 
@@ -131,14 +123,16 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		if(1) {
 			Matrix world;
 
+			firstview.Bind();
 			firstview.SetViewPort(0, 0, rt.GetWidth(), rt.GetHeight());
-			firstview.SetClearColor(0.0, 0.0, 0.0, 1.0);
-			firstview.Begin();
-			mesh.Begin();
+			firstview.ClearColor(0.0, 1.0, 0.5, 1.0);
+			
 			glEnable(GL_DEPTH_TEST);
-
+			mesh.Begin();
+			
 			mshader.SetUniformMatrix4fv("view",  1, GL_FALSE, camera.GetView());
 			mshader.SetUniformMatrix4fv("proj",  1, GL_FALSE, camera.GetProj());
+			
 			//RANDOM MOVE
 			float begin  = 3;
 			float margin = 2.2;
@@ -153,55 +147,33 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 				}
 			}
 			mesh.End();
-			firstview.End();
-		}
-
-		if(0)
-		{
-			glDisable(GL_DEPTH_TEST);
-			rtdisp.Begin();
-			rt.Begin();
-			glViewport(0, 0, rt.GetWidth(), rt.GetHeight());
 			
-			rectshader.Begin();
-			rectshader.SetUniform1i("tex",    0);
-			rectshader.SetUniform1i("tex2",   1);
-			rectshader.SetUniform4fv("info",  1, info);
-			rectshader.SetUniform4fv("info2", 1, info2);
-			rectshader.End();
-			rt.End();
-			rtdisp.End();
-			glEnable(GL_DEPTH_TEST);
+			firstview.Unbind();
 		}
 
 		//blit
 		if(1)
 		{
 			glDisable(GL_DEPTH_TEST);
-			view.SetViewPort(0, 0,  GetWidth(), GetHeight());
-			view.SetClearColor(0, 1, 1, 0);
 			
-			//view.Begin();
-			blitshader.Begin();
-			blitshader.SetUniform4fv("info2",  1, info2); 
 			/*
-			rt.Bind();
-			
-			blitshader.SetUniform1i("tex0", 0);
-			blitshader.SetUniform1i("tex1", 1);
-			blitshader.SetUniform4fv("info",  1, info);
+			mainview.Bind();
 			*/
+			mainview.SetViewPort(0, 0,  GetWidth(), GetHeight());
+			mainview.ClearColor(0, 1, 1, 0);
+			blitshader.Begin();
+			blitshader.SetUniform1i("tex0",   rt.GetTexture(0));
+			blitshader.SetUniform1i("tex1",   rt.GetTexture(1));
+			blitshader.SetUniform1i("tex2",   rt.GetTexture(2));
+			blitshader.SetUniform1i("tex3",   rt.GetTexture(3));
 			glRects(-1, -1, 1, 1);
-			glFlush();
-
-			rt.Unbind();
 			blitshader.End();
-			view.End();
 			glEnable(GL_DEPTH_TEST);
+			
+			mainview.Unbind();
 		}
 		wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
 		g_time += (1.0 / 60.0);
-		//Sleep(16);
 	}
 }
 

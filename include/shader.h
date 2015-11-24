@@ -93,10 +93,12 @@ public:
 	
 	void Begin() {
 		GLint prog = Get();
-		if(prog < 0) {
+		if(prog <= 0) {
 			GL_DEBUG0;
+			printf("aaaaaaaaaa");
 			return;
 		}
+		
 		glUseProgram(prog); GL_DEBUG0;
 	}
 	
