@@ -95,7 +95,6 @@ public:
 		GLint prog = Get();
 		if(prog <= 0) {
 			GL_DEBUG0;
-			printf("aaaaaaaaaa");
 			return;
 		}
 		
@@ -114,6 +113,12 @@ public:
 		}
 		glUniform1i(loc, data); GL_DEBUG0;
 		return loc;
+	}
+
+	GLint BindTexture(const char *name, int texid, int num) {
+		glBindTexture(GL_TEXTURE_2D, texid);
+		SetUniform1i(name, num);
+		return 0;
 	}
 
 	GLint SetUniform4fv(const char *name, int n, void *data) {
@@ -213,5 +218,5 @@ public:
 	}
 };
 
-
 #endif
+

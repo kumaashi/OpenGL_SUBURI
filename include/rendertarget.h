@@ -68,7 +68,6 @@ public:
 			glDeleteTextures(Max, rttex);
 			memset(rttex, 0, sizeof(rttex));
 			memset(rbo, 0, sizeof(rbo));
-			
 			rbdepth = 0;
 			fbo = 0;
 			
@@ -109,6 +108,7 @@ public:
 			glFramebufferTexture2D(
 					GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D_MULTISAMPLE, rttex[i], 0);
 		}
+		
 		SetupDrawBuffers();
 		
 		status = glCheckFramebufferStatus(GL_FRAMEBUFFER);

@@ -312,7 +312,10 @@ void glInitFunc() {
 	/*
 	glDebugMessageCallback((GLDEBUGPROC)glErrorCallbackUser, NULL);
 	*/
-	
+	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE1);
+	glActiveTexture(GL_TEXTURE2);
+	glActiveTexture(GL_TEXTURE3);
 }
 
 //--------------------------------------------------------------------------------------

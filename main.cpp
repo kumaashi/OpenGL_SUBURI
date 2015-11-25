@@ -11,9 +11,10 @@
 #include "include/shader.h"
 
 namespace {
+
 	View         firstview;
 	View         mainview;
-	
+
 	RenderTarget rt;
 	RenderTarget rtdisp;
 
@@ -87,11 +88,6 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 
 	static float g_time = 0;
 	glSetInterval(1);
-	{
-		GLint oldfbo = -1;
-		glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &oldfbo);
-		printf("Old = %08X\n", oldfbo);
-	}
 	while(ProcMsg()) {
 		show_fps();
 		static unsigned long start = timeGetTime();
@@ -126,13 +122,13 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			firstview.Bind();
 			firstview.SetViewPort(0, 0, rt.GetWidth(), rt.GetHeight());
 			firstview.ClearColor(0.0, 1.0, 0.5, 1.0);
-			
+
 			glEnable(GL_DEPTH_TEST);
 			mesh.Begin();
-			
+
 			mshader.SetUniformMatrix4fv("view",  1, GL_FALSE, camera.GetView());
 			mshader.SetUniformMatrix4fv("proj",  1, GL_FALSE, camera.GetProj());
-			
+
 			//RANDOM MOVE
 			float begin  = 3;
 			float margin = 2.2;
@@ -147,7 +143,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 				}
 			}
 			mesh.End();
-			
+
 			firstview.Unbind();
 		}
 
@@ -155,25 +151,33 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		if(1)
 		{
 			glDisable(GL_DEPTH_TEST);
-			
-			/*
+
+			//main view is not have RenderTarget
 			mainview.Bind();
-			*/
 			mainview.SetViewPort(0, 0,  GetWidth(), GetHeight());
-			mainview.ClearColor(0, 1, 1, 0);
+			mainview.ClearColor(0, 0, 1, 0);
+
+			//Create Texture
 			blitshader.Begin();
-			blitshader.SetUniform1i("tex0",   rt.GetTexture(0));
-			blitshader.SetUniform1i("tex1",   rt.GetTexture(1));
-			blitshader.SetUniform1i("tex2",   rt.GetTexture(2));
-			blitshader.SetUniform1i("tex3",   rt.GetTexture(3));
+			blitshader.BindTexture("tex0", rt.GetTexture(0), 0);
+			blitshader.BindTexture("tex1", rt.GetTexture(1), 1);
+			blitshader.BindTexture("tex2", rt.GetTexture(2), 2);
+			blitshader.BindTexture("tex3", rt.GetTexture(3), 3);
 			glRects(-1, -1, 1, 1);
 			blitshader.End();
 			glEnable(GL_DEPTH_TEST);
-			
+
 			mainview.Unbind();
 		}
 		wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
 		g_time += (1.0 / 60.0);
+
+		//DEBUG
+		{
+			GLint oldfbo = -1;
+			glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &oldfbo);
+			printf("Old = %08X\n", oldfbo);
+		}
 	}
 }
 
@@ -181,5 +185,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 //--------------------------------------------------------------------------------------
 // ep
 //--------------------------------------------------------------------------------------
-int main(int argc, char *argv[]) { return Init(argc, argv, StartMain);}
+int main(int argc, char *argv[]) {
+	return Init(argc, argv, StartMain);
+}
 
