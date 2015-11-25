@@ -1,4 +1,4 @@
-#version 450
+//#version 400
 
 #define MAX_VERTEX      3
 

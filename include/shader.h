@@ -28,7 +28,7 @@ public:
 
 	GLuint Get() {
 		if(!program) {
-			printf("%s:[[[Warning]]] invalid shader %s %s %s\n", __FUNCTION__, strvs.c_str(), strgs.c_str(), strfs.c_str());
+			//printf("%s:[[[Warning]]] invalid shader %s %s %s\n", __FUNCTION__, strvs.c_str(), strgs.c_str(), strfs.c_str());
 		}
 		return program;
 	}
@@ -202,7 +202,7 @@ public:
 				std::vector<char> vlog(maxLength);
 				memset(&vlog[0], 0, vlog.size());
 				glGetProgramInfoLog(program, maxLength, &length, &vlog[0]);
-				printf("%s\n", &vlog[0]);
+				printf("length = %d, %s\n", vlog.size(), &vlog[0]);
 			}
 			Unload();
 			return -1;
