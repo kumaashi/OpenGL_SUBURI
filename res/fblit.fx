@@ -8,7 +8,8 @@ uniform sampler2D   tex2;
 uniform sampler2D   tex3;
 
 void main() {
-	vec2  uv     = (gl_FragCoord.xy / vec2(512.0, 512.0));
+	//vec2  uv     = (gl_FragCoord.xy / vec2(512.0, 512.0));
+	vec2  uv     = (gl_FragCoord.xy / info.xy);
 	vec4  col    = vec4(0.0);
 	col += texture2D(tex0, uv);
 	col += texture2D(tex1, uv);

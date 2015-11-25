@@ -159,7 +159,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 
 			//Create Texture
 			blitshader.Begin();
-			//blitshader.SetUniform4fv("info", 1, info);
+			blitshader.SetUniform4fv("info", 1, info);
 			blitshader.BindTexture("tex0", rt.GetTexture(0), 0);
 			blitshader.BindTexture("tex1", rt.GetTexture(1), 1);
 			blitshader.BindTexture("tex2", rt.GetTexture(2), 2);

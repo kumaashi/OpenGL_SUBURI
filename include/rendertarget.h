@@ -5,6 +5,7 @@ class RenderTarget {
 	enum {
 		Max = 4,
 	};
+
 	GLuint fbo;
 	GLuint rbdepth;
 	GLuint rttex[Max];
@@ -30,7 +31,7 @@ class RenderTarget {
 		
 		for(int i = 0 ; param[i].pname; i++) {
 			Param *w = &param[i];
-			//glTexParameteri(GL_TEXTURE_2D, w->pname, w->param);
+			glTexParameteri(GL_TEXTURE_2D, w->pname, w->param);
 		}
 	}
 
