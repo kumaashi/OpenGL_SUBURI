@@ -6,7 +6,6 @@ class RenderTarget {
 		Max = 4,
 	};
 	GLuint fbo;
-	GLuint rbo[Max];
 	GLuint rbdepth;
 	GLuint rttex[Max];
 	int Width;
@@ -25,13 +24,13 @@ class RenderTarget {
 			{ GL_TEXTURE_WRAP_S,     GL_CLAMP_TO_EDGE},
 			{ GL_TEXTURE_WRAP_T,     GL_CLAMP_TO_EDGE},
 			{ GL_TEXTURE_WRAP_R,     GL_CLAMP_TO_EDGE},
-			//{ GL_GENERATE_MIPMAP,    GL_TRUE},
+			{ GL_GENERATE_MIPMAP,    GL_TRUE},
 			{ 0, 0},
 		};
 		
 		for(int i = 0 ; param[i].pname; i++) {
 			Param *w = &param[i];
-			glTexParameteri(GL_TEXTURE_2D, w->pname, w->param);
+			//glTexParameteri(GL_TEXTURE_2D, w->pname, w->param);
 		}
 	}
 
@@ -63,11 +62,9 @@ public:
 	void Release() {
 		if(fbo) {
 			glDeleteFramebuffers(1, &fbo);
-			glDeleteRenderbuffers(Max, rbo);
 			glDeleteRenderbuffers(1, &rbdepth);
 			glDeleteTextures(Max, rttex);
 			memset(rttex, 0, sizeof(rttex));
-			memset(rbo, 0, sizeof(rbo));
 			rbdepth = 0;
 			fbo = 0;
 			
@@ -80,35 +77,28 @@ public:
 		printf("%s: %s, Width=%d, Height=%d, Ms=%d\n", __FUNCTION__, name, w, h, ms);
 		int status = 0;
 
-		//Create Render Buffer and texture
-		glGenFramebuffers(1, &fbo);
-		glGenTextures(Max, rttex);
-		glGenRenderbuffers(Max, rbo);
 		glGenRenderbuffers(1, &rbdepth);
+		glGenTextures(Max, rttex);
+		glGenFramebuffers(1, &fbo);
 
-		//Bind
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-
-		//Color
+		glEnable(GL_TEXTURE_2D);
 		for(int i = 0 ; i < Max; i++) {
-			glBindRenderBuffer(GL_RENDERBUFFER, rbo[i]);
-			glRenderbufferStorageMultisample(GL_RENDERBUFFER, ms, GL_RGBA32F, w, h);
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_RENDERBUFFER, rbo[i]);
+			glBindTexture(GL_TEXTURE_2D, rttex[i]);
+			glSetupState();
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, w, h, 0, GL_RGBA, GL_FLOAT, NULL);
+			glBindTexture(GL_TEXTURE_2D, 0);
 		}
+		glDisable(GL_TEXTURE_2D);
 
-		//Depth
 		glBindRenderBuffer(GL_RENDERBUFFER, rbdepth);
-		glRenderbufferStorageMultisample(GL_RENDERBUFFER, ms, GL_DEPTH_COMPONENT32, w, h);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32, w, h);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		for(int i = 0 ; i < Max; i++) {
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, rttex[i], 0);
+		}
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbdepth);
 
-		for(int i = 0 ; i < Max; i++) {
-			glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, rttex[i]);
-			glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, ms, GL_RGBA32F, w, h, GL_TRUE);
-			glSetupState();
-			glFramebufferTexture2D(
-					GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D_MULTISAMPLE, rttex[i], 0);
-		}
-		
 		SetupDrawBuffers();
 		
 		status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
@@ -120,7 +110,8 @@ public:
 				printf("Bind OK index=%d: %d, %d\n", i, rttex[i], fbo);
 			}
 		}
-		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+		//glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		glBindRenderBuffer(GL_RENDERBUFFER, 0);
 		Width  = w;
@@ -132,7 +123,7 @@ public:
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		SetupDrawBuffers();
-		printf("%s : %d\n", __FUNCTION__, fbo);
+		//printf("%s : %d\n", __FUNCTION__, fbo);
 	}
 	
 	void Unmap()

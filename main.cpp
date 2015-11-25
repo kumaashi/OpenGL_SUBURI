@@ -49,7 +49,7 @@ void ResetShader() {
 //Setup RenderTarget
 void ResetRenderTarget() {
 	rt.Create("RT", DEFAULT_WIDTH, DEFAULT_HEIGHT);
-	rtdisp.Create("RTDISP", DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	//rtdisp.Create("RTDISP", DEFAULT_WIDTH, DEFAULT_HEIGHT);
 }
 
 //Setup Camera
@@ -159,6 +159,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 
 			//Create Texture
 			blitshader.Begin();
+			//blitshader.SetUniform4fv("info", 1, info);
 			blitshader.BindTexture("tex0", rt.GetTexture(0), 0);
 			blitshader.BindTexture("tex1", rt.GetTexture(1), 1);
 			blitshader.BindTexture("tex2", rt.GetTexture(2), 2);
@@ -169,11 +170,12 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 
 			mainview.Unbind();
 		}
+
 		wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
 		g_time += (1.0 / 60.0);
 
 		//DEBUG
-		{
+		if(0){
 			GLint oldfbo = -1;
 			glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, &oldfbo);
 			printf("Old = %08X\n", oldfbo);
