@@ -75,8 +75,8 @@ public:
 	void Release() {
 		if(fbo) {
 			glDeleteFramebuffers(1, &fbo); GL_DEBUG0;
-			glDeleteRenderBuffers(Max, rbo); GL_DEBUG0;
-			glDeleteRenderBuffers(1, &rbdepth); GL_DEBUG0;
+			glDeleteRenderbuffers(Max, rbo); GL_DEBUG0;
+			glDeleteRenderbuffers(1, &rbdepth); GL_DEBUG0;
 			glDeleteTextures(Max, rttex); GL_DEBUG0;
 			memset(rttex, 0, sizeof(rttex));
 			memset(rbo, 0, sizeof(rbo));
