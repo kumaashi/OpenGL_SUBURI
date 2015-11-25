@@ -25,10 +25,10 @@ namespace {
 
 	Camera       camera;
 	Matrix       ctrlMatrix;
-	vec          pos(0,10,-10);
+	vec          pos(0,5,-5);
 	vec          at(0,0,0);
 	vec          up(0,1,0);
-	float        fFov     = 60.0;
+	float        fFov     = 90.0;
 	float        zNear    = 1.00;
 	float        zFar     = 2560;
 }

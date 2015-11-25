@@ -15,7 +15,7 @@ void main() {
 	col += texture2D(tex1, uv);
 	col += texture2D(tex2, uv);
 	col += texture2D(tex3, uv);
-	gl_FragColor = col;
+	gl_FragColor = vec4(col.xyz, 1.0);
 }
 
 
