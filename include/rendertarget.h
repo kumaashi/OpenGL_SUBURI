@@ -84,6 +84,7 @@ public:
 		
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		for(int i = 0 ; i < Max; i++) {
+			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, rttex[i]);
 			glSetupState();
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, w, h, 0, GL_RGBA, GL_FLOAT, NULL);

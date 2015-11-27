@@ -25,10 +25,10 @@ namespace {
 
 	Camera       camera;
 	Matrix       ctrlMatrix;
-	vec          pos(0,5,-5);
+	vec          pos(0,1,-5);
 	vec          at(0,0,0);
 	vec          up(0,1,0);
-	float        fFov     = 90.0;
+	float        fFov     = 45.0;
 	float        zNear    = 1.00;
 	float        zFar     = 2560;
 }
@@ -133,7 +133,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			mshader.SetUniformMatrix4fv("proj",  1, GL_FALSE, camera.GetProj());
 
 			//RANDOM MOVE
-			float begin  = 3;
+			float begin  = 90;
 			float margin = 2.2;
 			static float ugoki = 0.0;
 			ugoki += dtime;
