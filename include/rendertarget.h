@@ -68,7 +68,6 @@ public:
 			glDeleteTextures(Max, rttex);
 			memset(rttex, 0, sizeof(rttex));
 			memset(rbo, 0, sizeof(rbo));
-			
 			rbdepth = 0;
 			fbo = 0;
 			

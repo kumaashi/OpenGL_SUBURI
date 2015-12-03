@@ -306,8 +306,6 @@ void glInitFunc() {
 	glDeleteFramebuffers        = (PFNGLDELETEFRAMEBUFFERSPROC        )wglGetProcAddress("glDeleteFramebuffers");
 	glDeleteRenderbuffers       = (PFNGLDELETERENDERBUFFERSPROC       )wglGetProcAddress("glDeleteRenderbuffers");
 	
-	
-	
 	//glEnable( GL_MULTISAMPLE );
 	/*
 	glDebugMessageCallback((GLDEBUGPROC)glErrorCallbackUser, NULL);
