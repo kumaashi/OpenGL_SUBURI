@@ -222,7 +222,7 @@ PFNGLGENVERTEXARRAYSPROC                glGenVertexArrays           = NULL;
 PFNGLDELETEVERTEXARRAYSPROC             glDeleteVertexArrays        = NULL;
 PFNGLGENFRAMEBUFFERSPROC                glGenFramebuffers           = NULL;
 PFNGLBINDFRAMEBUFFERPROC                glBindFramebuffer           = NULL;
-PFNGLGENRENDERBUFFERSPROC               glGenRenderBuffers          = NULL;
+PFNGLGENRENDERBUFFERSPROC               glGenRenderbuffers          = NULL;
 PFNGLBINDRENDERBUFFERPROC               glBindRenderBuffer          = NULL;
 PFNGLFRAMEBUFFERRENDERBUFFERPROC        glFramebufferRenderbuffer   = NULL;
 PFNGLRENDERBUFFERSTORAGEPROC            glRenderBufferStorage       = NULL;
@@ -289,7 +289,7 @@ void glInitFunc() {
 	glDeleteVertexArrays        = (PFNGLDELETEVERTEXARRAYSPROC        )wglGetProcAddress("glDeleteVertexArrays");
 	glGenFramebuffers           = (PFNGLGENFRAMEBUFFERSPROC           )wglGetProcAddress("glGenFramebuffers");
 	glBindFramebuffer           = (PFNGLBINDFRAMEBUFFERPROC           )wglGetProcAddress("glBindFramebuffer");
-	glGenRenderBuffers          = (PFNGLGENRENDERBUFFERSPROC          )wglGetProcAddress("glGenRenderbuffers");
+	glGenRenderbuffers          = (PFNGLGENRENDERBUFFERSPROC          )wglGetProcAddress("glGenRenderbuffers");
 	glBindRenderBuffer          = (PFNGLBINDRENDERBUFFERPROC          )wglGetProcAddress("glBindRenderbuffer");
 	glFramebufferRenderbuffer   = (PFNGLFRAMEBUFFERRENDERBUFFERPROC   )wglGetProcAddress("glFramebufferRenderbuffer");
 	glRenderBufferStorage       = (PFNGLRENDERBUFFERSTORAGEPROC       )wglGetProcAddress("glRenderbufferStorage");
@@ -310,7 +310,10 @@ void glInitFunc() {
 	/*
 	glDebugMessageCallback((GLDEBUGPROC)glErrorCallbackUser, NULL);
 	*/
-	
+	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE1);
+	glActiveTexture(GL_TEXTURE2);
+	glActiveTexture(GL_TEXTURE3);
 }
 
 //--------------------------------------------------------------------------------------

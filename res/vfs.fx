@@ -1,17 +1,12 @@
 #version 450
 
-in vec4 out_color;
-in vec3 out_pos;
+varying   vec4 out_color;
+varying   vec3 out_pos;
+varying   vec3 out_nor;
 
 void main() {
-	//gl_FragColor = vec4(out_color.xyz, 1.0);
-	//gl_FragColor = vec4(gl_FragCoord.z / gl_FragCoord.w);
-	//gl_FragColor = vec4(out_color.xyz, 1.0);
-
-	//gl_FragColor = vec4(out_color.xyz, gl_FragCoord.z / gl_FragCoord.w);
-	gl_FragData[0] = vec4(1.0, 0.0, 0.0, 1.0);
-	gl_FragData[1] = vec4(0.0, 1.0, 0.0, 1.0);
-	gl_FragData[2] = vec4(0.0, 0.0, 1.0, 1.0);
-	gl_FragData[3] = vec4(0.0, 0.0, 0.0, 1.0);
+	gl_FragData[0] = vec4(1,2,3,4) * 0.1;
+	gl_FragData[1] = vec4(out_pos, 1.0);
+	gl_FragData[2] = vec4(out_nor, 1.0);
+	gl_FragData[3] = vec4(out_color.xyz, 1.0);
 }
-

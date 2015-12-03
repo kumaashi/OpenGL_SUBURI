@@ -24,49 +24,37 @@ public:
 		rt = rendertarget;
 	}
 	
-
-	void CreateRenderTarget() {
-		//todo
-	}
-
 	void SetViewPort(int x0, int y0, int x1, int y1) {
 		vp[0] = x0;
 		vp[1] = y0;
 		vp[2] = x1;
 		vp[3] = y1;
+		glViewport(vp[0], vp[1], vp[2], vp[3]);
 	}
 	
-	void SetClearColor(float r, float g, float b, float a) {
+	void ClearColor(float r, float g, float b, float a) {
 		ccol[0] = r;
 		ccol[1] = g;
 		ccol[2] = b;
 		ccol[3] = a;
-	}
-
-	void Begin() {
-		if(rt) {
-			GL_DEBUG;
-			rt->Begin();
-		} else {
-			GL_DEBUG;
-			glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		}
-		glViewport(vp[0], vp[1], vp[2], vp[3]);
 		glClearColor( ccol[0], ccol[1], ccol[2], ccol[3]);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	void End() {
+	void Bind() {
 		if(rt) {
-			GL_DEBUG;
-			rt->End();
+			rt->Map();
 		} else {
-			GL_DEBUG;
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		}
-		
-		//need?
-		glFlush();
+	}
+
+	void Unbind() {
+		if(rt) {
+			rt->Unmap();
+		} else {
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		}
 	}
 };
 
