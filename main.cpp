@@ -35,17 +35,10 @@ namespace {
 
 //ResetShader
 void ResetShader() {
-	//mshader.LoadProgramFromFile("./res/vvs.fx",   "./res/gvs.fx", "./res/vfs.fx");
 	mshader.LoadProgramFromFile("./res/vvs.fx",   NULL, "./res/vfs.fx");
 	rectshader.LoadProgramFromFile("./res/vrect.fx", NULL, "./res/frect.fx");
 	blitshader.LoadProgramFromFile("./res/vblit.fx", NULL, "./res/fblit.fx");
 
-	//FOR FAILED CASE 
-	/*
-	if(!mshader.Get())    WAIT(1000);
-	if(!rectshader.Get()) WAIT(1000);
-	if(!blitshader.Get()) WAIT(1000);
-	*/
 	printf("%s:done ResetShader\n", __FUNCTION__);
 }
 
@@ -163,6 +156,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			//Create Texture
 			blitshader.Begin();
 			blitshader.SetUniform4fv("info", 1, info);
+			blitshader.SetUniform4fv("info2", 1, info2);
 			blitshader.BindTexture("tex0", rt.GetTexture(0), 0);
 			blitshader.BindTexture("tex1", rt.GetTexture(1), 1);
 			blitshader.BindTexture("tex2", rt.GetTexture(2), 2);
@@ -176,7 +170,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 
 		wglSwapLayerBuffers(hdc, WGL_SWAP_MAIN_PLANE);
 		g_time += (1.0 / 60.0);
-		Sleep(16);
+		//Sleep(16);
 
 		//DEBUG
 		if(0){

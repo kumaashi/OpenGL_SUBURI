@@ -111,15 +111,13 @@ public:
 		Sample = ms;
 	}
 	
-	void Map()
-	{
+	void Map() {
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		SetupDrawBuffers();
 		//printf("%s : %d\n", __FUNCTION__, fbo);
 	}
 	
-	void Unmap()
-	{
+	void Unmap() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 };
