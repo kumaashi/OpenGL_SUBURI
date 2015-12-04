@@ -37,7 +37,7 @@
 	//#define GL_DEBUG              DEBUG_PRINT("%08d:%s: glErr:%08X\n", __LINE__, __FUNCTION__,  glGetError())
 	#define GL_DEBUG          (void)0
 
-	//#define DEBUG_LEVEL0
+	#define DEBUG_LEVEL0
 	#ifdef  DEBUG_LEVEL0
 		#define GL_DEBUG0         GL_DEBUG
 	#else //DEBUG_LEVEL0
@@ -69,8 +69,12 @@
 //---------//---------//---------//---------//---------//---------//---------
 // Base preference
 //---------//---------//---------//---------//---------//---------//---------
-#define DEFAULT_WIDTH     (1280)
-#define DEFAULT_HEIGHT    (720)
+//#define DEFAULT_WIDTH     (1280)
+//#define DEFAULT_HEIGHT    (720)
+//#define DEFAULT_WIDTH     (320)
+//#define DEFAULT_HEIGHT    (240)
+#define DEFAULT_WIDTH     (320 * 2)
+#define DEFAULT_HEIGHT    (240 * 2)
 
 //OS Function
 BOOL ProcMsg();

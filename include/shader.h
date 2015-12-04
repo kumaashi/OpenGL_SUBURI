@@ -28,7 +28,7 @@ public:
 
 	GLuint Get() {
 		if(!program) {
-			printf("%s:[[[Warning]]] invalid shader %s %s %s\n", __FUNCTION__, strvs.c_str(), strgs.c_str(), strfs.c_str());
+			//printf("%s:[[[Warning]]] invalid shader %s %s %s\n", __FUNCTION__, strvs.c_str(), strgs.c_str(), strfs.c_str());
 		}
 		return program;
 	}
@@ -95,7 +95,6 @@ public:
 		GLint prog = Get();
 		if(prog <= 0) {
 			GL_DEBUG0;
-			printf("aaaaaaaaaa");
 			return;
 		}
 		
@@ -114,6 +113,12 @@ public:
 		}
 		glUniform1i(loc, data); GL_DEBUG0;
 		return loc;
+	}
+
+	GLint BindTexture(const char *name, int texid, int num) {
+		glBindTexture(GL_TEXTURE_2D, texid);
+		SetUniform1i(name, num);
+		return 0;
 	}
 
 	GLint SetUniform4fv(const char *name, int n, void *data) {
@@ -197,7 +202,7 @@ public:
 				std::vector<char> vlog(maxLength);
 				memset(&vlog[0], 0, vlog.size());
 				glGetProgramInfoLog(program, maxLength, &length, &vlog[0]);
-				printf("%s\n", &vlog[0]);
+				printf("length = %d, %s\n", vlog.size(), &vlog[0]);
 			}
 			Unload();
 			return -1;
@@ -213,5 +218,5 @@ public:
 	}
 };
 
-
 #endif
+
