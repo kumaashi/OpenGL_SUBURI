@@ -110,7 +110,8 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			static_cast<float>(GetWidth()), static_cast<float>(GetHeight()),
 			static_cast<float>(g_time), static_cast<float>(g_time)
 		};
-
+printf("%d %d\n", 
+			static_cast<int>(GetWidth()), static_cast<int>(GetHeight()));
 		//Set Render Path
 		if(1) {
 			Matrix world;
