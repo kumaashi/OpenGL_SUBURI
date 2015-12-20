@@ -35,7 +35,7 @@ namespace {
 
 //ResetShader
 void ResetShader() {
-	mshader.LoadProgramFromFile("./res/vvs.fx",   NULL, "./res/vfs.fx");
+	mshader.LoadProgramFromFile("./res/vvs.fx",   "./res/gvs.fx", "./res/vfs.fx");
 	rectshader.LoadProgramFromFile("./res/vrect.fx", NULL, "./res/frect.fx");
 	blitshader.LoadProgramFromFile("./res/vblit.fx", NULL, "./res/fblit.fx");
 
@@ -110,8 +110,7 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 			static_cast<float>(GetWidth()), static_cast<float>(GetHeight()),
 			static_cast<float>(g_time), static_cast<float>(g_time)
 		};
-printf("%d %d\n", 
-			static_cast<int>(GetWidth()), static_cast<int>(GetHeight()));
+
 		//Set Render Path
 		if(1) {
 			Matrix world;

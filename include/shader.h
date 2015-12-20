@@ -43,7 +43,7 @@ public:
 			char *s = &buf[0];
 			printf("%s START name=%s, ============================\n", __FUNCTION__, name);
 			printf("%s\n", s);
-			printf("%s END   name=%s, ============================\n", __FUNCTION__, name);
+			printf("%s END   name=%s, ============================\n\n", __FUNCTION__, name);
 		}
 	}
 
@@ -55,12 +55,21 @@ public:
 			return 0;
 		}
 		unsigned char *b = fp.Buf();
-		GL_DEBUG0;
-		GLuint shader = glCreateShader(type); GL_DEBUG0;
-		glShaderSource(shader, 1, (char **)&b, &size); GL_DEBUG0;
+		GLuint shader = glCreateShader(type);
+		glShaderSource(shader, 1, (char **)&b, &size);
 		glCompileShader(shader); GL_DEBUG0;
-		PrintShaderLog(fname, shader);
-		printf("%s:name=%s, Done!\n", __FUNCTION__, fname);
+		
+		int result = 0;
+		glGetShaderiv(shader, GL_COMPILE_STATUS, &result);
+		if(result == GL_FALSE) {
+			printf("%s:name=%s, COMPILE FAILED!\n", __FUNCTION__, fname);
+			PrintShaderLog(fname, shader);
+			
+			glDeleteShader(shader);
+			shader = 0;
+		} else {
+			printf("%s:name=%s, Done!\n", __FUNCTION__, fname);
+		}
 		return shader;
 	}
 
@@ -167,44 +176,35 @@ public:
 				return -1;
 			}
 		}
-		printf("%s:vs=%04d gs=%04d fs=%04d\n", __FUNCTION__, vs, gs, fs);
+		printf("%s:Compile OK. vs=%04d gs=%04d fs=%04d\n", __FUNCTION__, vs, gs, fs);
 
 		if(vsfile) strvs = vsfile;
 		if(gsfile) strgs = gsfile;
 		if(fsfile) strfs = fsfile;
 
 		program = glCreateProgram();
-		GL_DEBUG0;
-		if(vs) {
-			glAttachShader(program, vs); GL_DEBUG0;
-			PrintShaderLog(vsfile, vs);
-		}
+		if(vs) glAttachShader(program, vs);
+		if(gs) glAttachShader(program, gs);
+		if(fs) glAttachShader(program, fs);
 
-		if(gs) {
-			glAttachShader(program, gs); GL_DEBUG0;
-			PrintShaderLog(gsfile, gs);
-		}
-
-		if(fs) {
-			glAttachShader(program, fs); GL_DEBUG0;
-			PrintShaderLog(fsfile, fs);
-		}
-
-		glLinkProgram(program); GL_DEBUG0;
+		glLinkProgram(program);
 		int result = 0;
-		glGetProgramiv(program, GL_LINK_STATUS, &result); GL_DEBUG0;
+		glGetProgramiv(program, GL_LINK_STATUS, &result);
 		if(result == GL_FALSE) {
 			printf("%s:Failed glLinkProgram\n", __FUNCTION__);
-			int maxLength;
-			int length;
-			glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength); GL_DEBUG0;
+			int maxLength, length;
+			glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
 			if(maxLength) {
 				std::vector<char> vlog(maxLength);
 				memset(&vlog[0], 0, vlog.size());
 				glGetProgramInfoLog(program, maxLength, &length, &vlog[0]);
-				printf("length = %d, %s\n", vlog.size(), &vlog[0]);
+				printf("length = %d\n", vlog.size());
+				printf("@START====================================================\n");
+				printf("%s\n", &vlog[0]);
+				printf("@END====================================================\n");
 			}
 			Unload();
+			program = 0;
 			return -1;
 		}
 		
