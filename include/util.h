@@ -69,8 +69,12 @@
 //---------//---------//---------//---------//---------//---------//---------
 // Base preference
 //---------//---------//---------//---------//---------//---------//---------
-#define DEFAULT_WIDTH     (1280)
-#define DEFAULT_HEIGHT    (720)
+//#define DEFAULT_WIDTH     (1280)
+//#define DEFAULT_HEIGHT    (720)
+//#define DEFAULT_WIDTH     (320)
+//#define DEFAULT_HEIGHT    (240)
+#define DEFAULT_WIDTH     (320 * 2)
+#define DEFAULT_HEIGHT    (240 * 2)
 
 //OS Function
 BOOL ProcMsg();

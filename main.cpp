@@ -35,7 +35,7 @@ namespace {
 
 //ResetShader
 void ResetShader() {
-	mshader.LoadProgramFromFile("./res/vvs.fx",   NULL, "./res/vfs.fx");
+	mshader.LoadProgramFromFile("./res/vvs.fx",   "./res/gvs.fx", "./res/vfs.fx");
 	rectshader.LoadProgramFromFile("./res/vrect.fx", NULL, "./res/frect.fx");
 	blitshader.LoadProgramFromFile("./res/vblit.fx", NULL, "./res/fblit.fx");
 
