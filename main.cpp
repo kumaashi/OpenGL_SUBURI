@@ -65,6 +65,38 @@ void Handle_WM_SIZE(int w, int h) {
 	ResetRenderTarget();
 	firstview.SetRenderTarget(&rt);
 }
+void UpdateCamera(float dtime) {
+	static BOOL clickLeft = FALSE;
+	static BOOL clickRight = FALSE;
+	static float MouseX = 0;//point.x;
+	static float MouseY = 0;//point.y;
+	POINT point = GetMousePos();
+	float deltaX = MouseX - (float)point.x;
+	float deltaY = MouseY - (float)point.y;
+	printf("%f, %f\n", deltaX, deltaY);
+	MouseX = point.x;
+	MouseY = point.y;
+	clickLeft = GetMouseLeft();
+	clickRight = GetMouseRight();
+
+	if(clickLeft) {
+		pos.x += deltaX * 0.01;
+		pos.y += deltaY * 0.01;
+	}
+
+	if(clickLeft && clickRight ) {
+	}
+
+	float r = 30;
+	float speed = 0.3 * dtime;
+	if(GetKey('1')) { vec pos (r, r, -r); camera.SetTracking(pos, speed); }
+	if(GetKey('2')) { vec pos (-r, r, -r); camera.SetTracking(pos, speed); }
+	if(GetKey('A')) { vec pos (frand() * r, frand() * r, frand() * r); camera.SetTracking(pos, speed); }
+
+	camera.SetView(pos, at, up);
+	camera.Update();
+
+}
 
 
 //--------------------------------------------------------------------------------------
@@ -91,15 +123,10 @@ void StartMain(int argc, char *argv[], HDC hdc) {
 		float dtime = float(delta) / 1000.0f;
 		start = timeGetTime();
 
-		//Update
-		float r = 30;
-		float speed = 0.3 * dtime;
-		if(GetKey(VK_F5)) { ResetShader(); }
-		if(GetKey('1')) { vec pos (r, r, -r); camera.SetTracking(pos, speed); }
-		if(GetKey('2')) { vec pos (-r, r, -r); camera.SetTracking(pos, speed); }
-		if(GetKey('A')) { vec pos (frand() * r, frand() * r, frand() * r); camera.SetTracking(pos, speed); }
+		UpdateCamera(dtime);
 
-		camera.Update();
+		//Update
+		if(GetKey(VK_F5)) { ResetShader(); }
 
 		float info[4]  = {
 			static_cast<float>(rt.GetWidth()), static_cast<float>(rt.GetHeight()),
