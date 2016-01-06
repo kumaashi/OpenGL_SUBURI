@@ -6,6 +6,8 @@ local a0 = float3.new(1,1,0)
 local a1 = float3.new(0,1,1)
 local a2 = float3.new(1,-1,0)
 
+CreateWindow(12345, 56789)
+
 float3:normalize(a0)
 float3:normalize(a1)
 float3:normalize(a2)
