@@ -87,7 +87,6 @@ PFNGLVERTEXATTRIBPOINTERPROC            glVertexAttribPointer       = NULL;
 PFNGLDISPATCHCOMPUTEPROC                glDispatchCompute           = NULL;
 PFNGLBINDFRAGDATALOCATIONPROC           glBindFragDataLocation      = NULL;
 PFNGLUNIFORMBLOCKBINDINGPROC            glUniformBlockBinding       = NULL;
-PFNGLBINDBUFFERBASEPROC                 glBindBufferBase            = NULL;
 
 void glInitFunc()
 {
@@ -151,22 +150,15 @@ void glInitFunc()
 	glDispatchCompute           = (PFNGLDISPATCHCOMPUTEPROC           )wglGetProcAddress("glDispatchCompute");
 	glBindFragDataLocation      = (PFNGLBINDFRAGDATALOCATIONPROC      )wglGetProcAddress("glBindFragDataLocation");
 	glUniformBlockBinding       = (PFNGLUNIFORMBLOCKBINDINGPROC       )wglGetProcAddress("glUniformBlockBinding");
-	glBindBufferBase            = (PFNGLBINDBUFFERBASEPROC            )wglGetProcAddress("glBindBufferBase");
 	
 	
-	//glEnable( GL_MULTISAMPLE );
-	/*
-	glDebugMessageCallback((GLDEBUGPROC)glErrorCallbackUser, NULL);
-	*/
 	glActiveTexture(GL_TEXTURE0);
 	glActiveTexture(GL_TEXTURE1);
 	glActiveTexture(GL_TEXTURE2);
 	glActiveTexture(GL_TEXTURE3);
+	glEnable( GL_MULTISAMPLE );
 }
 
-//--------------------------------------------------------------------------------------
-// luafunc
-//--------------------------------------------------------------------------------------
 int InitOpenGL(HWND hWnd)
 {
 	if(hWnd == NULL) {
@@ -418,17 +410,19 @@ GLuint genComputeProg(GLuint texHandle) {
 	GLuint progHandle = glCreateProgram();
 	GLuint cs = glCreateShader(GL_COMPUTE_SHADER);
 
-	//https://www.opengl.org/wiki/Compute_Shader
-	//http://wlog.flatlib.jp/item/1637
+	///////////////////////////////////////////////////////////////////////////////////////////////
+	//
+	// https://www.opengl.org/wiki/Compute_Shader
+	// http://wlog.flatlib.jp/item/1637
+	// 
+	// in uvec3 gl_NumWorkGroups;
+	// in uvec3 gl_WorkGroupID;
+	// in uvec3 gl_LocalInvocationID;
+	// in uvec3 gl_GlobalInvocationID; //gl_WorkGroupID * gl_WorkGroupSize + gl_LocalInvocationID;
+	// in uint  gl_LocalInvocationIndex;
+	//
+	///////////////////////////////////////////////////////////////////////////////////////////////
 
-	//in uvec3 gl_NumWorkGroups;
-	//in uvec3 gl_WorkGroupID;
-	//in uvec3 gl_LocalInvocationID;
-	//in uvec3 gl_GlobalInvocationID; //gl_WorkGroupID * gl_WorkGroupSize + gl_LocalInvocationID;
-	//in uint  gl_LocalInvocationIndex;
-	
-	
-	
 	const char *csSrc[] = {
 		"#version 430\n",
 		"uniform float roll;\
@@ -575,18 +569,13 @@ GLuint genRenderProg(GLuint texHandle) {
 }
 
 GLuint genTexture(int width, int height) {
-	// We create a single float channel 512^2 texture
 	GLuint texHandle;
 	glGenTextures(1, &texHandle);
-
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texHandle);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
-
-	// Because we're also using this tex as an image (in order to write to it),
-	// we bind it to an image unit as well
 	glBindImageTexture(0, texHandle, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
 	checkErrors("Gen texture");	
 	return texHandle;
@@ -600,21 +589,24 @@ void swapBuffers() {
 }
 
 
-
-GLuint renderHandle, computeHandle;
-
 #define WIN_X     640
 #define WIN_Y     480
 #define CELL_SIZE 32
 
-void updateTex(int frame) {
+void updateTex(GLuint computeHandle, int frame) {
 	glUseProgram(computeHandle);
 	glUniform1f(glGetUniformLocation(computeHandle, "roll"), (float)frame*0.01f);
-	glDispatchCompute(WIN_X / CELL_SIZE, WIN_Y / CELL_SIZE, 1); // 512^2 threads in blocks of 16^2
+
+	int dispatchX = WIN_X / CELL_SIZE;
+	int dispatchY = WIN_Y / CELL_SIZE;
+	int dispatchZ = 1;
+
+	//printf("%d %d %d\n", dispatchX, dispatchY, dispatchZ);
+	glDispatchCompute(dispatchX, dispatchY, dispatchZ); // 512^2 threads in blocks of 16^2
 	checkErrors("Dispatch compute shader");
 }
 
-void draw() {
+void draw(GLuint renderHandle) {
 	glUseProgram(renderHandle);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	swapBuffers();
@@ -628,13 +620,13 @@ int main()
 	glViewport(0, 0, win.GetWidth(), win.GetHeight());
 
 	GLuint texHandle = genTexture( win.GetWidth(), win.GetHeight());
-	renderHandle = genRenderProg(texHandle);
-	computeHandle = genComputeProg(texHandle);
+	GLuint renderHandle = genRenderProg(texHandle);
+	GLuint computeHandle = genComputeProg(texHandle);
 	int frame = 0;
 	while(win.ProcMsg())
 	{
-		updateTex(frame);
-		draw();
+		updateTex(computeHandle, frame);
+		draw(renderHandle);
 		frame++;
 	}
 }
