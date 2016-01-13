@@ -4,6 +4,7 @@
 #include <string.h>
 #include <string>
 #include <vector>
+#include <map>
 #include <algorithm>
 
 #include <windows.h>
@@ -14,6 +15,7 @@
 #include <gl/glu.h>
 #include <gl/glext.h>
 
+#include "file.h"
 
 #pragma comment(lib, "gdi32.lib")
 #pragma comment(lib, "winmm.lib")
@@ -405,10 +407,88 @@ void checkErrors(std::string desc) {
 }
 
 
-GLuint genComputeProg(GLuint texHandle) {
-	// Creating the compute shader, and the program object containing the shader
+
+GLuint LoadShader(GLenum shaderType, const char *name) {
+	if(!name) return 0;
+	GLuint shader = glCreateShader(shaderType);
+	File file(name);
+	const GLint len   = file.Size();
+	const char *Src = static_cast<const char *>(file.Buf());
+	glShaderSource(shader, 1, &Src, &len);
+	glCompileShader(shader);
+	int rvalue;
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &rvalue);
+	if (!rvalue) {
+		fprintf(stderr, "Error in compiling %s\n", name);
+		GLchar  log[10240];
+		GLsizei length;
+		glGetShaderInfoLog(shader, 10239, &length, log);
+		fprintf(stderr, "Linker log:\n%s\n", log);
+
+		glDeleteShader(shader);
+		return 0;
+	}
+	return shader;
+}
+
+
+typedef std::map<std::string, int> KeyValue;
+
+GLuint CreateProgram(
+	const char *  vsname,
+	const char *  gsname,
+	const char *  fsname,
+	const char *  csname   = NULL,
+	const char ** attrname = NULL,
+	const char ** dataname = NULL)
+{
 	GLuint progHandle = glCreateProgram();
-	GLuint cs = glCreateShader(GL_COMPUTE_SHADER);
+	
+	GLuint vs = LoadShader(GL_VERTEX_SHADER,   vsname);
+	GLuint gs = LoadShader(GL_GEOMETRY_SHADER, gsname);
+	GLuint fs = LoadShader(GL_FRAGMENT_SHADER, fsname);
+	GLuint cs = LoadShader(GL_COMPUTE_SHADER,  csname);
+	
+	if(vs) glAttachShader(progHandle, vs);
+	if(gs) glAttachShader(progHandle, gs);
+	if(fs) glAttachShader(progHandle, fs);
+	if(cs) glAttachShader(progHandle, cs);
+	
+	printf("%d %d %d %d\n", vs, gs, fs, cs);
+	if(attrname) {
+		for(int i = 0; attrname[i]; i++) {
+			glBindAttribLocation(progHandle, i, attrname[i]);
+		}
+	}
+	if(dataname) {
+		for(int i = 0; dataname[i]; i++) {
+			glBindFragDataLocation(progHandle, i, dataname[i]);
+		}
+	}
+	
+	glLinkProgram(progHandle);
+	
+	int rvalue;
+	glGetProgramiv(progHandle, GL_LINK_STATUS, &rvalue);
+	if (!rvalue) {
+		fprintf(stderr, "Error in linking program -> ");
+		GLchar  log[10240];
+		GLsizei length;
+		glGetProgramInfoLog(progHandle, 10239, &length, log);
+		fprintf(stderr, "Linker log:\n%s\n", log);
+		glDeleteProgram(progHandle);
+		return 0;
+	}
+	if(cs) glDeleteShader(cs);
+	if(fs) glDeleteShader(fs);
+	if(gs) glDeleteShader(gs);
+	if(vs) glDeleteShader(vs);
+	
+	return progHandle;
+}
+
+
+GLuint genComputeProg(GLuint texHandle) {
 
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	//
@@ -422,52 +502,12 @@ GLuint genComputeProg(GLuint texHandle) {
 	// in uint  gl_LocalInvocationIndex;
 	//
 	///////////////////////////////////////////////////////////////////////////////////////////////
-
-	const char *csSrc[] = {
-		"#version 430\n",
-		"uniform float roll;\
-		writeonly uniform image2D destTex;\
-		layout (local_size_x = 32, local_size_y = 32) in;\
-		float map(vec3 p)\
-		{\
-			return length(mod(p, 2.0) - 1.0) - 0.5;\
-		}\
-		void main() {\
-			ivec2 storePos = ivec2(gl_GlobalInvocationID.xy);\
-			float localCoef = dot(gl_LocalInvocationID.xy, gl_LocalInvocationID.xy);\
-			float tx  = float(gl_GlobalInvocationID.x);\
-			float ty  = float(gl_GlobalInvocationID.y);\
-			float x = -1.0 + (2.0 * tx / float(640));\
-			float y = -1.0 + (2.0 * ty / float(480));\
-		 	vec2  uv = vec2(x, y);\
-		 	vec3 dir = normalize(vec3(uv, 1.0));\
-		 	vec3 pos = vec3(0.0, 0.0, roll);\
-		 	float t  = 0.0;\
-		 	for(int i = 0 ; i < 100; i++)\
-		 	{\
-		 		float temp = map(t * dir + pos);\
-		 		if(abs(temp) < 0.001) break;\
-		 		t += temp * 0.5;\
-		 	}\
-			float globalCoef = sin(float(gl_WorkGroupID.x+gl_WorkGroupID.y)*0.1 + roll)*0.5;\
-			imageStore(destTex, storePos, vec4(x, y - t * 0.3, t * 0.1, 1.0));\
-		 }"
-	};
-
-	glShaderSource(cs, 2, csSrc, NULL);
-	glCompileShader(cs);
-	int rvalue;
-	glGetShaderiv(cs, GL_COMPILE_STATUS, &rvalue);
-	if (!rvalue) {
-		fprintf(stderr, "Error in compiling the compute shader\n");
-		GLchar log[10240];
-		GLsizei length;
-		glGetShaderInfoLog(cs, 10239, &length, log);
-		fprintf(stderr, "Compiler log:\n%s\n", log);
-		exit(40);
-	}
+	/*
+	GLuint progHandle = glCreateProgram();
+	GLuint cs = LoadShader(GL_COMPUTE_SHADER, "cs.glsl");
 	glAttachShader(progHandle, cs);
 
+	int rvalue;
 	glLinkProgram(progHandle);
 	glGetProgramiv(progHandle, GL_LINK_STATUS, &rvalue);
 	if (!rvalue) {
@@ -477,7 +517,10 @@ GLuint genComputeProg(GLuint texHandle) {
 		glGetProgramInfoLog(progHandle, 10239, &length, log);
 		fprintf(stderr, "Linker log:\n%s\n", log);
 		exit(41);
-	}   
+	}
+	*/
+	GLuint progHandle = CreateProgram(NULL, NULL, NULL, "cs.glsl", NULL, NULL);
+	
 	glUseProgram(progHandle);
 	
 	glUniform1i(glGetUniformLocation(progHandle, "destTex"), 0);
@@ -487,61 +530,39 @@ GLuint genComputeProg(GLuint texHandle) {
 }
 
 
-
 GLuint genRenderProg(GLuint texHandle) {
 	GLuint progHandle = glCreateProgram();
-	GLuint vp = glCreateShader(GL_VERTEX_SHADER);
-	GLuint fp = glCreateShader(GL_FRAGMENT_SHADER);
-
-	const char *vpSrc[] = {
-		"#version 430\n",
-		"in vec2 pos;\
-		 out vec2 texCoord;\
-		 void main() {\
-			 texCoord = pos*0.5f + 0.5f;\
-			 gl_Position = vec4(pos.x, pos.y, 0.0, 1.0);\
-		 }"
-	};
-
-	const char *fpSrc[] = {
-		"#version 430\n",
-		"uniform sampler2D srcTex;\
-		 in  vec2  texCoord;\
-		 out vec4  color;\
-		 void main() {\
-			 vec4  c = texture(srcTex, texCoord);\
-			 color   = c;\
-		 }"
-	};
-
-	glShaderSource(vp, 2, vpSrc, NULL);
-	glShaderSource(fp, 2, fpSrc, NULL);
-
-	glCompileShader(vp);
-	int rvalue;
-	glGetShaderiv(vp, GL_COMPILE_STATUS, &rvalue);
-	if (!rvalue) {
-		fprintf(stderr, "Error in compiling vp\n");
-		exit(30);
-	}
+	GLuint vp = LoadShader(GL_VERTEX_SHADER,   "vs.glsl");
+	GLuint fp = LoadShader(GL_FRAGMENT_SHADER, "fs.glsl");
 	glAttachShader(progHandle, vp);
-
-	glCompileShader(fp);
-	glGetShaderiv(fp, GL_COMPILE_STATUS, &rvalue);
-	if (!rvalue) {
-		fprintf(stderr, "Error in compiling fp\n");
-		exit(31);
-	}
 	glAttachShader(progHandle, fp);
-
 	glBindFragDataLocation(progHandle, 0, "color");
 	glLinkProgram(progHandle);
-
+	
+	int rvalue;
 	glGetProgramiv(progHandle, GL_LINK_STATUS, &rvalue);
 	if (!rvalue) {
-		fprintf(stderr, "Error in linking sp\n");
-		exit(32);
+		fprintf(stderr, "Error in linking program\n");
+		GLchar  log[10240];
+		GLsizei length;
+		glGetProgramInfoLog(progHandle, 10239, &length, log);
+		fprintf(stderr, "Linker log:\n%s\n", log);
+		return 0;
 	}   
+	glDeleteShader(fp);
+	glDeleteShader(vp);
+	/*
+	
+	const char *attrname[] = {
+		NULL,
+	};
+	const char *dataname[] = {
+		"color",
+		NULL,
+	};
+	
+	GLuint progHandle = CreateProgram("vs.hlsl", NULL, "fs.glsl", NULL, attrname, dataname);
+	*/
 	
 	glUseProgram(progHandle);
 	glUniform1i(glGetUniformLocation(progHandle, "srcTex"), 0);
@@ -555,9 +576,9 @@ GLuint genRenderProg(GLuint texHandle) {
 	glBindBuffer(GL_ARRAY_BUFFER, posBuf);
 	float data[] = {
 		-1.0f, -1.0f,
-		-1.0f, 1.0f,
-		1.0f, -1.0f,
-		1.0f, 1.0f
+		-1.0f,  1.0f,
+		 1.0f, -1.0f,
+		 1.0f,  1.0f
 	};
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float)*8, data, GL_STREAM_DRAW);
 	GLint posPtr = glGetAttribLocation(progHandle, "pos");
