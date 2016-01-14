@@ -1,3 +1,16 @@
+///////////////////////////////////////////////////////////////////////////////////////////////
+//
+// https://www.opengl.org/wiki/Compute_Shader
+// http://wlog.flatlib.jp/item/1637
+// 
+// in uvec3 gl_NumWorkGroups;
+// in uvec3 gl_WorkGroupID;
+// in uvec3 gl_LocalInvocationID;
+// in uvec3 gl_GlobalInvocationID; //gl_WorkGroupID * gl_WorkGroupSize + gl_LocalInvocationID;
+// in uint  gl_LocalInvocationIndex;
+//
+///////////////////////////////////////////////////////////////////////////////////////////////
+
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -398,15 +411,50 @@ LRESULT CALLBACK WinApp::MainWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPAR
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// GL Parts
+//
+////////////////////////////////////////////////////////////////////////////////
 void checkErrors(std::string desc) {
 	GLenum e = glGetError();
 	if (e != GL_NO_ERROR) {
 		fprintf(stderr, "OpenGL error in \"%s\": %s (%d)\n", desc.c_str(), gluErrorString(e), e);
-		exit(20);
+		//exit(20);
 	}
 }
 
-
+int GetStatus(int type, GLuint ctx) {
+	int index = -1;
+	int rvalue = GL_TRUE;
+	void (*fnStatus[])(GLuint, GLenum, GLint *) =
+	{
+		glGetShaderiv,
+		glGetProgramiv,
+	};
+	void (*fnInfoLog[])(GLuint, GLsizei, GLsizei *, GLchar *) =
+	{
+		glGetShaderInfoLog,
+		glGetProgramInfoLog,
+	};
+	if(type == GL_COMPILE_STATUS) index = 0;
+	if(type == GL_LINK_STATUS)    index = 1;
+	if(index < 0) {
+		fprintf(stderr, "Invalid status type\n");
+		return -1;
+	}
+	fnStatus[index](ctx, type, &rvalue);
+	if (rvalue != GL_TRUE) {
+		GLchar  log[10240];
+		GLsizei length = 0;
+		fnInfoLog[index](ctx, sizeof(log) - 1, &length, log);
+		printf("Error fnindex=%d, length = %d, rvalue=%d\n", index, length, rvalue);
+		fprintf(stderr, "[Error log]\n%s\n", log);
+		return -1;
+	}
+	return 0;
+}
 
 GLuint LoadShader(GLenum shaderType, const char *name) {
 	if(!name) return 0;
@@ -416,154 +464,92 @@ GLuint LoadShader(GLenum shaderType, const char *name) {
 	const char *Src = static_cast<const char *>(file.Buf());
 	glShaderSource(shader, 1, &Src, &len);
 	glCompileShader(shader);
-	int rvalue;
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &rvalue);
-	if (!rvalue) {
-		fprintf(stderr, "Error in compiling %s\n", name);
-		GLchar  log[10240];
-		GLsizei length;
-		glGetShaderInfoLog(shader, 10239, &length, log);
-		fprintf(stderr, "Linker log:\n%s\n", log);
-
+	if(GetStatus(GL_COMPILE_STATUS, shader)) {
 		glDeleteShader(shader);
 		return 0;
 	}
 	return shader;
 }
 
-
-typedef std::map<std::string, int> KeyValue;
-
 GLuint CreateProgram(
-	const char *  vsname,
-	const char *  gsname,
-	const char *  fsname,
-	const char *  csname   = NULL,
-	const char ** attrname = NULL,
-	const char ** dataname = NULL)
+	const GLenum *  shadertypes,
+	const char   ** filenames,
+	const char   ** attrname = NULL,
+	const char   ** dataname = NULL)
 {
+	if(!shadertypes || !shadertypes) return 0;
+
+	//GL_VERTEX_SHADER
+	//GL_GEOMETRY_SHADER
+	//GL_FRAGMENT_SHADER
+	//GL_COMPUTE_SHADER
+
 	GLuint progHandle = glCreateProgram();
+	for(int i = 0; filenames[i] && shadertypes[i] ; i++) {
+		GLuint shader = LoadShader(shadertypes[i], filenames[i]);
+		if(!shader) continue;
+		fprintf(stderr, "filename=%s, type=%08X shader=%08X\n", filenames[i], shadertypes[i], shader);
+		glAttachShader(progHandle, shader);
+		glDeleteShader(shader);
+	}
 	
-	GLuint vs = LoadShader(GL_VERTEX_SHADER,   vsname);
-	GLuint gs = LoadShader(GL_GEOMETRY_SHADER, gsname);
-	GLuint fs = LoadShader(GL_FRAGMENT_SHADER, fsname);
-	GLuint cs = LoadShader(GL_COMPUTE_SHADER,  csname);
-	
-	if(vs) glAttachShader(progHandle, vs);
-	if(gs) glAttachShader(progHandle, gs);
-	if(fs) glAttachShader(progHandle, fs);
-	if(cs) glAttachShader(progHandle, cs);
-	
-	printf("%d %d %d %d\n", vs, gs, fs, cs);
 	if(attrname) {
 		for(int i = 0; attrname[i]; i++) {
+			fprintf(stderr, "glBindAttribLocation -> %d %s\n", i, attrname[i]);
 			glBindAttribLocation(progHandle, i, attrname[i]);
 		}
 	}
+
 	if(dataname) {
 		for(int i = 0; dataname[i]; i++) {
+			fprintf(stderr, "glBindFragDataLocation -> %d %s\n", i, dataname[i]);
 			glBindFragDataLocation(progHandle, i, dataname[i]);
 		}
 	}
 	
 	glLinkProgram(progHandle);
-	
-	int rvalue;
-	glGetProgramiv(progHandle, GL_LINK_STATUS, &rvalue);
-	if (!rvalue) {
-		fprintf(stderr, "Error in linking program -> ");
-		GLchar  log[10240];
-		GLsizei length;
-		glGetProgramInfoLog(progHandle, 10239, &length, log);
-		fprintf(stderr, "Linker log:\n%s\n", log);
+	if(GetStatus(GL_LINK_STATUS, progHandle)) {
 		glDeleteProgram(progHandle);
 		return 0;
 	}
-	if(cs) glDeleteShader(cs);
-	if(fs) glDeleteShader(fs);
-	if(gs) glDeleteShader(gs);
-	if(vs) glDeleteShader(vs);
-	
 	return progHandle;
 }
 
-
 GLuint genComputeProg(GLuint texHandle) {
+	const GLenum shadertypes[] = {
+		GL_COMPUTE_SHADER,
+		0,
+	};
 
-	///////////////////////////////////////////////////////////////////////////////////////////////
-	//
-	// https://www.opengl.org/wiki/Compute_Shader
-	// http://wlog.flatlib.jp/item/1637
-	// 
-	// in uvec3 gl_NumWorkGroups;
-	// in uvec3 gl_WorkGroupID;
-	// in uvec3 gl_LocalInvocationID;
-	// in uvec3 gl_GlobalInvocationID; //gl_WorkGroupID * gl_WorkGroupSize + gl_LocalInvocationID;
-	// in uint  gl_LocalInvocationIndex;
-	//
-	///////////////////////////////////////////////////////////////////////////////////////////////
-	/*
-	GLuint progHandle = glCreateProgram();
-	GLuint cs = LoadShader(GL_COMPUTE_SHADER, "cs.glsl");
-	glAttachShader(progHandle, cs);
+	const char *filenames[] = {
+		"cs.glsl",
+		0,
+	};
 
-	int rvalue;
-	glLinkProgram(progHandle);
-	glGetProgramiv(progHandle, GL_LINK_STATUS, &rvalue);
-	if (!rvalue) {
-		fprintf(stderr, "Error in linking compute shader program\n");
-		GLchar log[10240];
-		GLsizei length;
-		glGetProgramInfoLog(progHandle, 10239, &length, log);
-		fprintf(stderr, "Linker log:\n%s\n", log);
-		exit(41);
-	}
-	*/
-	GLuint progHandle = CreateProgram(NULL, NULL, NULL, "cs.glsl", NULL, NULL);
-	
+	GLuint progHandle = CreateProgram(shadertypes, filenames, NULL, NULL);
 	glUseProgram(progHandle);
-	
 	glUniform1i(glGetUniformLocation(progHandle, "destTex"), 0);
-
 	checkErrors("Compute shader");
 	return progHandle;
 }
 
 
 GLuint genRenderProg(GLuint texHandle) {
-	GLuint progHandle = glCreateProgram();
-	GLuint vp = LoadShader(GL_VERTEX_SHADER,   "vs.glsl");
-	GLuint fp = LoadShader(GL_FRAGMENT_SHADER, "fs.glsl");
-	glAttachShader(progHandle, vp);
-	glAttachShader(progHandle, fp);
-	glBindFragDataLocation(progHandle, 0, "color");
-	glLinkProgram(progHandle);
-	
-	int rvalue;
-	glGetProgramiv(progHandle, GL_LINK_STATUS, &rvalue);
-	if (!rvalue) {
-		fprintf(stderr, "Error in linking program\n");
-		GLchar  log[10240];
-		GLsizei length;
-		glGetProgramInfoLog(progHandle, 10239, &length, log);
-		fprintf(stderr, "Linker log:\n%s\n", log);
-		return 0;
-	}   
-	glDeleteShader(fp);
-	glDeleteShader(vp);
-	/*
-	
-	const char *attrname[] = {
-		NULL,
+	const GLenum shadertypes[] = {
+		GL_VERTEX_SHADER,
+		GL_FRAGMENT_SHADER,
+		0,
 	};
-	const char *dataname[] = {
-		"color",
-		NULL,
+	const char *filenames[] = {
+		"vs.glsl",
+		"fs.glsl",
+		0,
 	};
+	const char *attrname[] = { NULL, };
+	const char *dataname[] = { "color", NULL, };
 	
-	GLuint progHandle = CreateProgram("vs.hlsl", NULL, "fs.glsl", NULL, attrname, dataname);
-	*/
-	
+	GLuint progHandle = CreateProgram(shadertypes, filenames, attrname, dataname);
+
 	glUseProgram(progHandle);
 	glUniform1i(glGetUniformLocation(progHandle, "srcTex"), 0);
 
@@ -598,6 +584,7 @@ GLuint genTexture(int width, int height) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
 	glBindImageTexture(0, texHandle, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+
 	checkErrors("Gen texture");	
 	return texHandle;
 }
