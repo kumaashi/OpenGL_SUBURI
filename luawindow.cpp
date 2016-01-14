@@ -58,10 +58,11 @@ namespace {
 
 	int RunApp(lua_State *l)
 	{
-		printf("%s : %s -> %d %d : ", __FUNCTION__, AppName, Width, Height);
 		AppName = luaL_checkstring(l, 1);
 		Width = (int)luaL_checknumber(l, 2);
 		Height = (int)luaL_checknumber(l, 3);
+
+		printf("%s : %s -> %d %d : ", __FUNCTION__, AppName, Width, Height);
 
 		static WNDCLASSEX wcex =
 		{

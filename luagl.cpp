@@ -190,6 +190,15 @@ namespace {
 		}
 		LUARETURN(l, 1);
 	}
+	
+	int Ping(lua_State *l)
+	{
+		glClearColor(1,1,1,1);
+		glClear(0x4100);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		wglSwapLayerBuffers(hDC, WGL_SWAP_MAIN_PLANE);
+		LUARETURN(l, 1);
+	}
 }
 
 namespace luagl
@@ -198,5 +207,6 @@ namespace luagl
 	{
 		LUAPUSHGFN(l, InitOpenGL);
 		LUAPUSHGFN(l, TermOpenGL);
+		LUAPUSHGFN(l, Ping);
 	}
 }

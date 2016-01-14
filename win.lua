@@ -10,6 +10,7 @@ local function Boot(name, width, height)
 		print("Run OpenGL Mode")
 		while ProcMsg() do
 			MainLoop()
+			Ping()
 		end
 	end
 	TermOpenGL()
