@@ -534,6 +534,7 @@ GLuint genComputeProg(GLuint texHandle) {
 	GLuint progHandle = CreateProgram(shadertypes, filenames, NULL, NULL);
 	glUseProgram(progHandle);
 	glUniform1i(glGetUniformLocation(progHandle, "destTex"), 0);
+	glUniform1i(glGetUniformLocation(progHandle, "infoTex"), 1);
 	checkErrors("Compute shader");
 	return progHandle;
 }
@@ -582,13 +583,31 @@ GLuint genRenderProg(GLuint texHandle) {
 
 GLuint genTexture(int width, int height) {
 	GLuint texHandle;
-	glGenTextures(1, &texHandle);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texHandle);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
-	glBindImageTexture(0, texHandle, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+	{
+		glGenTextures(1, &texHandle);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texHandle);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		std::vector<float> vBuf(width * height * sizeof(float) * 4);
+		memset(&vBuf[0], 0, vBuf.size());
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, &vBuf[0]);
+		glBindImageTexture(0, texHandle, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
+	}
+
+	{
+		GLuint texint;
+		glGenTextures(1, &texint);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texint);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		std::vector<int> vBuf(width * height * sizeof(unsigned long) * 4);
+		memset(&vBuf[0], 0, vBuf.size());
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_INT, &vBuf[0]);
+		glBindImageTexture(1, texint, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32I);
+		//glBindImageTexture(0, texHandle, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+	}
 
 	checkErrors("Gen texture");	
 	return texHandle;
@@ -602,9 +621,9 @@ void swapBuffers() {
 }
 
 
-#define WIN_X     640
-#define WIN_Y     480
 #define CELL_SIZE 32
+#define WIN_X     (CELL_SIZE * 20)
+#define WIN_Y     (CELL_SIZE * 15)
 
 void updateTex(GLuint computeHandle, int frame) {
 	glUseProgram(computeHandle);
@@ -632,12 +651,18 @@ int main()
 	InitOpenGL(win.GetHwnd());
 	glViewport(0, 0, win.GetWidth(), win.GetHeight());
 
-	GLuint texHandle = genTexture( win.GetWidth(), win.GetHeight());
-	GLuint renderHandle = genRenderProg(texHandle);
+	GLuint texHandle     = genTexture( win.GetWidth(), win.GetHeight());
+	GLuint renderHandle  = genRenderProg(texHandle);
 	GLuint computeHandle = genComputeProg(texHandle);
 	int frame = 0;
 	while(win.ProcMsg())
 	{
+		if(GetAsyncKeyState(VK_F5) & 0x8000)
+		{
+			texHandle     = genTexture( win.GetWidth(), win.GetHeight());
+			renderHandle  = genRenderProg(texHandle);
+			computeHandle = genComputeProg(texHandle);
+		}
 		updateTex(computeHandle, frame);
 		draw(renderHandle);
 		frame++;
