@@ -582,36 +582,37 @@ GLuint genRenderProg(GLuint texHandle) {
 }
 
 GLuint genTexture(int width, int height) {
+	std::vector<float> vBuf(width * height * sizeof(float) * 4);
+	memset(&vBuf[0], 0, vBuf.size());
 	GLuint texHandle;
-	{
-		glGenTextures(1, &texHandle);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texHandle);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		std::vector<float> vBuf(width * height * sizeof(float) * 4);
-		memset(&vBuf[0], 0, vBuf.size());
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, &vBuf[0]);
-		glBindImageTexture(0, texHandle, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
-	}
 
-	{
-		GLuint texint;
-		glGenTextures(1, &texint);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, texint);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		std::vector<int> vBuf(width * height * sizeof(unsigned long) * 4);
-		memset(&vBuf[0], 0, vBuf.size());
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_INT, &vBuf[0]);
-		glBindImageTexture(1, texint, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32I);
-		//glBindImageTexture(0, texHandle, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
-	}
-
+	glGenTextures(1, &texHandle);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texHandle);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, &vBuf[0]);
+	glBindImageTexture(0, texHandle, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32F);
 	checkErrors("Gen texture");	
 	return texHandle;
 }
+
+GLuint genIntTexture(int width, int height) {
+	std::vector<int> vBuf(width * height * sizeof(unsigned long) * 4);
+	memset(&vBuf[0], 0, vBuf.size());
+
+	GLuint texHandle;
+	glGenTextures(1, &texHandle);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, texHandle);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_INT, &vBuf[0]);
+	glBindImageTexture(1, texHandle, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32I);
+	checkErrors("Gen texture");	
+	return texHandle;
+}
+
 
 
 
@@ -652,20 +653,34 @@ int main()
 	glViewport(0, 0, win.GetWidth(), win.GetHeight());
 
 	GLuint texHandle     = genTexture( win.GetWidth(), win.GetHeight());
+	GLuint texInt        = genIntTexture( win.GetWidth(), win.GetHeight());
 	GLuint renderHandle  = genRenderProg(texHandle);
 	GLuint computeHandle = genComputeProg(texHandle);
+
+	std::vector<int> vBuf(WIN_X * WIN_Y * sizeof(unsigned long) * 4);
+	memset(&vBuf[0], 0, vBuf.size());
 	int frame = 0;
 	while(win.ProcMsg())
 	{
 		if(GetAsyncKeyState(VK_F5) & 0x8000)
 		{
 			texHandle     = genTexture( win.GetWidth(), win.GetHeight());
+			texInt        = genIntTexture( win.GetWidth(), win.GetHeight());
 			renderHandle  = genRenderProg(texHandle);
 			computeHandle = genComputeProg(texHandle);
 		}
+		
 		updateTex(computeHandle, frame);
 		draw(renderHandle);
 		frame++;
+
+
+		printf("texInt = %d\n", texInt);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, texInt);
+		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA_INTEGER, GL_INT, &vBuf[0]);
+
+		checkErrors("Check glGetTexImage");
 	}
 }
 
