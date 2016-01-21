@@ -584,6 +584,9 @@ GLuint genRenderProg(GLuint texHandle) {
 GLuint genTexture(int width, int height) {
 	std::vector<float> vBuf(width * height * sizeof(float) * 4);
 	memset(&vBuf[0], 0, vBuf.size());
+	for(int i = 0; i < vBuf.size(); i++) {
+		vBuf[i] = float(i);
+	}
 	GLuint texHandle;
 
 	glGenTextures(1, &texHandle);
@@ -599,7 +602,9 @@ GLuint genTexture(int width, int height) {
 
 GLuint genIntTexture(int width, int height) {
 	std::vector<int> vBuf(width * height * sizeof(unsigned long) * 4);
-	memset(&vBuf[0], 0, vBuf.size());
+	for(int i = 0; i < vBuf.size(); i++) {
+		vBuf[i] = i;
+	}
 
 	GLuint texHandle;
 	glGenTextures(1, &texHandle);
@@ -678,7 +683,7 @@ int main()
 		printf("texInt = %d\n", texInt);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, texInt);
-		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA_INTEGER, GL_INT, &vBuf[0]);
+		//glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA_INTEGER, GL_INT, &vBuf[0]);
 
 		checkErrors("Check glGetTexImage");
 	}

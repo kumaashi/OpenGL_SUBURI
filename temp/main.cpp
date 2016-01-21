@@ -290,151 +290,302 @@ LRESULT CALLBACK WinApp::MainWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPAR
 
 
 namespace Dx12 {
+	
+	/////////////////////////////////////////////////////////////
+	//
+	// CommandQueue
+	//
+	/////////////////////////////////////////////////////////////
 	class CommandQueue {
+		D3D12_COMMAND_QUEUE_DESC desc = {};
 		ID3D12CommandQueue       *queue;
 	public:
 		CommandQueue(ID3D12Device *device) {
-			D3D12_COMMAND_QUEUE_DESC queueDesc = {};
-			queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-			queueDesc.Type  = D3D12_COMMAND_LIST_TYPE_DIRECT;
-			device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&queue));
+			D3D12_COMMAND_QUEUE_DESC temp = {};
+			desc = temp;
+			desc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+			desc.Type  = D3D12_COMMAND_LIST_TYPE_DIRECT;
+			device->CreateCommandQueue(&desc, IID_PPV_ARGS(&queue));
 		}
 		~CommandQueue() { RELEASE(queue); }
 		ID3D12CommandQueue *Get() { return queue; }
 	};
-	
-	class DescriptorHeap {
-		ID3D12DescriptorHeap     *heap;
+
+	/////////////////////////////////////////////////////////////
+	//
+	// ID3D12CommandList
+	//
+	/////////////////////////////////////////////////////////////
+	class ID3D12CommandAllocatorList {
+		D3D12_COMMAND_QUEUE_DESC  desc;
+		ID3D12CommandAllocator    *allocator;
+		ID3D12GraphicsCommandList *m_commandList;
+		ID3D12GraphicsCommandList *m_bundle;
 	public:
-		DescriptorHeap(ID3D12Device *device, int FrameCount) {
-			D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
-			rtvHeapDesc.NumDescriptors = FrameCount;
-			rtvHeapDesc.Type           = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-			rtvHeapDesc.Flags          = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-			device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&heap));
+		ID3D12CommandAllocatorList(ID3D12Device *device, D3D12_COMMAND_LIST_TYPE  type) {
+			D3D12_COMMAND_QUEUE_DESC temp = {};
+			desc = temp;
+			desc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+			desc.Type  = type;
+			device->CreateCommandQueue(&desc, IID_PPV_ARGS(&queue));
+			device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_commandAllocator));
+			device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_BUNDLE, IID_PPV_ARGS(&m_bundleAllocator));
 		}
-		DWORD GetSize(D3D12_DESCRIPTOR_HEAP_TYPE e) {
+		~ID3D12CommandAllocatorList() {
+			RELEASE(allocator);
+			RELEASE(commandList);
+			RELEASE(bundle);
 		}
 	};
 
+	/////////////////////////////////////////////////////////////
+	//
+	// DescriptorHeap
+	//
+	/////////////////////////////////////////////////////////////
+	class DescriptorHeap {
+		D3D12_DESCRIPTOR_HEAP_DESC desc;
+		ID3D12DescriptorHeap      *heap;
+		DWORD                      count;
+	public:
+		DescriptorHeap(ID3D12Device *device, D3D12_DESCRIPTOR_HEAP_TYPE type, D3D12_DESCRIPTOR_HEAP_FLAG flag, typeint count) {
+			D3D12_DESCRIPTOR_HEAP_DESC temp = {};
+			desc = temp;
+			desc.NumDescriptors = FrameCount;
+			desc.Type           = type;
+			desc.Flags          = flag;
+			device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&heap));
+			count = FrameCount;
+		}
+		~DescriptorHeap()
+		{
+			memset(&desc, 0, sizeof(desc));
+			heap = NULL;
+			count = 0;
+		}
+		ID3D12DescriptorHeap *Get()
+		{
+			return heap;
+		}
+	};
+
+	/////////////////////////////////////////////////////////////
+	//
+	// RootSignature
+	//
+	/////////////////////////////////////////////////////////////
+	class RootSignature {
+		ID3D12RootSignature *rootSignature;
+	public:
+		RootSignature() {
+			int count = 1;
+			D3D12_ROOT_DESCRIPTOR      rooDescripter = {}
+			rooDescripter.ShaderRegister;
+			rooDescripter.RegisterSpace;
+			D3D12_DESCRIPTOR_RANGE     ranges[count]         = {};
+			D3D12_ROOT_PARAMETER       rootParameters[count] = {};
+			D3D12_ROOT_SIGNATURE_DESC  rootSignatureDesc     = {};
+
+			ranges[0].RangeType          = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
+			ranges[0].registerSpace      = 1
+			ranges[0].BaseShaderRegister = 0
+			ranges[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+			rootParameters[0].InitAsDescriptorTable(count, &ranges[0], D3D12_SHADER_VISIBILITY_ALL);
+
+			// Allow input layout and deny uneccessary access to certain pipeline stages.
+			D3D12_ROOT_SIGNATURE_FLAGS rootSignatureFlags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+			rootSignatureDesc.Initcount, rootParameters, NULL, nullptr, rootSignatureFlags); //need sampler
+
+			ComPtr<ID3DBlob> signature;
+			ComPtr<ID3DBlob> error;
+			ThrowIfFailed(D3D12SerializeRootSignature(
+				&rootSignatureDesc, 
+				D3D_ROOT_SIGNATURE_VERSION_1, 
+				&signature, 
+				&error));
+			ThrowIfFailed(
+				m_device->CreateRootSignature(
+					0, signature->GetBufferPointer(),
+					signature->GetBufferSize(),
+					IID_PPV_ARGS(&m_rootSignature)));
+
+			ID3DBlob signature;
+		}
+	};
+
+	/////////////////////////////////////////////////////////////
+	//
+	// SwapChain
+	//
+	/////////////////////////////////////////////////////////////
 	class SwapChain {
-		IDXGISwapChain3 *swapchain;
+		DXGI_SWAP_CHAIN_DESC  desc;
+		IDXGISwapChain3      *swapchain;
 	public:
 		SwapChain(Factory *factory, CommandQueue *queue, HWND hWnd, int widthm int height, int FrameCount, int &FrameIndex) {
+			DXGI_SWAP_CHAIN_DESC temp = {};
+			desc = temp;
 			IDXGISwapChain *tempref = NULL;;
-			DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
-			swapChainDesc.BufferCount       = FrameCount;
-			swapChainDesc.BufferDesc.Width  = width;
-			swapChainDesc.BufferDesc.Height = height;
-			swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-			swapChainDesc.BufferUsage       = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-			swapChainDesc.SwapEffect        = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-			swapChainDesc.OutputWindow      = hWnd;
-			swapChainDesc.SampleDesc.Count  = 1;
-			swapChainDesc.Windowed          = TRUE;
-			factory->CreateSwapChain(queue->Get(), &swapChainDesc, &tempref);
+			desc.BufferCount       = FrameCount;
+			desc.BufferDesc.Width  = width;
+			desc.BufferDesc.Height = height;
+			desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+			desc.BufferUsage       = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+			desc.SwapEffect        = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+			desc.OutputWindow      = hWnd;
+			desc.SampleDesc.Count  = 1;
+			desc.Windowed          = TRUE;
+			factory->CreateSwapChain(queue->Get(), &desc, &tempref);
 			tempref->QueryInterface( IID_PPV_ARGS( &swapchain ) );
-			//factory->MakeWindowAssociation(hWnd, DXGI_MWA_NO_ALT_ENTER);
 			FrameIndex = swapchain->GetCurrentBackBufferIndex();
+			RELEASE(tempref);
+		}
+		~SwapChain()
+		{
+			memset(&desc, 0, sizeof(desc));
+			RELEASE(swapchain);
+		}
+		IDXGISwapChain3 *Get() {
+			return swapchain;
+		}
+	};
+	
+	
+
+
+
+	/////////////////////////////////////////////////////////////
+	//
+	// RenderTarget
+	//
+	/////////////////////////////////////////////////////////////
+	class ID3D12Resource {
+		ID3D12Resource *resource;
+		ID3D12Resource() {
+			resource = NULL;
+		}
+		~ID3D12Resource()
+		{
+			RELEASE();
+		}
+		ID3D12Resource *Set(ID3D12Resource *resource)
+		{
+		}
+		ID3D12Resource *Get()
+		{
+			return resource;
 		}
 		
 	};
+
 #define DEBUG(x) printf("(%08d)%s : %08X\n", __LINE__, __FUNCTION__, x)
+
 	//Mas
+
 	class Device {
 		//‚í‚¯‚éˆÓ–¡‚ª‚È‚¢
 		IDXGIFactory4            *factory;
 		IDXGIAdapter1            *hardwareAdapter;
 		ID3D12Device             *device;
-		IDXGISwapChain           *swapChainRef;
-		IDXGISwapChain3          *swapChain;
-		ID3D12CommandQueue       *commandQueue; //todo
-		DWORD                    frameIndex;
-		HWND   hWnd;
-		DWORD  Width;
-		DWORD  Height;
 		enum {
 			FrameCount = 2,
 		};
 	public:
 		Device(HWND h, DWORD width, DWORD height) {
-			hWnd   = h;
-			Width  = width;
-			Height = height;
-			DEBUG(hWnd);
-			DEBUG(Width);
-			DEBUG(Height);
-
 			CreateDXGIFactory1(IID_PPV_ARGS(&factory));
-			DEBUG(factory);
-
-			D3D12CreateDevice(NULL, D3D_FEATURE_LEVEL_12_1, IID_PPV_ARGS(&device));
-			DEBUG(device);
-
-			D3D12_COMMAND_QUEUE_DESC queueDesc = {};
-			queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-			queueDesc.Type  = D3D12_COMMAND_LIST_TYPE_DIRECT;
-			device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&commandQueue));
-
-			DEBUG(commandQueue);
-
-			DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
-			swapChainDesc.BufferCount       = FrameCount;
-			swapChainDesc.BufferDesc.Width  = Width;
-			swapChainDesc.BufferDesc.Height = Height;
-			swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-			swapChainDesc.BufferUsage       = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-			swapChainDesc.SwapEffect        = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-			swapChainDesc.OutputWindow      = hWnd;
-			swapChainDesc.SampleDesc.Count  = 1;
-			swapChainDesc.Windowed          = TRUE;
+			D3D12CreateDevice(NULL, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&device)); // D3D_FEATURE_LEVEL_12_1
 			
-			IDXGISwapChain           *swapChainRef;
-			factory->CreateSwapChain(commandQueue, &swapChainDesc, &swapChainRef);
-			swapChainRef->QueryInterface(IID_PPV_ARGS(&swapChain));
+			CommandQueue queue(device);
+			int frameIndex = 999999;
+			SwapChain swapchain(factory, &queue, hWnd, Width, Height, FrameCount, frameIndex);
 			factory->MakeWindowAssociation(hWnd, DXGI_MWA_NO_ALT_ENTER);
-			frameIndex = swapChain->GetCurrentBackBufferIndex();
-
-			D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
-			rtvHeapDesc.NumDescriptors = FrameCount;
-			rtvHeapDesc.Type           = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-			rtvHeapDesc.Flags          = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-			device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&heap));
-			printf("END(%04d) %s\n", __LINE__, __FUNCTION__);
 		}
-		ID3D12DescriptorHeap *CreaetDescHeap(D3D12_DESCRIPTOR_HEAP_TYPE  type) {
+		
+		ID3D12Device *Get()
+		{
+			return device;
+		}
+
+		DWORD GetDescIncSize(D3D12_DESCRIPTOR_HEAP_TYPE e)
+		{
+			return device->GetDescriptorHandleIncrementSize(e);
+		}
+		
+		ID3D12DescriptorHeap *CreaetDescHeap(D3D12_DESCRIPTOR_HEAP_TYPE type,  D3D12_DESCRIPTOR_HEAP_FLAG flags ) {
 			ID3D12DescriptorHeap *ret = NULL;
 			D3D12_DESCRIPTOR_HEAP_DESC desc = {};
 			desc.NumDescriptors = 1; //todo
 			desc.Type           = type;
-			desc.Flags          = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+			desc.Flags          = flags;
 			m_device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&ret));
-			
-			if(type == D3D12_DESCRIPTOR_HEAP_TYPE_RTV) {
-			}
-		}
-		void Present() {
-		}
-
-		void Begin() {
-		}
-		void End() {
 		}
 		
-		void SetBlend(int type) {
-		}
-		
-		void Draw(int i) {
-		}
-		
-		void SetVertex(int i, void *ptr, DWORD num) {
-		}
-		
-		void SetIndex(int i, void *ptr, DWORD num)
-		{
-		}
 	};
 
+	/////////////////////////////////////////////////////////////
+	//
+	// SwapRenderTargetView
+	//
+	/////////////////////////////////////////////////////////////	
+	class SwapRenderTargetView {
+		enum
+		{
+			MaxCount = 2
+		};
+		ID3D12DescriptorHeap      *heap;
+		ID3D12Resource             renderTargets[MaxCount];
+		/*
+		D3D12_VIEWPORT m_viewport;
+		ComPtr<IDXGISwapChain3> m_swapChain;
+		ComPtr<ID3D12Device> m_device;
+		ComPtr<ID3D12Resource> m_renderTargets[FrameCount];
+		ComPtr<ID3D12Resource> m_depthStencil;
+		ComPtr<ID3D12CommandAllocator> m_commandAllocator;
+		ComPtr<ID3D12CommandQueue> m_commandQueue;
+		ComPtr<ID3D12RootSignature >m_rootSignature;
+		ComPtr<ID3D12DescriptorHeap> m_rtvHeap;
+		ComPtr<ID3D12DescriptorHeap> m_cbvSrvHeap;
+		ComPtr<ID3D12DescriptorHeap> m_dsvHeap;
+		ComPtr<ID3D12DescriptorHeap> m_samplerHeap;
+		ComPtr<ID3D12PipelineState> m_pipelineState1;
+		ComPtr<ID3D12PipelineState> m_pipelineState2;
+		ComPtr<ID3D12GraphicsCommandList> m_commandList;
+		D3D12_RECT m_scissorRect;*/
+
+	public:
+		~SwapRenderTargetView()
+		{
+			for(UINT i = 0 ; i < MaxCount; i++)
+			{
+				RELEASE(renderTargets[i]);
+			}
+			RELEASE(heap);
+		}
+		SwapRenderTargetView(Device *device, SwapChain *swapchain, int FrameCount)
+		{
+			if(FrameCount != MaxCount)
+			{
+				printf("‚É‚±‚µ‚©‚³‚Û[‚Æ‚µ‚Ä‚¢‚Ü‚¹‚ñB‚µ‚ËI");
+				return;
+			}
+			D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
+			rtvHeapDesc.NumDescriptors = FrameCount;
+			rtvHeapDesc.Type           = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+			rtvHeapDesc.Flags          = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+			device->Get()->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&heap));
+
+			D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = heap->GetCPUDescriptorHandleForHeapStart();
+		
+			SIZE_T  rtvDescriptorSize    = device->GetDescIncSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+			SIZE_T  cbvSrvDescriptorSize = device->GetDescIncSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+			for (UINT i = 0; i < FrameCount; i++) {
+				swapchain->Get()->GetBuffer(i, IID_PPV_ARGS(&renderTargets[i]));
+				device->Get()->CreateRenderTargetView(renderTargets[i], NULL, rtvHandle);
+				rtvHandle.ptr += rtvDescriptorSize
+			}
+		}
+	};
 	class App{
 	public:
 		IDXGIAdapter1            *hardwareAdapter;
@@ -462,40 +613,7 @@ namespace Dx12 {
 			RELEASE(factory);
 		}
 		void Init(HWND hWnd, int width, int height) {
-			//CreateDXGIFactory1(IID_PPV_ARGS(&factory));
-			//printf("Device -> %08X\n", factory);
-			//D3D12CreateDevice(hardwareAdapter, D3D_FEATURE_LEVEL_12_1, IID_PPV_ARGS(&m_device));
-			////q ì¬
-			//DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
-			//swapChainDesc.BufferCount       = FrameCount;
-			//swapChainDesc.BufferDesc.Width  = width;
-			//swapChainDesc.BufferDesc.Height = height;
-			//swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-			//swapChainDesc.BufferUsage       = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-			//swapChainDesc.SwapEffect        = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-			//swapChainDesc.OutputWindow      = hWnd;
-			//swapChainDesc.SampleDesc.Count  = 1;
-			//swapChainDesc.Windowed          = TRUE;
-            //
-			//factory->CreateSwapChain(m_commandQueue, &swapChainDesc, &m_swapChainRef);
-			//m_swapChainRef->QueryInterface( IID_PPV_ARGS( &m_swapChain ) );
-			//factory->MakeWindowAssociation(hWnd, DXGI_MWA_NO_ALT_ENTER);
-			//m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
-
-			D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
-			rtvHeapDesc.NumDescriptors = FrameCount;
-			rtvHeapDesc.Type           = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-			rtvHeapDesc.Flags          = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-			m_device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&m_rtvHeap));
-
-			m_rtvDescriptorSize = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-			D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = m_rtvHeap->GetCPUDescriptorHandleForHeapStart();
-			for (UINT n = 0; n < FrameCount; n++)
-			{
-				m_swapChain->GetBuffer(n, IID_PPV_ARGS(&m_renderTargets[n]));
-				m_device->CreateRenderTargetView(m_renderTargets[n], NULL, rtvHandle);
-				rtvHandle.ptr += m_rtvDescriptorSize;
-			}
+			
 		}
 	};
 }

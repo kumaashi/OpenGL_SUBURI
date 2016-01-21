@@ -29,7 +29,7 @@ void main() {
 	*/
 	uvec3 gi   = gl_GlobalInvocationID;
 	ivec3 ipos = ivec3(gi.x, gi.y, gi.z);
-	imageStore(infoTex, storePos, ivec4(ipos, 1) );
+	//imageStore(infoTex, storePos, ivec4(ipos, 1) );
 	//imageStore(infoTex, storePos, ivec4(1,1,1,1));
 	float tx        = float(gl_GlobalInvocationID.x);
 	float ty        = float(gl_GlobalInvocationID.y);
@@ -54,5 +54,10 @@ void main() {
 	
 	//WRITE
 	imageStore(destTex, storePos, 0.9 * fb + 0.1 * vec4(x, y - t * 0.3, t * 0.1, 1.0));
+	ivec4 ib = imageLoad(infoTex, storePos);
+	if(mod(ib.x, 2) == 0) {
+		
+		imageStore(destTex, storePos, vec4(ib.x * 0.1));
+	}
 }
 
