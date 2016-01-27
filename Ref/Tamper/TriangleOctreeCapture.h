@@ -45,7 +45,10 @@ VS_TRIANGLE_OCTREE_CAPTURE_OUTPUT VS_CaptureTriangleOctreeGeometry(float4 Positi
 }
 */
 
-[maxvertexcount(1)] void GS_CaptureTriangleOctreeGeometry( triangle VS_TRIANGLE_OCTREE_CAPTURE_OUTPUT input[3], inout PointStream<PS_TRIANGLE_OCTREE_CAPTURE_INPUT> OutputSliceStream, uint TriangleIndex : SV_PRIMITIVEID )
+[maxvertexcount(1)] void GS_CaptureTriangleOctreeGeometry(
+	triangle VS_TRIANGLE_OCTREE_CAPTURE_OUTPUT input[3],
+	inout PointStream<PS_TRIANGLE_OCTREE_CAPTURE_INPUT> OutputSliceStream,
+	uint TriangleIndex : SV_PRIMITIVEID )
 {
 	PS_TRIANGLE_OCTREE_CAPTURE_INPUT Out;
 	Out.V0 = input[0].Position.xyz;

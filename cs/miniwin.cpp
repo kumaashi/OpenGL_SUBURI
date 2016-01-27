@@ -275,6 +275,7 @@ PFNGLBEGINTRANSFORMFEEDBACKPROC         glBeginTransformFeedback    = NULL;
 PFNGLBINDATTRIBLOCATIONPROC             glBindAttribLocation        = NULL;
 PFNGLBINDBUFFERBASEPROC                 glBindBufferBase            = NULL;
 PFNGLBINDBUFFERPROC                     glBindBuffer                = NULL;
+PFNGLBINDFRAGDATALOCATIONPROC           glBindFragDataLocation      = NULL;
 PFNGLBINDFRAMEBUFFERPROC                glBindFramebuffer           = NULL;
 PFNGLBINDIMAGETEXTUREPROC               glBindImageTexture          = NULL;
 PFNGLBINDRENDERBUFFERPROC               glBindRenderBuffer          = NULL;
@@ -292,6 +293,7 @@ PFNGLDELETERENDERBUFFERSPROC            glDeleteRenderbuffers       = NULL;
 PFNGLDELETESHADERPROC                   glDeleteShader              = NULL;
 PFNGLDELETEVERTEXARRAYSPROC             glDeleteVertexArrays        = NULL;
 PFNGLDISABLEVERTEXATTRIBARRAYPROC       glDisableVertexAttribArray  = NULL;
+PFNGLDISPATCHCOMPUTEPROC                glDispatchCompute           = NULL;
 PFNGLDRAWBUFFERSPROC                    glDrawBuffers               = NULL;
 PFNGLENABLEVERTEXATTRIBARRAYPROC        glEnableVertexAttribArray   = NULL;
 PFNGLENDTRANSFORMFEEDBACKPROC           glEndTransformFeedback      = NULL;
@@ -322,21 +324,19 @@ PFNGLTRANSFORMFEEDBACKVARYINGSPROC      glTransformFeedbackVaryings = NULL;
 PFNGLUNIFORM1FPROC                      glUniform1f                 = NULL;
 PFNGLUNIFORM1IPROC                      glUniform1i                 = NULL;
 PFNGLUNIFORM4FVPROC                     glUniform4fv                = NULL;
+PFNGLUNIFORMBLOCKBINDINGPROC            glUniformBlockBinding       = NULL;
 PFNGLUNIFORMMATRIX4FVPROC               glUniformMatrix4fv          = NULL;
 PFNGLUSEPROGRAMPROC                     glUseProgram                = NULL;
 PFNGLVERTEXATTRIBPOINTERPROC            glVertexAttribPointer       = NULL;
-PFNGLDISPATCHCOMPUTEPROC                glDispatchCompute           = NULL;
-PFNGLBINDFRAGDATALOCATIONPROC           glBindFragDataLocation      = NULL;
-PFNGLUNIFORMBLOCKBINDINGPROC            glUniformBlockBinding       = NULL;
 
 void glInitFunc()
 {
 	glActiveTexture             = (PFNGLACTIVETEXTUREPROC             )wglGetProcAddress("glActiveTexture");
 	glAttachShader              = (PFNGLATTACHSHADERPROC              )wglGetProcAddress("glAttachShader");
-	glBeginTransformFeedback    = (PFNGLBEGINTRANSFORMFEEDBACKPROC    )wglGetProcAddress("glBeginTransformFeedback");
 	glBindAttribLocation        = (PFNGLBINDATTRIBLOCATIONPROC        )wglGetProcAddress("glBindAttribLocation");
 	glBindBuffer                = (PFNGLBINDBUFFERPROC                )wglGetProcAddress("glBindBuffer");
 	glBindBufferBase            = (PFNGLBINDBUFFERBASEPROC            )wglGetProcAddress("glBindBufferBase");
+	glBindFragDataLocation      = (PFNGLBINDFRAGDATALOCATIONPROC      )wglGetProcAddress("glBindFragDataLocation");
 	glBindFramebuffer           = (PFNGLBINDFRAMEBUFFERPROC           )wglGetProcAddress("glBindFramebuffer");
 	glBindImageTexture          = (PFNGLBINDIMAGETEXTUREPROC          )wglGetProcAddress("glBindImageTexture");
 	glBindRenderBuffer          = (PFNGLBINDRENDERBUFFERPROC          )wglGetProcAddress("glBindRenderbuffer");
@@ -354,10 +354,13 @@ void glInitFunc()
 	glDeleteShader              = (PFNGLDELETESHADERPROC              )wglGetProcAddress("glDeleteShader");
 	glDeleteVertexArrays        = (PFNGLDELETEVERTEXARRAYSPROC        )wglGetProcAddress("glDeleteVertexArrays");
 	glDisableVertexAttribArray  = (PFNGLDISABLEVERTEXATTRIBARRAYPROC  )wglGetProcAddress("glDisableVertexAttribArray");
+	glDispatchCompute           = (PFNGLDISPATCHCOMPUTEPROC           )wglGetProcAddress("glDispatchCompute");
 	glDrawBuffers               = (PFNGLDRAWBUFFERSPROC               )wglGetProcAddress("glDrawBuffers");
 	glDrawBuffers               = (PFNGLDRAWBUFFERSPROC               )wglGetProcAddress("glDrawBuffers");
 	glEnableVertexAttribArray   = (PFNGLENABLEVERTEXATTRIBARRAYPROC   )wglGetProcAddress("glEnableVertexAttribArray");
+	glBeginTransformFeedback    = (PFNGLBEGINTRANSFORMFEEDBACKPROC    )wglGetProcAddress("glBeginTransformFeedback");
 	glEndTransformFeedback      = (PFNGLENDTRANSFORMFEEDBACKPROC      )wglGetProcAddress("glEndTransformFeedback");
+	glTransformFeedbackVaryings = (PFNGLTRANSFORMFEEDBACKVARYINGSPROC )wglGetProcAddress("glTransformFeedbackVaryings");
 	glFramebufferRenderbuffer   = (PFNGLFRAMEBUFFERRENDERBUFFERPROC   )wglGetProcAddress("glFramebufferRenderbuffer");
 	glFramebufferTexture        = (PFNGLFRAMEBUFFERTEXTUREPROC        )wglGetProcAddress("glFramebufferTexture");
 	glFramebufferTexture2D      = (PFNGLFRAMEBUFFERTEXTURE2DPROC      )wglGetProcAddress("glFramebufferTexture2D");
@@ -381,16 +384,13 @@ void glInitFunc()
 	glShaderSource              = (PFNGLSHADERSOURCEPROC              )wglGetProcAddress("glShaderSource");
 	glTexImage2DMultisample     = (PFNGLTEXIMAGE2DMULTISAMPLEPROC     )wglGetProcAddress("glTexImage2DMultisample");
 	glTexImage3D                = (PFNGLTEXIMAGE3DPROC                )wglGetProcAddress("glTexImage3D");
-	glTransformFeedbackVaryings = (PFNGLTRANSFORMFEEDBACKVARYINGSPROC )wglGetProcAddress("glTransformFeedbackVaryings");
 	glUniform1f                 = (PFNGLUNIFORM1FPROC                 )wglGetProcAddress("glUniform1f");
 	glUniform1i                 = (PFNGLUNIFORM1IPROC                 )wglGetProcAddress("glUniform1i");
 	glUniform4fv                = (PFNGLUNIFORM4FVPROC                )wglGetProcAddress("glUniform4fv");
+	glUniformBlockBinding       = (PFNGLUNIFORMBLOCKBINDINGPROC       )wglGetProcAddress("glUniformBlockBinding");
 	glUniformMatrix4fv          = (PFNGLUNIFORMMATRIX4FVPROC          )wglGetProcAddress("glUniformMatrix4fv");
 	glUseProgram                = (PFNGLUSEPROGRAMPROC                )wglGetProcAddress("glUseProgram");
 	glVertexAttribPointer       = (PFNGLVERTEXATTRIBPOINTERPROC       )wglGetProcAddress("glVertexAttribPointer");
-	glDispatchCompute           = (PFNGLDISPATCHCOMPUTEPROC           )wglGetProcAddress("glDispatchCompute");
-	glBindFragDataLocation      = (PFNGLBINDFRAGDATALOCATIONPROC      )wglGetProcAddress("glBindFragDataLocation");
-	glUniformBlockBinding       = (PFNGLUNIFORMBLOCKBINDINGPROC       )wglGetProcAddress("glUniformBlockBinding");
 	
 	
 	glActiveTexture(GL_TEXTURE0);

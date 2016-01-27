@@ -171,7 +171,7 @@ struct Video {
 		dwHeight          = sysY * screenratio;
 
 		POINT point       = { (sysX - (LONG)dwWidth ) / 2, (sysY - dwHeight) / 2 };
-		RECT rc = {0, 0, dwWidth, dwHeight};
+		RECT rc = {0, 0, Width, Height};
 		BITMAPINFO   bi;
 
 		WNDCLASSEX twc =
@@ -182,8 +182,12 @@ struct Video {
 		};
 		AdjustWindowRectEx(&rc, style, FALSE, dwExStyle);
 		RegisterClassEx(&twc);
-		hWnd = CreateWindowEx(dwExStyle, name, name, style, point.x, point.y, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInst, NULL );
-		//hWnd = CreateWindowEx(dwExStyle, name, name, style, 0, 0, Width, Height, NULL, NULL, hInst, NULL );
+		//hWnd = CreateWindowEx(dwExStyle, name, name, style, point.x, point.y, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInst, NULL );
+		rc.right  -= rc.left;
+		rc.bottom -= rc.top;
+		hWnd = CreateWindowEx(dwExStyle, name, name, style,
+			(sysX - rc.right) / 2, (sysY - rc.bottom) / 2,
+			rc.right, rc.bottom, NULL, NULL, hInst, NULL );
 		ShowWindow(hWnd, SW_SHOW);
 		UpdateWindow(hWnd);
 		bi.bmiHeader.biSize        = sizeof(BITMAPINFOHEADER);
@@ -239,7 +243,7 @@ struct Video {
 	void Update() {
 		HDC hdc = GetDC(hWnd);
 		//StretchBlt(hdc, 0, 0, dwWidth, dwHeight, hDIBDC, 0, 0, Width, Height, SRCCOPY);
-		BitBlt(hdc, 0, 0, dwWidth, dwHeight, hDIBDC, 0, 0, SRCCOPY);
+		BitBlt(hdc, 0, 0, Width, Height, hDIBDC, 0, 0, SRCCOPY);
 		ReleaseDC(hWnd, hdc);
 	}
 };
@@ -329,7 +333,7 @@ void ShowFps()
 
 int main()
 {
-	Video video("test", 320, 240, 32);
+	Video video("test", 640, 480, 32);
 	Input input;
 	Event event;
 	while(input.Update() != 1) {
