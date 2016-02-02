@@ -15,10 +15,7 @@
 #pragma comment(lib, "glu32.lib")
 
 
-
-
 namespace Util {
-
 	LRESULT CALLBACK WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 		int temp = wParam & 0xFFF0;
 		switch(msg) {
@@ -249,7 +246,7 @@ namespace Util {
 			float material[] = {
 				color.x, color.y, color.z, 1.0
 			};
-			glMaterialfv(GL_FRONT, GL_DIFFUSE, material);
+			//glMaterialfv(GL_FRONT, GL_DIFFUSE, material);
 		}
 	};
 
@@ -266,6 +263,13 @@ namespace Util {
 		}
 
 		void Load(const char *name) {
+			#pragma pack(push,1)
+			struct stldata {
+				float n[3];
+				float p[9];unsigned short reserve;
+			};
+			#pragma pack(pop)
+
 			Random dummycolor;
 			File f;
 			int size = f.Load(name);
@@ -276,25 +280,22 @@ namespace Util {
 			triangle_num       = *(int *)(&buf[index]);
 			index             += 4;
 			int cnt            = 0;
-			printf("trimax = %d\n", triangle_num);
+			printf("filename=%s, trimax = %d\n", name, triangle_num);
 			while(cnt < triangle_num) {
-				#pragma pack(push,1)
-				struct stldata {
-					float n[3];
-					float p[9];unsigned short reserve;
-				};
-				#pragma pack(pop)
 				stldata d = *(stldata *)(&buf[index]); 
 				for(int j = 0 ; j < 3; j++) {
 					for(int i = 0 ; i < 3; i++) {
 						vNormal.push_back(d.n[i]);
 					}
 				}
-				float c = dummycolor.GetFloat();
 				for(int i = 0 ; i < 9; i++) {
 					vVertex.push_back(d.p[i]);
-					vColor.push_back(dummycolor.GetFloat());
 				}
+				for(int i = 0 ; i < 12; i++) {
+					float c = dummycolor.GetFloat();
+					vColor.push_back(c);
+				}
+				printf("\n");
 				index += sizeof(stldata);
 				cnt++;
 			}
@@ -341,6 +342,7 @@ namespace Util {
 			glEnable(GL_DEPTH_TEST);
 			//glDisable(GL_DEPTH_TEST);
 			glEnable(GL_CULL_FACE);
+			glEnable(GL_COLOR_MATERIAL);
 			glEnable(GL_LIGHTING);
 			glEnable(GL_LIGHT0);
 			//glEnable(GL_BLEND);
@@ -387,7 +389,7 @@ namespace Util {
 			int tablemesh = 0;
 			for(int i = 0; i < tableindex; i++) {
 				if( (i % 1024) == 0) {
-					glFlush();
+					//glFlush();
 				}
 				int mesh = vTable[i].mesh;
 				int size = vMesh[mesh].GetSize() * 3;
@@ -397,10 +399,10 @@ namespace Util {
 					float *col = vMesh[mesh].GetColor();
 					if(mesh != tablemesh) {
 						glVertexPointer(3, GL_FLOAT, 0, pos);
-						glNormalPointer(GL_FLOAT, 0, nor);
-						glColorPointer(3, GL_FLOAT, 0, col);
+						glNormalPointer(GL_FLOAT,    0, nor);
+						glColorPointer(4, GL_FLOAT,  0, col);
+						size = vMesh[mesh].GetSize() * 3; //Triangle
 						tablemesh = mesh;
-						size = vMesh[tablemesh].GetSize() * 3;
 					}
 					glPushMatrix();
 					vTable[i].Apply();
@@ -422,7 +424,7 @@ int main() {
 	Util::Render render;
 	int Width = 1280;
 	int Height = 720;
-	base.Init("UNKO", Width, Height);
+	base.Init("AAA", Width, Height);
 	render.Init();
 	render.LoadMesh(1, "cube.stl");
 	float angle = 0;
@@ -432,7 +434,7 @@ int main() {
 		render.Clear(1, 1, 1, 1);
 		render.Reset(Width, Height);
 		//vec3 pos = vec3(0, 5, -10);
-		angle += 0.016666;
+		angle += 0.0016666;
 		vec3 pos = vec3(cos(angle) * 64, 5, sin(angle) * 64);
 		vec3 at  = vec3(0, 0,  0);
 		vec3 up  = vec3(0, 1,  0);
